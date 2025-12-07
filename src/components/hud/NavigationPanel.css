@@ -1,0 +1,298 @@
+/* Navigation Panel - Glassmorphism Sci-Fi Style */
+
+.nav-container {
+    position: relative;
+    z-index: 1000;
+    font-family: 'Orbitron', 'Segoe UI', sans-serif;
+}
+
+/* Toggle Button */
+.nav-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: linear-gradient(
+        135deg,
+        rgba(124, 196, 237, 0.1) 0%,
+        rgba(10, 20, 35, 0.9) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(124, 196, 237, 0.3);
+    border-radius: 8px;
+    color: #7cc4ed;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: grab;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.nav-toggle:active {
+    cursor: grabbing;
+}
+
+.nav-toggle:hover {
+    background: linear-gradient(
+        135deg,
+        rgba(124, 196, 237, 0.15) 0%,
+        rgba(20, 35, 55, 0.95) 100%
+    );
+    border-color: rgba(124, 196, 237, 0.5);
+    box-shadow: 0 0 15px rgba(124, 196, 237, 0.2);
+}
+
+.nav-toggle--open {
+    background: rgba(124, 196, 237, 0.15);
+    border-color: rgba(124, 196, 237, 0.5); 
+}
+
+.nav-toggle__label {
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .nav-toggle__label {
+        display: none;
+    }
+    .nav-toggle {
+        padding: 12px;
+    }
+}
+
+/* Panel - Expanded Dropdown Style */
+.nav-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    width: 260px;
+    background: linear-gradient(
+        135deg,
+        rgba(124, 196, 237, 0.05) 0%,
+        rgba(10, 20, 35, 0.85) 50%,
+        rgba(124, 196, 237, 0.02) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(124, 196, 237, 0.3);
+    border-radius: 8px;
+    padding: 0;
+    transform: translateY(-20px) scale(0.95);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.nav-panel--open {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Scanlines */
+.nav-panel__scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(124, 196, 237, 0.02) 2px,
+        rgba(124, 196, 237, 0.02) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Brackets */
+.nav-panel__bracket {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: rgba(124, 196, 237, 0.6);
+    border-style: solid;
+    border-width: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+.nav-panel__bracket--tl { top: 0; left: 0; border-top-width: 2px; border-left-width: 2px; border-top-left-radius: 8px; }
+.nav-panel__bracket--tr { top: 0; right: 0; border-top-width: 2px; border-right-width: 2px; border-top-right-radius: 8px; }
+.nav-panel__bracket--bl { bottom: 0; left: 0; border-bottom-width: 2px; border-left-width: 2px; border-bottom-left-radius: 8px; }
+.nav-panel__bracket--br { bottom: 0; right: 0; border-bottom-width: 2px; border-right-width: 2px; border-bottom-right-radius: 8px; }
+
+/* Header */
+.nav-panel__header {
+    background: rgba(124, 196, 237, 0.05);
+    border-bottom: 1px solid rgba(124, 196, 237, 0.2);
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: grab;
+    z-index: 10;
+}
+.nav-panel__header:active {
+    cursor: grabbing;
+}
+
+.nav-panel__grip-dots {
+    color: rgba(124, 196, 237, 0.4);
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.nav-panel__header-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-panel__title {
+    color: #7cc4ed;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    white-space: nowrap;
+}
+
+.nav-panel__subtitle {
+    font-size: 9px;
+    color: rgba(124, 196, 237, 0.5);
+    letter-spacing: 1px;
+}
+
+.nav-panel__header-actions {
+    margin-left: auto;
+}
+
+.nav-panel__close {
+    background: none;
+    border: none;
+    color: rgba(124, 196, 237, 0.6);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.nav-panel__close:hover {
+    color: #ff4d4d;
+}
+
+/* Navigation List */
+.nav-panel__list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 16px 0;
+    padding: 0 10px;
+    z-index: 5;
+    position: relative;
+}
+
+/* Footer */
+.nav-panel__footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 15px;
+    border-top: 1px solid rgba(124, 196, 237, 0.1);
+}
+
+.nav-panel__footer-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(124, 196, 237, 0.2);
+}
+
+.nav-panel__hint {
+    color: rgba(124, 196, 237, 0.4);
+    font-size: 9px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+
+/* Nav Item */
+.nav-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: rgba(124, 196, 237, 0.03);
+    border: 1px solid rgba(124, 196, 237, 0.1);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    overflow: hidden;
+    text-align: left;
+}
+
+.nav-item:hover {
+    background: rgba(124, 196, 237, 0.1);
+    border-color: rgba(124, 196, 237, 0.3);
+    color: #ffffff;
+    transform: translateX(4px);
+}
+
+.nav-item--active {
+    background: rgba(124, 196, 237, 0.15);
+    border-color: rgba(124, 196, 237, 0.4);
+    color: #7cc4ed;
+}
+
+.nav-item__icon {
+    width: 18px;
+    font-size: 16px;
+    color: #7cc4ed;
+    transition: all 0.25s ease;
+}
+
+.nav-item:hover .nav-item__icon {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 6px rgba(124, 196, 237, 0.6));
+}
+
+.nav-item__name {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.nav-item__glow {
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    width: 40px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(124, 196, 237, 0.15), transparent);
+    transform: translateY(-50%) skewX(-20deg);
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.nav-item:hover .nav-item__glow {
+    left: 120%;
+    opacity: 1;
+}
+
+/* Backdrop */
+.nav-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}

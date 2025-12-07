@@ -1,0 +1,140 @@
+/* Portfolio View - Grid Layout */
+.portfolio-view {
+    width: 100%;
+    height: 100%;
+}
+
+.portfolio-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Project Card */
+.project-card {
+    background: rgba(124, 196, 237, 0.03);
+    border: 1px solid rgba(124, 196, 237, 0.1);
+    border-radius: 6px;
+    padding: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    gap: 15px;
+}
+
+.project-card:hover {
+    background: rgba(124, 196, 237, 0.08);
+    border-color: rgba(124, 196, 237, 0.3);
+    transform: translateX(5px);
+}
+
+/* Image */
+.project-card__image-container {
+    width: 140px;
+    height: 100px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(124, 196, 237, 0.2);
+}
+
+.project-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    opacity: 0.8;
+}
+
+.project-card:hover .project-card__image {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+.project-card__links-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 20, 35, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.project-card__image-container:hover .project-card__links-overlay {
+    opacity: 1;
+}
+
+.project-link-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(124, 196, 237, 0.1);
+    border: 1px solid rgba(124, 196, 237, 0.3);
+    border-radius: 50%;
+    color: #7cc4ed;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.project-link-btn:hover {
+    background: #7cc4ed;
+    color: #0a1423;
+    transform: scale(1.1);
+}
+
+/* Content */
+.project-card__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-title {
+    font-family: 'Orbitron', sans-serif;
+    color: #7cc4ed;
+    font-size: 14px;
+    margin: 0 0 6px 0;
+    letter-spacing: 1px;
+}
+
+.project-description {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0 0 10px 0;
+    flex: 1;
+}
+
+/* Tech Stack */
+.project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tech-tag {
+    background: rgba(124, 196, 237, 0.1);
+    border: 1px solid rgba(124, 196, 237, 0.2);
+    color: rgba(124, 196, 237, 0.8);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: 'Orbitron', monospace;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive adjustment for very small screens (if card is too wide) */
+@media (max-width: 480px) {
+    .project-card {
+        flex-direction: column;
+    }
+    .project-card__image-container {
+        width: 100%;
+        height: 140px;
+    }
+}

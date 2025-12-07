@@ -1,0 +1,128 @@
+.project-detail-view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.back-btn {
+    align-self: flex-start;
+    background: transparent;
+    border: none;
+    color: rgba(124, 196, 237, 0.6);
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.back-btn:hover {
+    color: #7cc4ed;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.1);
+    padding-bottom: 15px;
+}
+
+.detail-title {
+    font-family: 'Orbitron', sans-serif;
+    color: #7cc4ed;
+    font-size: 24px;
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+.detail-links {
+    display: flex;
+    gap: 10px;
+}
+
+.detail-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid rgba(124, 196, 237, 0.3);
+    border-radius: 4px;
+    color: #7cc4ed;
+    text-decoration: none;
+    font-size: 12px;
+    transition: all 0.2s;
+    background: rgba(124, 196, 237, 0.05);
+}
+
+.detail-link:hover {
+    background: rgba(124, 196, 237, 0.15);
+    border-color: #7cc4ed;
+}
+
+.detail-link.primary {
+    background: rgba(124, 196, 237, 0.1);
+    border-color: rgba(124, 196, 237, 0.5);
+    font-weight: 600;
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.detail-image-container {
+    width: 100%;
+    height: 250px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(124, 196, 237, 0.2);
+}
+
+.detail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.detail-info h3 {
+    color: rgba(124, 196, 237, 0.8);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    margin: 20px 0 10px 0;
+    letter-spacing: 1px;
+}
+
+.detail-info h3:first-child {
+    margin-top: 0;
+}
+
+.detail-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.detail-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.detail-tech-tag {
+    background: rgba(124, 196, 237, 0.15);
+    border: 1px solid rgba(124, 196, 237, 0.3);
+    color: #7cc4ed;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: 'Orbitron', monospace;
+}

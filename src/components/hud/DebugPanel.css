@@ -1,0 +1,184 @@
+/* ===========================
+   DEBUG PANEL STYLES
+   Real-time effect tuning
+   =========================== */
+
+.debug-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    padding: 8px 16px;
+    background: rgba(20, 30, 50, 0.9);
+    border: 1px solid rgba(124, 196, 237, 0.4);
+    border-radius: 4px;
+    color: #7cc4ed;
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.debug-toggle:hover {
+    background: rgba(40, 60, 80, 0.95);
+    border-color: rgba(124, 196, 237, 0.8);
+}
+
+.debug-panel {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    width: 280px;
+    padding: 16px;
+    background: rgba(10, 20, 35, 0.95);
+    border: 1px solid rgba(124, 196, 237, 0.3);
+    border-radius: 8px;
+    font-family: 'Orbitron', monospace;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.debug-panel__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.2);
+}
+
+.debug-panel__header h3 {
+    margin: 0;
+    color: #7cc4ed;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+.debug-panel__header button {
+    background: none;
+    border: none;
+    color: rgba(124, 196, 237, 0.7);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.debug-panel__header button:hover {
+    color: #7cc4ed;
+}
+
+.debug-panel__section {
+    margin-bottom: 16px;
+}
+
+.debug-panel__section h4 {
+    margin: 0 0 10px 0;
+    color: rgba(124, 196, 237, 0.7);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.debug-slider {
+    margin-bottom: 12px;
+}
+
+.debug-slider label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    color: rgba(200, 220, 240, 0.8);
+    font-size: 11px;
+}
+
+.debug-slider label span {
+    color: #7cc4ed;
+    font-weight: bold;
+}
+
+.debug-slider input[type="range"] {
+    width: 100%;
+    height: 6px;
+    background: rgba(124, 196, 237, 0.1);
+    border-radius: 3px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.debug-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    background: #7cc4ed;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(124, 196, 237, 0.6);
+}
+
+.debug-slider input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: #7cc4ed;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(124, 196, 237, 0.6);
+}
+
+.debug-panel__values {
+    padding-top: 12px;
+    border-top: 1px solid rgba(124, 196, 237, 0.2);
+}
+
+.debug-panel__values h4 {
+    margin: 0 0 8px 0;
+    color: rgba(124, 196, 237, 0.7);
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.debug-panel__values pre {
+    margin: 0;
+    padding: 10px;
+    background: rgba(0, 10, 20, 0.5);
+    border-radius: 4px;
+    color: #64ed7c;
+    font-family: 'Consolas', monospace;
+    font-size: 10px;
+    line-height: 1.6;
+    overflow-x: auto;
+}
+
+/* Dropdown select style */
+.debug-select {
+    width: 100%;
+    padding: 6px 10px;
+    background: rgba(10, 20, 35, 0.9);
+    border: 1px solid rgba(124, 196, 237, 0.3);
+    border-radius: 4px;
+    color: #7cc4ed;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.debug-select:hover {
+    border-color: rgba(124, 196, 237, 0.6);
+}
+
+.debug-select:focus {
+    border-color: rgba(124, 196, 237, 0.8);
+    box-shadow: 0 0 8px rgba(124, 196, 237, 0.3);
+}
+
+.debug-select option {
+    background: rgba(10, 20, 35, 1);
+    color: #7cc4ed;
+}
+
