@@ -5,12 +5,13 @@ import { COLORS, SIZES, INTENSITY } from '../../config/galaxyConfig'
 import { HudReticle } from './HudReticle'
 import { HudCallout } from './HudCallout'
 import { FresnelGlowMaterial } from './FresnelGlowMaterial'
+import { GlowHalo } from './GlowHalo'
 import { useCameraStore } from '../../stores/cameraStore'
 import { useDebugStore } from '../../stores/debugStore'
 
 /**
- * Sun Component - Optimized for performance
- * Color/scale updates only when necessary, not every frame
+ * Sun Component - HYBRID: Fresnel rim light + Halo sprite
+ * Best of both worlds!
  */
 export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }) => {
     const groupRef = useRef()
@@ -29,13 +30,8 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
     const stopTracking = useCameraStore(state => state.stopTracking)
     const sunEmissive = useDebugStore(state => state.sunEmissive)
     
-    const baseColor = useMemo(() => new THREE.Color(color), [color])
-    // Memoized initial color for JSX (avoids .clone() on every render)
-    const initialColor = useMemo(() => baseColor.clone().multiplyScalar(sunEmissive), [baseColor, sunEmissive])
-    // Memoized offset for HudCallout (avoids array allocation on every render)
+    // Memoized offset for HudCallout
     const calloutOffset = useMemo(() => [size * 0.6 + 1.5, size * 0.6, 0], [size])
-    
-    // Note: Color updates are now handled by FresnelGlowMaterial via props
     
     // Register body
     useEffect(() => {
@@ -67,6 +63,15 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
     
     return (
         <group ref={groupRef} position={position}>
+            {/* Halo glow behind the sun - sprite based */}
+            <GlowHalo 
+                color={color}
+                size={size * 2.5}
+                opacity={0.5}
+                layers={3}
+            />
+            
+            {/* Core with Fresnel rim light */}
             <mesh 
                 ref={coreRef}
                 onClick={handleClick}
@@ -80,7 +85,7 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
                     glowColor="#ffffff"
                     intensity={hovered ? sunEmissive * 1.2 : sunEmissive}
                     fresnelPower={1.5}
-                    glowStrength={1.2}
+                    glowStrength={1.0}
                 />
             </mesh>
             

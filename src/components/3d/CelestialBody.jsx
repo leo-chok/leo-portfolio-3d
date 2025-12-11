@@ -47,7 +47,7 @@ export const CelestialBody = ({
     // Memoized offset for HudCallout (avoids array allocation on every render)
     const calloutOffset = useMemo(() => [size + 2, size, 0], [size])
     
-    // Note: Color updates are now handled by FresnelGlowMaterial via props
+    // Note: Color updates handled by FresnelGlowMaterial via props
     
     // Register body for navigation
     useEffect(() => {
