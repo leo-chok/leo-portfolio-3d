@@ -1,16 +1,29 @@
-import { GALAXY_MAP, SIZES, COLORS, INTENSITY } from '../../config/galaxyConfig'
+import { GALAXY_MAP, SIZES, INTENSITY } from '../../config/galaxyConfig'
 import { Sun } from './Sun'
 import { CelestialBody } from './CelestialBody'
 import { OrbitingBody } from './OrbitingBody'
+import { useDebugStore, hueToColor } from '../../stores/debugStore'
 
 /**
  * SolarSystem Component - Main orchestrator
  * Renders the entire galaxy structure from galaxyConfig
- * 
- * Note: Camera navigation is handled by CameraController
- * This component only renders the celestial bodies
+ * Colors controlled by HUE values from debug store
  */
 export const SolarSystem = () => {
+    // Get HUE values for dynamic colors
+    const planetHue1 = useDebugStore(state => state.planetHue1)
+    const planetHue2 = useDebugStore(state => state.planetHue2)
+    const moonHue = useDebugStore(state => state.moonHue)
+    
+    // Map planet index to HUE
+    const getPlanetColor = (index) => {
+        const hues = [planetHue1, planetHue2]
+        return hueToColor(hues[index] || planetHue1, 70, 60)
+    }
+    
+    // All moons share the same HUE
+    const moonColor = hueToColor(moonHue, 60, 65)
+    
     return (
         <group>
             {/* ====== SUN (Présentation) ====== */}
@@ -20,7 +33,7 @@ export const SolarSystem = () => {
             />
 
             {/* ====== PLANETS ====== */}
-            {GALAXY_MAP.planets.map((planet) => (
+            {GALAXY_MAP.planets.map((planet, planetIndex) => (
                 <OrbitingBody
                     key={planet.id}
                     orbitRadius={planet.orbitRadius}
@@ -32,7 +45,7 @@ export const SolarSystem = () => {
                         id={planet.id}
                         name={planet.name}
                         size={planet.size}
-                        color={planet.color}
+                        color={getPlanetColor(planetIndex)}
                         intensity={planet.intensity}
                     >
                         {/* ====== MOONS ====== */}
@@ -48,7 +61,7 @@ export const SolarSystem = () => {
                                 <CelestialBody
                                     name={moon.name}
                                     size={SIZES.moon}
-                                    color={COLORS.moon}
+                                    color={moonColor}
                                     intensity={INTENSITY.moon}
                                     satellites={moon.satellites || []}
                                 />
@@ -60,4 +73,3 @@ export const SolarSystem = () => {
         </group>
     )
 }
-

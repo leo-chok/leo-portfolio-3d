@@ -1,17 +1,17 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { COLORS, SIZES, INTENSITY } from '../../config/galaxyConfig'
+import { SIZES, INTENSITY } from '../../config/galaxyConfig'
 import { HudReticle } from './HudReticle'
 import { HudCallout } from './HudCallout'
 import { FresnelGlowMaterial } from './FresnelGlowMaterial'
 import { GlowHalo } from './GlowHalo'
 import { useCameraStore } from '../../stores/cameraStore'
-import { useDebugStore } from '../../stores/debugStore'
+import { useDebugStore, hueToColor } from '../../stores/debugStore'
 
 /**
  * Sun Component - HYBRID: Fresnel rim light + Halo sprite
- * Best of both worlds!
+ * Color controlled by sunHue from debug store
  */
 export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }) => {
     const groupRef = useRef()
@@ -20,7 +20,6 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
     const [hovered, setHovered] = useState(false)
     
     const size = SIZES.sun
-    const color = COLORS.sun
     const intensity = INTENSITY.sun
     
     const registerBody = useCameraStore(state => state.registerBody)
@@ -29,6 +28,10 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
     const setTrackedRef = useCameraStore(state => state.setTrackedRef)
     const stopTracking = useCameraStore(state => state.stopTracking)
     const sunEmissive = useDebugStore(state => state.sunEmissive)
+    const sunHue = useDebugStore(state => state.sunHue)
+    
+    // Dynamic color from HUE
+    const color = useMemo(() => hueToColor(sunHue, 80, 65), [sunHue])
     
     // Memoized offset for HudCallout
     const calloutOffset = useMemo(() => [size * 0.6 + 1.5, size * 0.6, 0], [size])

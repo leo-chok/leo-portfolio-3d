@@ -1,4 +1,4 @@
-import { useDebugStore } from '../../stores/debugStore'
+import { useDebugStore, hueToColor } from '../../stores/debugStore'
 import { useEffect } from 'react'
 import './DebugPanel.css'
 
@@ -6,13 +6,9 @@ export const DebugPanel = () => {
     const {
         showDebugPanel,
         toggleDebugPanel,
-        // Bloom
-        bloomEnabled, toggleBloomEnabled,
-        bloomThreshold, bloomStrength, bloomRadius,
-        setBloomThreshold, setBloomStrength, setBloomRadius,
-        // Emissive
-        sunEmissive, planetEmissive, moonEmissive,
-        setSunEmissive, setPlanetEmissive, setMoonEmissive,
+        // HUE Colors
+        sunHue, planetHue1, planetHue2, moonHue,
+        setSunHue, setPlanetHue1, setPlanetHue2, setMoonHue,
         // Particles
         starsCount, dustCount,
         setStarsCount, setDustCount,
@@ -30,6 +26,39 @@ export const DebugPanel = () => {
     
     if (!showDebugPanel) return null
     
+    // Helper to create hue slider with color preview
+    const HueSlider = ({ label, value, onChange }) => (
+        <div className="debug-slider debug-slider--hue">
+            <label>
+                {label}: 
+                <span 
+                    className="debug-hue-preview" 
+                    style={{ backgroundColor: hueToColor(value) }}
+                />
+                <span>{value}°</span>
+            </label>
+            <input 
+                type="range" 
+                min="0" 
+                max="360" 
+                step="5" 
+                value={value}
+                onChange={(e) => onChange(parseInt(e.target.value))}
+                style={{
+                    background: `linear-gradient(to right, 
+                        hsl(0, 70%, 60%), 
+                        hsl(60, 70%, 60%), 
+                        hsl(120, 70%, 60%), 
+                        hsl(180, 70%, 60%), 
+                        hsl(240, 70%, 60%), 
+                        hsl(300, 70%, 60%), 
+                        hsl(360, 70%, 60%)
+                    )`
+                }}
+            />
+        </div>
+    )
+    
     return (
         <div className="debug-panel">
             <div className="debug-panel__header">
@@ -37,66 +66,14 @@ export const DebugPanel = () => {
                 <button onClick={toggleDebugPanel}>×</button>
             </div>
             
-            {/* BLOOM EFFECT */}
+            {/* HUE COLORS */}
             <div className="debug-panel__section">
-                <h4>
-                    ☀️ Bloom 
-                    <button 
-                        onClick={toggleBloomEnabled}
-                        style={{ 
-                            marginLeft: '10px', 
-                            padding: '2px 8px',
-                            background: bloomEnabled ? '#00ff00' : '#ff4444',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            fontSize: '10px'
-                        }}
-                    >
-                        {bloomEnabled ? 'ON' : 'OFF'}
-                    </button>
-                </h4>
+                <h4>🎨 Colors (HUE)</h4>
                 
-                <div className="debug-slider">
-                    <label>Threshold: <span>{bloomThreshold.toFixed(2)}</span></label>
-                    <input type="range" min="0" max="1" step="0.01" value={bloomThreshold}
-                        onChange={(e) => setBloomThreshold(parseFloat(e.target.value))} />
-                </div>
-                
-                <div className="debug-slider">
-                    <label>Strength: <span>{bloomStrength.toFixed(2)}</span></label>
-                    <input type="range" min="0" max="5" step="0.1" value={bloomStrength}
-                        onChange={(e) => setBloomStrength(parseFloat(e.target.value))} />
-                </div>
-                
-                <div className="debug-slider">
-                    <label>Radius: <span>{bloomRadius.toFixed(2)}</span></label>
-                    <input type="range" min="0" max="2" step="0.05" value={bloomRadius}
-                        onChange={(e) => setBloomRadius(parseFloat(e.target.value))} />
-                </div>
-            </div>
-            
-            {/* EMISSIVE MATERIALS */}
-            <div className="debug-panel__section">
-                <h4>💡 Emissive</h4>
-                
-                <div className="debug-slider">
-                    <label>Sun: <span>{sunEmissive.toFixed(1)}</span></label>
-                    <input type="range" min="1" max="20" step="0.5" value={sunEmissive}
-                        onChange={(e) => setSunEmissive(parseFloat(e.target.value))} />
-                </div>
-                
-                <div className="debug-slider">
-                    <label>Planets: <span>{planetEmissive.toFixed(1)}</span></label>
-                    <input type="range" min="1" max="15" step="0.5" value={planetEmissive}
-                        onChange={(e) => setPlanetEmissive(parseFloat(e.target.value))} />
-                </div>
-                
-                <div className="debug-slider">
-                    <label>Moons: <span>{moonEmissive.toFixed(1)}</span></label>
-                    <input type="range" min="1" max="10" step="0.5" value={moonEmissive}
-                        onChange={(e) => setMoonEmissive(parseFloat(e.target.value))} />
-                </div>
+                <HueSlider label="Sun" value={sunHue} onChange={setSunHue} />
+                <HueSlider label="Portfolio" value={planetHue1} onChange={setPlanetHue1} />
+                <HueSlider label="Contact" value={planetHue2} onChange={setPlanetHue2} />
+                <HueSlider label="Moons" value={moonHue} onChange={setMoonHue} />
             </div>
             
             {/* PARTICLES (PERFORMANCE) */}

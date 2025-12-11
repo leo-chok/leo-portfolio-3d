@@ -5,7 +5,7 @@ import './LoadingScreen.css'
  * LoadingScreen - Futuristic System Initialization Screen
  * Simple fade out transition when complete
  */
-export const LoadingScreen = ({ onComplete }) => {
+export const LoadingScreen = ({ onComplete, onReadyToAnimate }) => {
     const [progress, setProgress] = useState(0)
     const [currentStep, setCurrentStep] = useState(0)
     const [isFadingOut, setIsFadingOut] = useState(false)
@@ -38,13 +38,16 @@ export const LoadingScreen = ({ onComplete }) => {
             )
             setCurrentStep(stepIndex)
             
-            // When complete, trigger fade out
+            // When complete, trigger animation then fade out
             if (newProgress >= 100 && !completedRef.current) {
                 completedRef.current = true
                 clearInterval(interval)
                 
-                // Short delay to show 100%, then fade
+                // Short delay to show 100%, then start animation and fade
                 setTimeout(() => {
+                    // Start the camera animation NOW (before fade)
+                    onReadyToAnimate?.()
+                    
                     setIsFadingOut(true)
                     
                     // After fade animation, call onComplete

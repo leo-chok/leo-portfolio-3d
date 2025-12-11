@@ -10,7 +10,14 @@ import { LoadingScreen } from './components/hud/LoadingScreen'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
+  const [canStartAnimation, setCanStartAnimation] = useState(false)
 
+  // Called when loading reaches 100% (before fade out)
+  const handleReadyToAnimate = () => {
+    setCanStartAnimation(true)
+  }
+
+  // Called after fade out is complete
   const handleLoadingComplete = () => {
     setIsLoading(false)
   }
@@ -19,7 +26,10 @@ function App() {
     <>
       {/* Loading Screen - shown on initial load */}
       {isLoading && (
-        <LoadingScreen onComplete={handleLoadingComplete} />
+        <LoadingScreen 
+          onReadyToAnimate={handleReadyToAnimate}
+          onComplete={handleLoadingComplete} 
+        />
       )}
 
       <Canvas
@@ -28,7 +38,7 @@ function App() {
       >
         <color attach="background" args={['#050a0f']} />
         <Suspense fallback={null}>
-          <Experience startAnimation={!isLoading} />
+          <Experience startAnimation={canStartAnimation} />
         </Suspense>
       </Canvas>
       <Loader />
@@ -41,4 +51,3 @@ function App() {
 }
 
 export default App
-
