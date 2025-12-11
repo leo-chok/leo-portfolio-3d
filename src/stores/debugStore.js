@@ -10,7 +10,7 @@ export const useDebugStore = create((set) => ({
     bloomThreshold: 0.50,
     bloomStrength: 2.20,
     bloomRadius: 0.55,
-    bloomEnabled: true,
+    bloomEnabled: false, // Disabled for Fresnel test
     
     // === MATERIAL EMISSIVE INTENSITY ===
     sunEmissive: 6.0,

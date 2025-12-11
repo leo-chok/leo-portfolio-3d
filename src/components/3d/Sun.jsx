@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import { COLORS, SIZES, INTENSITY } from '../../config/galaxyConfig'
 import { HudReticle } from './HudReticle'
 import { HudCallout } from './HudCallout'
+import { FresnelGlowMaterial } from './FresnelGlowMaterial'
 import { useCameraStore } from '../../stores/cameraStore'
 import { useDebugStore } from '../../stores/debugStore'
 
@@ -34,12 +35,7 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
     // Memoized offset for HudCallout (avoids array allocation on every render)
     const calloutOffset = useMemo(() => [size * 0.6 + 1.5, size * 0.6, 0], [size])
     
-    // Update color only when emissive changes
-    useEffect(() => {
-        if (materialRef.current) {
-            materialRef.current.color.copy(baseColor).multiplyScalar(sunEmissive)
-        }
-    }, [sunEmissive, baseColor])
+    // Note: Color updates are now handled by FresnelGlowMaterial via props
     
     // Register body
     useEffect(() => {
@@ -78,10 +74,13 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
                 onPointerOut={() => { document.body.style.cursor = 'auto'; setHovered(false) }}
             >
                 <sphereGeometry args={[size * 0.6, 48, 48]} />
-                <meshBasicMaterial 
+                <FresnelGlowMaterial
                     ref={materialRef}
-                    color={initialColor} 
-                    toneMapped={false}
+                    color={color}
+                    glowColor="#ffffff"
+                    intensity={hovered ? sunEmissive * 1.2 : sunEmissive}
+                    fresnelPower={1.5}
+                    glowStrength={1.2}
                 />
             </mesh>
             

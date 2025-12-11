@@ -5,6 +5,7 @@ import { COLORS, SIZES, INTENSITY } from '../../config/galaxyConfig'
 import { HudReticle } from './HudReticle'
 import { HudCallout } from './HudCallout'
 import { Satellite } from './Satellite'
+import { FresnelGlowMaterial } from './FresnelGlowMaterial'
 import { useCameraStore } from '../../stores/cameraStore'
 import { useDebugStore } from '../../stores/debugStore'
 
@@ -46,13 +47,7 @@ export const CelestialBody = ({
     // Memoized offset for HudCallout (avoids array allocation on every render)
     const calloutOffset = useMemo(() => [size + 2, size, 0], [size])
     
-    // Update color ONLY when emissive or hover changes (not every frame!)
-    useEffect(() => {
-        if (materialRef.current) {
-            const multiplier = hovered ? emissiveMultiplier * 1.5 : emissiveMultiplier
-            materialRef.current.color.copy(baseColor).multiplyScalar(multiplier)
-        }
-    }, [hovered, emissiveMultiplier, baseColor])
+    // Note: Color updates are now handled by FresnelGlowMaterial via props
     
     // Register body for navigation
     useEffect(() => {
@@ -93,10 +88,12 @@ export const CelestialBody = ({
                 onPointerOut={() => { document.body.style.cursor = 'auto'; setHovered(false) }}
             >
                 <sphereGeometry args={[size, 32, 32]} />
-                <meshBasicMaterial 
+                <FresnelGlowMaterial
                     ref={materialRef}
-                    color={initialColor}
-                    toneMapped={false}
+                    color={color}
+                    intensity={hovered ? emissiveMultiplier * 1.3 : emissiveMultiplier}
+                    fresnelPower={isPlanet ? 2.0 : 2.5}
+                    glowStrength={isPlanet ? 0.8 : 0.6}
                 />
             </mesh>
             
