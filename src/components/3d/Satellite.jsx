@@ -1,49 +1,15 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { Html, Billboard, Text } from '@react-three/drei'
-import { COLORS, SIZES, INTENSITY } from '../../config/galaxyConfig'
-
-// FontAwesome imports
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { 
-    faReact, faNodeJs, faJs, faHtml5, faCss3Alt, 
-    faDocker, faGithub, faLinkedin, faTwitter 
-} from '@fortawesome/free-brands-svg-icons'
-import { 
-    faRobot, faCode, faServer, faUsers, faComments, 
-    faLightbulb, faHandshake, faBrain, faClock, faChartLine, faHeart 
-} from '@fortawesome/free-solid-svg-icons'
-
-// Icon mapping
-const ICON_MAP = {
-    // Brands
-    'react': faReact,
-    'node-js': faNodeJs,
-    'js': faJs,
-    'html5': faHtml5,
-    'css3-alt': faCss3Alt,
-    'docker': faDocker,
-    'github': faGithub,
-    'linkedin': faLinkedin,
-    'twitter': faTwitter,
-    // Solid
-    'robot': faRobot,
-    'code': faCode,
-    'server': faServer,
-    'users': faUsers,
-    'comments': faComments,
-    'lightbulb': faLightbulb,
-    'handshake': faHandshake,
-    'brain': faBrain,
-    'clock': faClock,
-    'chart-line': faChartLine,
-    'heart': faHeart,
-}
+import { Billboard, Text } from '@react-three/drei'
+import { COLORS } from '../../config/galaxyConfig'
+import { useDebugStore } from '../../stores/debugStore'
 
 /**
- * Satellite Component - Tiny orbiting bodies with FontAwesome icons
- * Uses electron-style tilted orbital planes
+ * Satellite Component - Highly optimized
+ * - Simple 3D sphere (no Html)
+ * - Color updates on hover change only (not every frame)
+ * - Minimal useFrame work
  */
 export const Satellite = ({ 
     name, 
@@ -55,77 +21,57 @@ export const Satellite = ({
     onClick 
 }) => {
     const orbitRef = useRef()
+    const meshRef = useRef()
     const orbitAngle = useRef(initialAngle)
     const [hovered, setHovered] = useState(false)
     
     const color = COLORS.hud
+    const satelliteEmissive = useDebugStore(state => state.satelliteEmissive)
     
-    // Convert tilt to radians
-    const tiltXRad = (orbitTilt.x * Math.PI) / 180
-    const tiltYRad = (orbitTilt.y * Math.PI) / 180
+    // Pre-computed values (memoized)
+    const tiltXRad = useMemo(() => (orbitTilt.x * Math.PI) / 180, [orbitTilt.x])
+    const tiltYRad = useMemo(() => (orbitTilt.y * Math.PI) / 180, [orbitTilt.y])
+    const baseColor = useMemo(() => new THREE.Color(color), [color])
+    const initialColor = useMemo(() => baseColor.clone().multiplyScalar(satelliteEmissive), [baseColor, satelliteEmissive])
     
+    // Update color ONLY on hover or emissive change
+    useEffect(() => {
+        if (meshRef.current?.material) {
+            const multiplier = hovered ? satelliteEmissive * 2 : satelliteEmissive
+            meshRef.current.material.color.copy(baseColor).multiplyScalar(multiplier)
+        }
+    }, [hovered, satelliteEmissive, baseColor])
+    
+    // Minimal useFrame - just orbit rotation
     useFrame((state, delta) => {
-        // Rotate the orbit group
         if (orbitRef.current) {
             orbitAngle.current += orbitSpeed * delta
             orbitRef.current.rotation.y = orbitAngle.current
         }
     })
     
-    const faIcon = ICON_MAP[icon]
+    const size = 0.08
     
     return (
-        // Tilted orbital plane
         <group rotation={[tiltXRad, tiltYRad, 0]}>
-            {/* Orbit rotation group */}
             <group ref={orbitRef}>
-                {/* Body positioned at radius */}
                 <group position={[orbitRadius, 0, 0]}>
-                    {/* Icon rendered as HTML in 3D space */}
-                    <Html
-                        center
-                        sprite
-                        transform
-                        scale={0.15}
-                        style={{
-                            pointerEvents: 'auto',
-                            cursor: 'pointer',
-                        }}
+                    <mesh
+                        ref={meshRef}
+                        onClick={(e) => { e.stopPropagation(); onClick?.() }}
+                        onPointerOver={() => { document.body.style.cursor = 'pointer'; setHovered(true) }}
+                        onPointerOut={() => { document.body.style.cursor = 'auto'; setHovered(false) }}
                     >
-                        <div
-                            onClick={(e) => { e.stopPropagation(); onClick?.() }}
-                            onMouseEnter={() => setHovered(true)}
-                            onMouseLeave={() => setHovered(false)}
-                            style={{
-                                color: hovered ? '#ffffff' : color,
-                                fontSize: '24px',
-                                filter: `drop-shadow(0 0 ${hovered ? '10px' : '5px'} ${color})`,
-                                transition: 'all 0.2s ease',
-                                transform: hovered ? 'scale(1.3)' : 'scale(1)',
-                            }}
-                        >
-                            {faIcon && <FontAwesomeIcon icon={faIcon} />}
-                        </div>
-                    </Html>
+                        <sphereGeometry args={[size, 8, 8]} />
+                        <meshBasicMaterial 
+                            color={initialColor}
+                            toneMapped={false}
+                        />
+                    </mesh>
                     
-                    {/* Point light for glow */}
-                    <pointLight 
-                        color={color} 
-                        intensity={hovered ? INTENSITY.satellite * 2 : INTENSITY.satellite} 
-                        distance={2} 
-                        decay={2} 
-                    />
-                    
-                    {/* Label on hover */}
-                    {hovered && (
-                        <Billboard position={[0, 0.4, 0]}>
-                            <Text
-                                fontSize={0.15}
-                                color={COLORS.hud}
-                                anchorX="center"
-                                anchorY="bottom"
-                                font="/fonts/Orbitron-Bold.ttf"
-                            >
+                    {hovered && name && (
+                        <Billboard position={[0, 0.3, 0]}>
+                            <Text fontSize={0.12} color={COLORS.hud} anchorX="center" anchorY="bottom">
                                 {name}
                             </Text>
                         </Billboard>

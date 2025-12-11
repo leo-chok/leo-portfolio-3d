@@ -1,19 +1,64 @@
 import { useCameraStore } from '../../stores/cameraStore'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
+import { GALAXY_MAP } from '../../config/galaxyConfig'
 import './CockpitHUD.css'
+
+// Build navigation list from GALAXY_MAP (sun + planets)
+const NAV_SECTIONS = [
+    { id: GALAXY_MAP.sun.id, name: GALAXY_MAP.sun.name },
+    ...GALAXY_MAP.planets.map(p => ({ id: p.id, name: p.name }))
+]
 
 export const CockpitHUD = () => {
     const isTracking = useCameraStore((state) => state.isTracking)
     const trackedRef = useCameraStore((state) => state.trackedRef)
+    const trackedId = useCameraStore((state) => state.trackedId)
     const bodyRegistry = useCameraStore((state) => state.bodyRegistry)
+    const navigateTo = useCameraStore((state) => state.navigateTo)
+    const returnToOverview = useCameraStore((state) => state.returnToOverview)
     
-    // Simple logic to just show the section name in TopBar
     const [activeSection, setActiveSection] = useState(null)
     const [isVisible, setIsVisible] = useState(false)
     
+    // Find current section index for navigation
+    const currentIndex = useMemo(() => {
+        if (!activeSection) return -1
+        return NAV_SECTIONS.findIndex(s => s.id === activeSection)
+    }, [activeSection])
+    
+    // Get section display name
+    const sectionDisplayName = useMemo(() => {
+        if (!activeSection) return 'PRÉSENTATION'
+        const section = NAV_SECTIONS.find(s => s.id === activeSection)
+        return section?.name || 'OVERVIEW'
+    }, [activeSection])
+    
+    // Navigation handlers
+    const navigatePrev = useCallback(() => {
+        if (currentIndex <= 0) {
+            // Go to last section
+            const lastSection = NAV_SECTIONS[NAV_SECTIONS.length - 1]
+            navigateTo(lastSection.id)
+        } else {
+            navigateTo(NAV_SECTIONS[currentIndex - 1].id)
+        }
+    }, [currentIndex, navigateTo])
+    
+    const navigateNext = useCallback(() => {
+        if (currentIndex >= NAV_SECTIONS.length - 1 || currentIndex === -1) {
+            // Go to first section (sun)
+            navigateTo(NAV_SECTIONS[0].id)
+        } else {
+            navigateTo(NAV_SECTIONS[currentIndex + 1].id)
+        }
+    }, [currentIndex, navigateTo])
+    
     useEffect(() => {
-        // Find which section is being tracked
-        if (isTracking && trackedRef) {
+        // Update active section from trackedId or by finding in registry
+        if (trackedId) {
+            setActiveSection(trackedId)
+            setIsVisible(true)
+        } else if (isTracking && trackedRef) {
             for (const [id, data] of Object.entries(bodyRegistry)) {
                 if (data.ref === trackedRef) {
                     setActiveSection(id)
@@ -22,16 +67,10 @@ export const CockpitHUD = () => {
                 }
             }
         } else {
-            // Keep visible but reset section or fully hide?
-            // User requested removing "small windows", but top/bottom bars are cool.
-            // Let's keep bars always visible or visible on load?
-            // The original logic hid the HUD when not distinct section?
-            // Actually original logic was: hidden when not tracking?
-            // Let's keep "OVERVIEW" when not tracking.
             setActiveSection(null)
-            setIsVisible(true) // Always visible for immersion? Or wait for load?
+            setIsVisible(true)
         }
-    }, [isTracking, trackedRef, bodyRegistry])
+    }, [isTracking, trackedRef, trackedId, bodyRegistry])
     
     // Ensure HUD is visible initially
     useEffect(() => {
@@ -52,18 +91,39 @@ export const CockpitHUD = () => {
             <div className="cockpit-bracket cockpit-bracket--bl" />
             <div className="cockpit-bracket cockpit-bracket--br" />
             
-            {/* Top bar */}
+            {/* Top bar with navigation */}
             <div className="cockpit-topbar">
                 <div className="cockpit-topbar__left">
                     <span className="cockpit-topbar__label">SYS</span>
                     <span className="cockpit-topbar__value">ONLINE</span>
                 </div>
+                
                 <div className="cockpit-topbar__center">
-                   <span className="cockpit-topbar__title">SCALAR NAVIGATION</span>
+                    {/* Left arrow */}
+                    <button 
+                        className="cockpit-nav-arrow cockpit-nav-arrow--left"
+                        onClick={navigatePrev}
+                        aria-label="Section précédente"
+                    >
+                        <span className="cockpit-nav-arrow__icon">‹</span>
+                    </button>
+                    
+                    {/* Section title */}
+                    <span className="cockpit-topbar__title">{sectionDisplayName}</span>
+                    
+                    {/* Right arrow */}
+                    <button 
+                        className="cockpit-nav-arrow cockpit-nav-arrow--right"
+                        onClick={navigateNext}
+                        aria-label="Section suivante"
+                    >
+                        <span className="cockpit-nav-arrow__icon">›</span>
+                    </button>
                 </div>
+                
                 <div className="cockpit-topbar__right">
                     <span className="cockpit-topbar__label">NAV</span>
-                    <span className="cockpit-topbar__value">{activeSection?.toUpperCase() || 'OVERVIEW'}</span>
+                    <span className="cockpit-topbar__value">{currentIndex + 1}/{NAV_SECTIONS.length}</span>
                 </div>
             </div>
             

@@ -1,20 +1,19 @@
 import { useRef, useMemo } from 'react'
-import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+
+// Pre-computed color (outside component = zero allocations)
+const DUST_COLOR = new THREE.Color('#7cc4ed').multiplyScalar(2)
 
 export const SpaceDust = ({ count = 2000 }) => {
   const mesh = useRef()
   
-  // Generate random positions and slight drift velocities
+  // Generate random positions (memoized)
   const particles = useMemo(() => {
     const temp = new Float32Array(count * 3)
     for (let i = 0; i < count; i++) {
-      const x = (Math.random() - 0.5) * 200 // Wide spread
-      const y = (Math.random() - 0.5) * 200
-      const z = (Math.random() - 0.5) * 200
-      temp[i * 3] = x
-      temp[i * 3 + 1] = y
-      temp[i * 3 + 2] = z
+      temp[i * 3] = (Math.random() - 0.5) * 200
+      temp[i * 3 + 1] = (Math.random() - 0.5) * 200
+      temp[i * 3 + 2] = (Math.random() - 0.5) * 200
     }
     return temp
   }, [count])
@@ -31,7 +30,7 @@ export const SpaceDust = ({ count = 2000 }) => {
       </bufferGeometry>
       <pointsMaterial
         size={0.15}
-        color={new THREE.Color('#7cc4ed').multiplyScalar(2)}
+        color={DUST_COLOR}
         sizeAttenuation={true}
         transparent
         opacity={0.4}

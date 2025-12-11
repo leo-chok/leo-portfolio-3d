@@ -1,5 +1,3 @@
-import { useThree } from '@react-three/fiber'
-import { gsap } from 'gsap'
 import { GALAXY_MAP, SIZES, COLORS, INTENSITY } from '../../config/galaxyConfig'
 import { Sun } from './Sun'
 import { CelestialBody } from './CelestialBody'
@@ -8,61 +6,17 @@ import { OrbitingBody } from './OrbitingBody'
 /**
  * SolarSystem Component - Main orchestrator
  * Renders the entire galaxy structure from galaxyConfig
+ * 
+ * Note: Camera navigation is handled by CameraController
+ * This component only renders the celestial bodies
  */
 export const SolarSystem = () => {
-    const { camera } = useThree()
-    const controls = useThree((state) => state.controls)
-
-    // Navigation handler - only handles return to overview
-    // Approach to element is handled by CameraController
-    const navigateTo = (worldPosition, bodySize = 1.5) => {
-        if (!controls) return
-
-        // Return to overview if no position (toggle off)
-        if (!worldPosition) {
-            controls.autoRotate = false
-            
-            const duration = 2
-            const tl = gsap.timeline()
-            
-            // Fly back to overview position
-            tl.to(camera.position, {
-                x: 0,
-                y: 20,
-                z: 60,
-                duration: duration,
-                ease: "power3.inOut"
-            }, 0)
-            
-            tl.to(controls.target, {
-                x: 0,
-                y: 0,
-                z: 0,
-                duration: duration,
-                ease: "power3.inOut",
-                onUpdate: () => controls.update()
-            }, 0)
-            
-            tl.call(() => {
-                controls.autoRotate = true
-                controls.autoRotateSpeed = 0.3
-            }, null, duration)
-            
-            return
-        }
-
-        // For element approach: just disable autoRotate
-        // CameraController handles the smooth flight to real-time position
-        controls.autoRotate = false
-    }
-
     return (
         <group>
             {/* ====== SUN (Présentation) ====== */}
             <Sun 
                 name={GALAXY_MAP.sun.name}
                 position={GALAXY_MAP.sun.position}
-                onClick={(worldPos, size) => navigateTo(worldPos, size)}
             />
 
             {/* ====== PLANETS ====== */}
@@ -80,7 +34,6 @@ export const SolarSystem = () => {
                         size={planet.size}
                         color={planet.color}
                         intensity={planet.intensity}
-                        onClick={(worldPos, size) => navigateTo(worldPos, size)}
                     >
                         {/* ====== MOONS ====== */}
                         {planet.moons?.map((moon, moonIndex) => (
@@ -98,7 +51,6 @@ export const SolarSystem = () => {
                                     color={COLORS.moon}
                                     intensity={INTENSITY.moon}
                                     satellites={moon.satellites || []}
-                                    onClick={(worldPos, size) => navigateTo(worldPos, size)}
                                 />
                             </OrbitingBody>
                         ))}
@@ -108,3 +60,4 @@ export const SolarSystem = () => {
         </group>
     )
 }
+

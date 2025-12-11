@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Text, Line, Billboard } from '@react-three/drei'
 import * as THREE from 'three'
@@ -6,11 +6,20 @@ import gsap from 'gsap'
 
 const HUD_COLOR = '#00d4ff'
 
+// Pre-allocated reusable arrays (outside component to avoid GC)
+const ORIGIN = [0, 0, 0]
+
 export const HudCallout = ({ name, visible = false, offset = [4, 3, 0] }) => {
     const lineRef = useRef()
     const textRef = useRef()
     const [drawProgress, setDrawProgress] = useState(0)
     const [showText, setShowText] = useState(false)
+    
+    // Memoize offset-dependent calculations
+    const midPoint = useMemo(() => [offset[0] * 0.3, offset[1] * 0.6, 0], [offset[0], offset[1]])
+    
+    // Memoize underline points (only changes when name changes)
+    const underlinePoints = useMemo(() => [[0, -0.3, 0], [name.length * 0.4, -0.3, 0]], [name.length])
     
     // Animation timeline
     useEffect(() => {
@@ -59,29 +68,34 @@ export const HudCallout = ({ name, visible = false, offset = [4, 3, 0] }) => {
         }
     })
     
+    // Memoize line points calculation (only recalculates when drawProgress changes)
+    const linePoints = useMemo(() => {
+        if (drawProgress === 0) return [ORIGIN, ORIGIN]
+        
+        const progress = drawProgress
+        const t1 = Math.min(progress * 2, 1)
+        
+        const currentMid = [
+            midPoint[0] * t1,
+            midPoint[1] * t1,
+            0
+        ]
+        
+        if (progress <= 0.5) {
+            return [ORIGIN, currentMid]
+        }
+        
+        const t2 = (progress - 0.5) * 2
+        const currentEnd = [
+            midPoint[0] + (offset[0] - midPoint[0]) * t2,
+            midPoint[1] + (offset[1] - midPoint[1]) * t2,
+            0
+        ]
+        
+        return [ORIGIN, midPoint, currentEnd]
+    }, [drawProgress, midPoint, offset])
+    
     if (!visible && drawProgress === 0) return null
-    
-    // Calculate line points based on draw progress
-    const startPoint = [0, 0, 0]
-    const midPoint = [offset[0] * 0.3, offset[1] * 0.6, 0]
-    const endPoint = offset
-    
-    // Interpolate points based on progress
-    const currentMid = [
-        startPoint[0] + (midPoint[0] - startPoint[0]) * Math.min(drawProgress * 2, 1),
-        startPoint[1] + (midPoint[1] - startPoint[1]) * Math.min(drawProgress * 2, 1),
-        0
-    ]
-    
-    const currentEnd = drawProgress > 0.5 ? [
-        midPoint[0] + (endPoint[0] - midPoint[0]) * ((drawProgress - 0.5) * 2),
-        midPoint[1] + (endPoint[1] - midPoint[1]) * ((drawProgress - 0.5) * 2),
-        0
-    ] : currentMid
-    
-    const linePoints = drawProgress <= 0.5 
-        ? [startPoint, currentMid]
-        : [startPoint, midPoint, currentEnd]
     
     return (
         <Billboard follow={true} lockX={false} lockY={false} lockZ={false}>
@@ -103,7 +117,7 @@ export const HudCallout = ({ name, visible = false, offset = [4, 3, 0] }) => {
                 <group position={offset}>
                     {/* Underline */}
                     <Line
-                        points={[[0, -0.3, 0], [name.length * 0.4, -0.3, 0]]}
+                        points={underlinePoints}
                         color={HUD_COLOR}
                         lineWidth={1}
                         transparent

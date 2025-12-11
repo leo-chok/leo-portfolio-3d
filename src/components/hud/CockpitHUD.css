@@ -150,14 +150,87 @@
     letter-spacing: 1px;
 }
 
-.cockpit-topbar__center {
+.cockpit-topbar__title {
+    color: rgba(124, 196, 237, 0.9);
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    min-width: 200px;
     text-align: center;
 }
 
-.cockpit-topbar__title {
+/* ===========================
+   NAVIGATION ARROWS
+   =========================== */
+
+.cockpit-topbar__center {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.cockpit-nav-arrow {
+    pointer-events: auto;
+    background: transparent;
+    border: 1px solid rgba(124, 196, 237, 0.3);
     color: rgba(124, 196, 237, 0.7);
-    font-size: 12px;
-    letter-spacing: 4px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    clip-path: polygon(
+        10% 0%, 90% 0%,
+        100% 25%, 100% 75%,
+        90% 100%, 10% 100%,
+        0% 75%, 0% 25%
+    );
+}
+
+.cockpit-nav-arrow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(124, 196, 237, 0.05) 0%,
+        rgba(124, 196, 237, 0.1) 50%,
+        rgba(124, 196, 237, 0.05) 100%
+    );
+    clip-path: inherit;
+    z-index: -1;
+}
+
+.cockpit-nav-arrow:hover {
+    border-color: rgba(124, 196, 237, 0.8);
+    color: rgba(124, 196, 237, 1);
+    box-shadow: 
+        0 0 15px rgba(124, 196, 237, 0.3),
+        inset 0 0 10px rgba(124, 196, 237, 0.1);
+    transform: scale(1.1);
+}
+
+.cockpit-nav-arrow:hover::before {
+    background: linear-gradient(
+        135deg,
+        rgba(124, 196, 237, 0.1) 0%,
+        rgba(124, 196, 237, 0.2) 50%,
+        rgba(124, 196, 237, 0.1) 100%
+    );
+}
+
+.cockpit-nav-arrow:active {
+    transform: scale(0.95);
+}
+
+.cockpit-nav-arrow__icon {
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1;
+    font-family: 'Orbitron', monospace;
 }
 
 @media (max-width: 768px) {
@@ -170,6 +243,25 @@
     .cockpit-topbar__left,
     .cockpit-topbar__right {
         display: none;
+    }
+    
+    .cockpit-topbar__title {
+        font-size: 11px;
+        min-width: 120px;
+        letter-spacing: 2px;
+    }
+    
+    .cockpit-topbar__center {
+        gap: 10px;
+    }
+    
+    .cockpit-nav-arrow {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .cockpit-nav-arrow__icon {
+        font-size: 18px;
     }
     
     /* Ensure Bottom Bar also fits */
