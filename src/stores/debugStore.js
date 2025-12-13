@@ -1,54 +1,63 @@
 import { create } from 'zustand'
+import { DEFAULTS } from '../config/galaxyConfig'
 
 /**
- * Debug Store for real-time effect and material adjustments
- * Controls bloom, HUE colors, AND particle counts
- * Press 'D' to toggle debug panel visibility
+ * Debug Store - Real-time celestial body customization
+ * 
+ * Controls for each body:
+ * - HUE (0-360)
+ * - Size (0.5-10)
+ * - Orbit Radius (5-80)
+ * - Orbit Tilt (0-90)
+ * 
+ * Press 'D' to toggle debug panel
  */
-export const useDebugStore = create((set) => ({
-    // === BLOOM POST-PROCESSING ===
-    bloomThreshold: 0.50,
-    bloomStrength: 2.20,
-    bloomRadius: 0.55,
-    bloomEnabled: false,
+export const useDebugStore = create((set, get) => ({
+    // === Debug panel visibility ===
+    showDebugPanel: false,
+    toggleDebugPanel: () => set((state) => ({ showDebugPanel: !state.showDebugPanel })),
     
-    // === MATERIAL EMISSIVE INTENSITY (all set to 1 for Fresnel) ===
-    sunEmissive: 1.0,
-    planetEmissive: 1.0,
-    planetHoverEmissive: 1.3,
-    moonEmissive: 1.0,
-    satelliteEmissive: 1.0,
-    
-    // === HUE COLORS (0-360 degree color wheel) ===
-    sunHue: 40,         // Orange/yellow
-    planetHue1: 200,    // Blue (Portfolio)
-    planetHue2: 280,    // Purple (Contact)
-    moonHue: 180,       // Cyan (all moons share this)
-    
-    // === PARTICLE COUNTS (performance tuning) ===
+    // === PARTICLE COUNTS ===
     starsCount: 2000,
     dustCount: 1500,
-    
-    // Debug panel visibility
-    showDebugPanel: false,
-    
-    // === BLOOM ACTIONS ===
-    setBloomThreshold: (value) => set({ bloomThreshold: value }),
-    setBloomStrength: (value) => set({ bloomStrength: value }),
-    setBloomRadius: (value) => set({ bloomRadius: value }),
-    toggleBloomEnabled: () => set((state) => ({ bloomEnabled: !state.bloomEnabled })),
-    
-    // === HUE ACTIONS ===
-    setSunHue: (value) => set({ sunHue: value }),
-    setPlanetHue1: (value) => set({ planetHue1: value }),
-    setPlanetHue2: (value) => set({ planetHue2: value }),
-    setMoonHue: (value) => set({ moonHue: value }),
-    
-    // === PARTICLE ACTIONS ===
     setStarsCount: (value) => set({ starsCount: value }),
     setDustCount: (value) => set({ dustCount: value }),
     
-    toggleDebugPanel: () => set((state) => ({ showDebugPanel: !state.showDebugPanel })),
+    // === SUN ===
+    sun: { ...DEFAULTS.sun },
+    setSun: (key, value) => set((state) => ({ 
+        sun: { ...state.sun, [key]: value } 
+    })),
+    
+    // === PLANETS ===
+    planets: { ...DEFAULTS.planets },
+    setPlanet: (planetId, key, value) => set((state) => ({
+        planets: {
+            ...state.planets,
+            [planetId]: { ...state.planets[planetId], [key]: value }
+        }
+    })),
+    
+    // === MOONS ===
+    moons: { ...DEFAULTS.moons },
+    setMoon: (moonId, key, value) => set((state) => ({
+        moons: {
+            ...state.moons,
+            [moonId]: { ...state.moons[moonId], [key]: value }
+        }
+    })),
+    
+    // === GETTERS ===
+    getSunValue: (key) => get().sun[key],
+    getPlanetValue: (planetId, key) => get().planets[planetId]?.[key],
+    getMoonValue: (moonId, key) => get().moons[moonId]?.[key],
+    
+    // === RESET ===
+    resetAll: () => set({
+        sun: { ...DEFAULTS.sun },
+        planets: { ...DEFAULTS.planets },
+        moons: { ...DEFAULTS.moons },
+    }),
 }))
 
 /**

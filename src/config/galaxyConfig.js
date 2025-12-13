@@ -1,19 +1,137 @@
 /**
  * Galaxy Configuration
  * Central data structure for the entire solar system hierarchy
+ * 
+ * Structure:
+ * - 1 Sun (Présentation) - Size 15
+ * - 4 Planets on same orbital plane (0°)
+ * - 7 Moons with chaotic orbits around their parents
  */
 
-// Color palette - New palette
-export const COLORS = {
-    sun: '#7cc4ed',      // Bright sky blue (accent)
-    planet: '#6b9b9e',   // Muted teal/cyan
-    moon: '#c6d8d3',     // Pale mint/green
-    satellite: '#7cc4ed', // Sky blue for icons
-    hud: '#7cc4ed',      // HUD elements
-    background: '#283447', // Dark navy (dominant)
+import { projects } from '../data/projects'
+
+// ============================================
+// RANDOM GENERATORS (refresh = new random)
+// ============================================
+
+// Random blue hue for planets (180-240 = cyan to blue)
+const randomBlueHue = () => 180 + Math.random() * 60
+
+// Random grey/white for moons (low saturation, high lightness)
+const randomGreyHue = () => Math.random() * 360 // Any hue but low saturation makes it grey
+
+// Random moon orbit radius (proportional to parent, max 20)
+const randomMoonOrbit = (min = 3, max = 20) => min + Math.random() * (max - min)
+
+// Random moon orbit tilt (chaotic, 0-90°)
+const randomMoonTilt = () => Math.random() * 90
+
+// ============================================
+// DEFAULT VALUES
+// ============================================
+
+export const DEFAULTS = {
+    // Sun - The biggest element
+    sun: {
+        hue: 40, // Warm orange/yellow
+        size: 15,
+    },
+    
+    // Planets - All on same orbital plane (tilt 0)
+    planets: {
+        portfolio: { 
+            hue: randomBlueHue(), 
+            size: 4, 
+            orbitRadius: 90, 
+            orbitTilt: 0 
+        },
+        formation: { 
+            hue: randomBlueHue(), 
+            size: 2, 
+            orbitRadius: 35, 
+            orbitTilt: 0 
+        },
+        skills: { 
+            hue: randomBlueHue(), 
+            size: 2, 
+            orbitRadius: 50, 
+            orbitTilt: 0 
+        },
+        contact: { 
+            hue: randomBlueHue(), 
+            size: 1.5, 
+            orbitRadius: 130, 
+            orbitTilt: 0 
+        },
+    },
+    
+    // Moons - All size 0.3, random orbits and tilts
+    moons: {
+        // Portfolio moons (5 projects)
+        'moon-keepgoals': { 
+            hue: randomGreyHue(), 
+            saturation: 10, // Low sat = grey
+            size: 0.3, 
+            orbitRadius: randomMoonOrbit(4, 12), 
+            orbitTilt: randomMoonTilt() 
+        },
+        'moon-toothy': { 
+            hue: randomGreyHue(), 
+            saturation: 10,
+            size: 0.3, 
+            orbitRadius: randomMoonOrbit(5, 14), 
+            orbitTilt: randomMoonTilt() 
+        },
+        'moon-jambonbeurre': { 
+            hue: randomGreyHue(), 
+            saturation: 10,
+            size: 0.3, 
+            orbitRadius: randomMoonOrbit(6, 16), 
+            orbitTilt: randomMoonTilt() 
+        },
+        'moon-pokedex': { 
+            hue: randomGreyHue(), 
+            saturation: 10,
+            size: 0.3, 
+            orbitRadius: randomMoonOrbit(7, 18), 
+            orbitTilt: randomMoonTilt() 
+        },
+        'moon-clickit': { 
+            hue: randomGreyHue(), 
+            saturation: 10,
+            size: 0.3, 
+            orbitRadius: randomMoonOrbit(8, 20), 
+            orbitTilt: randomMoonTilt() 
+        },
+        // Skills moons (2)
+        'moon-hardskills': { 
+            hue: randomGreyHue(), 
+            saturation: 10,
+            size: 0.3, 
+            orbitRadius: randomMoonOrbit(3, 8), 
+            orbitTilt: randomMoonTilt() 
+        },
+        'moon-softskills': { 
+            hue: randomGreyHue(), 
+            saturation: 10,
+            size: 0.3, 
+            orbitRadius: randomMoonOrbit(4, 10), 
+            orbitTilt: randomMoonTilt() 
+        },
+    }
 }
 
-// Luminosity settings by hierarchy level
+// Color palette (legacy)
+export const COLORS = {
+    sun: '#7cc4ed',
+    planet: '#6b9b9e',
+    moon: '#c6d8d3',
+    satellite: '#7cc4ed',
+    hud: '#7cc4ed',
+    background: '#283447',
+}
+
+// Luminosity settings
 export const INTENSITY = {
     sun: 3,
     planet: 4,
@@ -21,34 +139,28 @@ export const INTENSITY = {
     satellite: 2,
 }
 
-// Size multipliers (relative to base unit)
+// Legacy sizes
 export const SIZES = {
-    sun: 8,        // 3x larger than planets
-    planet: 2,   // Base size
-    moon: 0.5,     // 3x smaller than planets
-    satellite: 0.5, // 3x smaller than moons
+    sun: 15,
+    planet: 2.5,
+    moon: 0.3,
+    satellite: 0.5,
 }
 
-// Orbital configuration for "electron" effect
-export const ORBITAL_PLANES = {
-    portfolio: { tilt: 15, rotation: 0 },
-    skills: { tilt: 45, rotation: 90 },
-    contact: { tilt: 30, rotation: 180 },
-    platforms: { tilt: 60, rotation: 270 },
-}
-
-// Seeded random for consistent colors
-const seededRandom = (seed) => {
-    const x = Math.sin(seed * 9999) * 10000
-    return x - Math.floor(x)
-}
-
-// Generate subtle blue-ish color variations (hue 180-240)
-const generateColor = (seed) => {
-    const hue = 180 + seededRandom(seed) * 60 // 180 (cyan) to 240 (blue)
-    const saturation = 30 + seededRandom(seed + 1) * 25 // 30-55% (subtle)
-    const lightness = 60 + seededRandom(seed + 2) * 15 // 60-75% (luminous)
+// Helper to convert HUE to HSL color (supports custom saturation)
+export const hueToHSL = (hue, saturation = 70, lightness = 60) => {
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`
+}
+
+// Generate project moons from data
+const generateProjectMoons = () => {
+    return projects.map((project, index) => ({
+        id: `moon-${project.id}`,
+        name: project.title,
+        projectData: project,
+        orbitRadius: DEFAULTS.moons[`moon-${project.id}`]?.orbitRadius || (5 + index * 2),
+        orbitSpeed: 0.08 + Math.random() * 0.05,
+    }))
 }
 
 // Main galaxy structure
@@ -57,44 +169,25 @@ export const GALAXY_MAP = {
         id: 'presentation',
         name: 'PRÉSENTATION',
         position: [0, 0, 0],
-        size: SIZES.sun,
-        color: COLORS.sun,
-        intensity: INTENSITY.sun,
         description: 'Bienvenue dans mon univers',
     },
     
     planets: [
         {
-            id: 'portfolio',
-            name: 'PORTFOLIO',
-            orbitRadius: 20,
-            orbitSpeed: 0.08,
-            orbitPlane: ORBITAL_PLANES.portfolio,
-            size: SIZES.planet,
-            color: generateColor(1),
-            intensity: INTENSITY.planet,
-            moons: [
-                { id: 'projet1', name: 'Projet 1', orbitRadius: 4, orbitSpeed: 0.3, color: generateColor(11) },
-                { id: 'projet2', name: 'Projet 2', orbitRadius: 5.5, orbitSpeed: 0.25, color: generateColor(12) },
-                { id: 'projet3', name: 'Projet 3', orbitRadius: 7, orbitSpeed: 0.2, color: generateColor(13) },
-            ]
+            id: 'formation',
+            name: 'FORMATION',
+            orbitSpeed: 0.03,
+            moons: [],
         },
         {
             id: 'skills',
-            name: 'SKILLS',
-            orbitRadius: 35,
-            orbitSpeed: 0.05,
-            orbitPlane: ORBITAL_PLANES.skills,
-            size: SIZES.planet,
-            color: generateColor(2),
-            intensity: INTENSITY.planet,
+            name: 'COMPÉTENCES',
+            orbitSpeed: 0.025,
             moons: [
                 { 
-                    id: 'hardskills', 
+                    id: 'moon-hardskills', 
                     name: 'Hardskills', 
-                    orbitRadius: 6, 
-                    orbitSpeed: 0.01,
-                    color: generateColor(21),
+                    orbitSpeed: 0.08 + Math.random() * 0.04,
                     satellites: [
                         { icon: 'react', name: 'React', type: 'brand' },
                         { icon: 'node-js', name: 'Node.js', type: 'brand' },
@@ -103,56 +196,34 @@ export const GALAXY_MAP = {
                         { icon: 'css3-alt', name: 'CSS3', type: 'brand' },
                         { icon: 'docker', name: 'Docker', type: 'brand' },
                         { icon: 'github', name: 'GitHub', type: 'brand' },
-                        { icon: 'robot', name: 'IA', type: 'solid' },
-                        { icon: 'code', name: 'TypeScript', type: 'solid' },
-                        { icon: 'server', name: 'Express', type: 'solid' },
                     ]
                 },
                 { 
-                    id: 'softskills', 
+                    id: 'moon-softskills', 
                     name: 'Softskills', 
-                    orbitRadius: 14, 
-                    orbitSpeed: 0.001,
-                    color: generateColor(22),
+                    orbitSpeed: 0.06 + Math.random() * 0.04,
                     satellites: [
                         { icon: 'users', name: 'Leadership' },
                         { icon: 'comments', name: 'Communication' },
                         { icon: 'lightbulb', name: 'Créativité' },
                         { icon: 'handshake', name: 'Collaboration' },
                         { icon: 'brain', name: 'Problem Solving' },
-                        { icon: 'clock', name: 'Gestion du temps' },
-                        { icon: 'chart-line', name: 'Analytique' },
-                        { icon: 'heart', name: 'Empathie' },
                     ]
                 },
             ]
         },
         {
-            id: 'contact',
-            name: 'CONTACT',
-            orbitRadius: 50,
-            orbitSpeed: 0.03,
-            orbitPlane: ORBITAL_PLANES.contact,
-            size: SIZES.planet,
-            color: generateColor(3),
-            intensity: INTENSITY.planet,
-            hasModal: true,
-            moons: []
+            id: 'portfolio',
+            name: 'PORTFOLIO',
+            orbitSpeed: 0.02,
+            moons: generateProjectMoons(),
         },
         {
-            id: 'platforms',
-            name: 'MY PLATFORMS',
-            orbitRadius: 65,
-            orbitSpeed: 0.02,
-            orbitPlane: ORBITAL_PLANES.platforms,
-            size: SIZES.planet,
-            color: generateColor(4),
-            intensity: INTENSITY.planet,
-            moons: [
-                { id: 'github', name: 'GitHub', icon: 'github', url: 'https://github.com', color: generateColor(41) },
-                { id: 'linkedin', name: 'LinkedIn', icon: 'linkedin', url: 'https://linkedin.com', color: generateColor(42) },
-                { id: 'twitter', name: 'Twitter', icon: 'twitter', url: 'https://twitter.com', color: generateColor(43) },
-            ]
+            id: 'contact',
+            name: 'CONTACT',
+            orbitSpeed: 0.015,
+            hasModal: true,
+            moons: [],
         },
     ]
 }

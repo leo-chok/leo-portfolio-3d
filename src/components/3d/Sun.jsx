@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { SIZES, INTENSITY } from '../../config/galaxyConfig'
+import { INTENSITY } from '../../config/galaxyConfig'
 import { HudReticle } from './HudReticle'
 import { HudCallout } from './HudCallout'
 import { FresnelGlowMaterial } from './FresnelGlowMaterial'
@@ -11,7 +11,7 @@ import { useDebugStore, hueToColor } from '../../stores/debugStore'
 
 /**
  * Sun Component - HYBRID: Fresnel rim light + Halo sprite
- * Color controlled by sunHue from debug store
+ * Color and size controlled by debug store
  */
 export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }) => {
     const groupRef = useRef()
@@ -19,7 +19,11 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
     const materialRef = useRef()
     const [hovered, setHovered] = useState(false)
     
-    const size = SIZES.sun
+    // Get sun values from debug store
+    const sunData = useDebugStore(state => state.sun)
+    const size = sunData?.size || 8
+    const sunHue = sunData?.hue || 40
+    
     const intensity = INTENSITY.sun
     
     const registerBody = useCameraStore(state => state.registerBody)
@@ -27,8 +31,6 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
     const trackedRef = useCameraStore(state => state.trackedRef)
     const setTrackedRef = useCameraStore(state => state.setTrackedRef)
     const stopTracking = useCameraStore(state => state.stopTracking)
-    const sunEmissive = useDebugStore(state => state.sunEmissive)
-    const sunHue = useDebugStore(state => state.sunHue)
     
     // Dynamic color from HUE
     const color = useMemo(() => hueToColor(sunHue, 80, 65), [sunHue])
@@ -86,7 +88,7 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
                     ref={materialRef}
                     color={color}
                     glowColor="#ffffff"
-                    intensity={hovered ? sunEmissive * 1.2 : sunEmissive}
+                    intensity={hovered ? 1.2 : 1}
                     fresnelPower={1.5}
                     glowStrength={1.0}
                 />

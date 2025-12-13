@@ -4,6 +4,9 @@ import { HoloWindow } from './common/HoloWindow'
 import { PresentationView } from './views/PresentationView'
 import { PortfolioView } from './views/PortfolioView'
 import { ProjectDetailView } from './views/ProjectDetailView'
+import { FormationView } from './views/FormationView'
+import { SkillsView } from './views/SkillsView'
+import { ContactView } from './views/ContactView'
 
 /**
  * ContentManager - Orchestrates HUD Windows
@@ -39,10 +42,9 @@ export const ContentManager = () => {
         const width = window.innerWidth
         const isMobile = width < 768
         const baseLeft = 50
-        const listWidth = 600 // Approx width of list window
+        const listWidth = 600
         const gap = 20
         
-        // On mobile, center it (overlay). On desktop, place to right of list.
         const x = isMobile ? (width * 0.025) : (baseLeft + listWidth + gap)
         
         return {
@@ -53,10 +55,9 @@ export const ContentManager = () => {
     
     // Handle visibility with delay for camera travel
     useEffect(() => {
-        const validSections = ['presentation', 'portfolio', 'skills', 'contact', 'platforms']
+        const validSections = ['presentation', 'portfolio', 'formation', 'skills', 'contact']
         
         if (isTracking && trackedId && validSections.includes(trackedId)) {
-            // Close existing first if switching sections
             if (activeId !== trackedId) {
                 setIsVisible(false)
                 setSelectedProject(null)
@@ -69,7 +70,6 @@ export const ContentManager = () => {
             return () => clearTimeout(timer)
         } else if (!isTracking) {
             setIsVisible(false)
-            // Delay clearing to allow fade out
             const timer = setTimeout(() => {
                 setActiveId(null)
                 setSelectedProject(null)
@@ -110,7 +110,6 @@ export const ContentManager = () => {
             
             {activeId === 'portfolio' && (
                 <>
-                    {/* Main Portfolio List - Moves Left if Project Selected */}
                     <HoloWindow 
                         title="PORTFOLIO" 
                         subtitle="PROJECTS DB"
@@ -121,7 +120,6 @@ export const ContentManager = () => {
                         <PortfolioView onProjectSelect={handleProjectSelect} />
                     </HoloWindow>
 
-                    {/* Detail Window - Appears when Project Selected */}
                     {selectedProject && (
                         <HoloWindow 
                             title="PROJECT DETAIL" 
@@ -136,6 +134,39 @@ export const ContentManager = () => {
                         </HoloWindow>
                     )}
                 </>
+            )}
+            
+            {activeId === 'formation' && (
+                <HoloWindow 
+                    title="FORMATION" 
+                    subtitle="EXPERIENCE LOG"
+                    initialPosition={getInitialPosition()}
+                    onClose={handleClose}
+                >
+                    <FormationView />
+                </HoloWindow>
+            )}
+            
+            {activeId === 'skills' && (
+                <HoloWindow 
+                    title="COMPÉTENCES" 
+                    subtitle="SKILLS DATABASE"
+                    initialPosition={getInitialPosition()}
+                    onClose={handleClose}
+                >
+                    <SkillsView />
+                </HoloWindow>
+            )}
+            
+            {activeId === 'contact' && (
+                <HoloWindow 
+                    title="CONTACT" 
+                    subtitle="COMMUNICATION LINK"
+                    initialPosition={getInitialPosition()}
+                    onClose={handleClose}
+                >
+                    <ContactView />
+                </HoloWindow>
             )}
         </>
     )

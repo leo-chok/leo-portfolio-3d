@@ -3,8 +3,9 @@ import { useEffect, useState, useMemo, useCallback } from 'react'
 import { GALAXY_MAP } from '../../config/galaxyConfig'
 import './CockpitHUD.css'
 
-// Build navigation list from GALAXY_MAP (sun + planets)
+// Build navigation list: Overview (00) + sun + planets
 const NAV_SECTIONS = [
+    { id: 'overview', name: 'OVERVIEW', isOverview: true },
     { id: GALAXY_MAP.sun.id, name: GALAXY_MAP.sun.name },
     ...GALAXY_MAP.planets.map(p => ({ id: p.id, name: p.name }))
 ]
@@ -17,41 +18,41 @@ export const CockpitHUD = () => {
     const navigateTo = useCameraStore((state) => state.navigateTo)
     const returnToOverview = useCameraStore((state) => state.returnToOverview)
     
-    const [activeSection, setActiveSection] = useState(null)
+    const [activeSection, setActiveSection] = useState('overview')
     const [isVisible, setIsVisible] = useState(false)
     
     // Find current section index for navigation
     const currentIndex = useMemo(() => {
-        if (!activeSection) return -1
         return NAV_SECTIONS.findIndex(s => s.id === activeSection)
     }, [activeSection])
     
     // Get section display name
     const sectionDisplayName = useMemo(() => {
-        if (!activeSection) return 'PRÉSENTATION'
         const section = NAV_SECTIONS.find(s => s.id === activeSection)
         return section?.name || 'OVERVIEW'
     }, [activeSection])
     
-    // Navigation handlers
-    const navigatePrev = useCallback(() => {
-        if (currentIndex <= 0) {
-            // Go to last section
-            const lastSection = NAV_SECTIONS[NAV_SECTIONS.length - 1]
-            navigateTo(lastSection.id)
+    // Navigate to a section (handles overview specially)
+    const goToSection = useCallback((section) => {
+        if (section.isOverview) {
+            returnToOverview()
+            setActiveSection('overview')
         } else {
-            navigateTo(NAV_SECTIONS[currentIndex - 1].id)
+            navigateTo(section.id)
+            setActiveSection(section.id)
         }
-    }, [currentIndex, navigateTo])
+    }, [navigateTo, returnToOverview])
+    
+    // Navigation handlers with cycling
+    const navigatePrev = useCallback(() => {
+        const newIndex = currentIndex <= 0 ? NAV_SECTIONS.length - 1 : currentIndex - 1
+        goToSection(NAV_SECTIONS[newIndex])
+    }, [currentIndex, goToSection])
     
     const navigateNext = useCallback(() => {
-        if (currentIndex >= NAV_SECTIONS.length - 1 || currentIndex === -1) {
-            // Go to first section (sun)
-            navigateTo(NAV_SECTIONS[0].id)
-        } else {
-            navigateTo(NAV_SECTIONS[currentIndex + 1].id)
-        }
-    }, [currentIndex, navigateTo])
+        const newIndex = currentIndex >= NAV_SECTIONS.length - 1 ? 0 : currentIndex + 1
+        goToSection(NAV_SECTIONS[newIndex])
+    }, [currentIndex, goToSection])
     
     useEffect(() => {
         // Update active section from trackedId or by finding in registry
@@ -67,7 +68,8 @@ export const CockpitHUD = () => {
                 }
             }
         } else {
-            setActiveSection(null)
+            // Not tracking = Overview mode
+            setActiveSection('overview')
             setIsVisible(true)
         }
     }, [isTracking, trackedRef, trackedId, bodyRegistry])
@@ -123,7 +125,7 @@ export const CockpitHUD = () => {
                 
                 <div className="cockpit-topbar__right">
                     <span className="cockpit-topbar__label">NAV</span>
-                    <span className="cockpit-topbar__value">{currentIndex + 1}/{NAV_SECTIONS.length}</span>
+                    <span className="cockpit-topbar__value">{String(currentIndex).padStart(2, '0')}/{String(NAV_SECTIONS.length - 1).padStart(2, '0')}</span>
                 </div>
             </div>
             

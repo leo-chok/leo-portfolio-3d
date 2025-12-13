@@ -32,7 +32,7 @@ export const Experience = ({ startAnimation = false }) => {
                 autoRotate={false}
                 autoRotateSpeed={0.3}
                 target={[0, 0, 0]}
-                maxDistance={90}
+                maxDistance={150}
                 minDistance={5}
                 enableDamping={true}
                 dampingFactor={0.05}

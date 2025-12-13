@@ -12,7 +12,7 @@ import { useCameraStore } from '../../stores/cameraStore'
 const _worldPos = new THREE.Vector3()
 const _desiredCamPos = new THREE.Vector3()
 const _moveDelta = new THREE.Vector3()
-const _overviewPos = new THREE.Vector3(0, 10, 40)
+const _overviewPos = new THREE.Vector3(0, 25, 80)
 const _overviewTarget = new THREE.Vector3(0, 0, 0)
 
 /**

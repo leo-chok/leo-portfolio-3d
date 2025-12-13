@@ -1,6 +1,6 @@
 /* ===========================
    DEBUG PANEL STYLES
-   Real-time effect tuning
+   Real-time celestial body tuning
    =========================== */
 
 .debug-toggle {
@@ -29,7 +29,9 @@
     top: 10px;
     right: 10px;
     z-index: 9999;
-    width: 280px;
+    width: 300px;
+    max-height: 90vh;
+    overflow-y: auto;
     padding: 16px;
     background: rgba(10, 20, 35, 0.95);
     border: 1px solid rgba(124, 196, 237, 0.3);
@@ -37,6 +39,10 @@
     font-family: 'Orbitron', monospace;
     backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.debug-panel--large {
+    width: 320px;
 }
 
 .debug-panel__header {
@@ -55,6 +61,12 @@
     letter-spacing: 2px;
 }
 
+.debug-panel__header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
 .debug-panel__header button {
     background: none;
     border: none;
@@ -69,31 +81,104 @@
     color: #7cc4ed;
 }
 
-.debug-panel__section {
-    margin-bottom: 16px;
+.debug-reset-btn {
+    font-size: 10px !important;
+    padding: 4px 8px !important;
+    background: rgba(255, 100, 100, 0.2) !important;
+    border: 1px solid rgba(255, 100, 100, 0.4) !important;
+    border-radius: 4px;
+    color: rgba(255, 150, 150, 0.9) !important;
 }
 
-.debug-panel__section h4 {
-    margin: 0 0 10px 0;
-    color: rgba(124, 196, 237, 0.7);
-    font-size: 10px;
+.debug-reset-btn:hover {
+    background: rgba(255, 100, 100, 0.3) !important;
+}
+
+.debug-panel__section {
+    margin-bottom: 8px;
+}
+
+.debug-panel__section--moons {
+    margin-left: 10px;
+    padding-left: 10px;
+    border-left: 2px solid rgba(124, 196, 237, 0.15);
+}
+
+.debug-moons-title {
+    margin: 12px 0 8px 0;
+    color: rgba(124, 196, 237, 0.5);
+    font-size: 9px;
     letter-spacing: 2px;
     text-transform: uppercase;
 }
 
+/* Section headers (collapsible) */
+.debug-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(124, 196, 237, 0.05);
+    border: 1px solid rgba(124, 196, 237, 0.15);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 11px;
+    color: rgba(200, 220, 240, 0.8);
+}
+
+.debug-section-header:hover {
+    background: rgba(124, 196, 237, 0.1);
+    border-color: rgba(124, 196, 237, 0.3);
+}
+
+.debug-section-header.expanded {
+    background: rgba(124, 196, 237, 0.15);
+    border-color: rgba(124, 196, 237, 0.4);
+}
+
+.debug-section-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.debug-section-arrow {
+    margin-left: auto;
+    font-size: 8px;
+    color: rgba(124, 196, 237, 0.5);
+}
+
+/* Body controls container */
+.debug-body-controls {
+    padding: 12px 10px;
+    background: rgba(0, 10, 20, 0.4);
+    border: 1px solid rgba(124, 196, 237, 0.1);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+}
+
+/* Sliders */
 .debug-slider {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+}
+
+.debug-slider:last-child {
+    margin-bottom: 0;
 }
 
 .debug-slider label {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
     margin-bottom: 4px;
-    color: rgba(200, 220, 240, 0.8);
-    font-size: 11px;
+    color: rgba(200, 220, 240, 0.7);
+    font-size: 10px;
 }
 
-.debug-slider label span {
+.debug-slider label span:last-child {
+    margin-left: auto;
     color: #7cc4ed;
     font-weight: bold;
 }
@@ -101,7 +186,7 @@
 .debug-slider input[type="range"] {
     width: 100%;
     height: 6px;
-    background: rgba(124, 196, 237, 0.1);
+    background: rgba(124, 196, 237, 0.15);
     border-radius: 3px;
     outline: none;
     -webkit-appearance: none;
@@ -129,84 +214,38 @@
     box-shadow: 0 0 8px rgba(124, 196, 237, 0.6);
 }
 
-.debug-panel__values {
-    padding-top: 12px;
-    border-top: 1px solid rgba(124, 196, 237, 0.2);
-}
-
-.debug-panel__values h4 {
-    margin: 0 0 8px 0;
-    color: rgba(124, 196, 237, 0.7);
-    font-size: 10px;
-    letter-spacing: 2px;
-}
-
-.debug-panel__values pre {
-    margin: 0;
-    padding: 10px;
-    background: rgba(0, 10, 20, 0.5);
-    border-radius: 4px;
-    color: #64ed7c;
-    font-family: 'Consolas', monospace;
-    font-size: 10px;
-    line-height: 1.6;
-    overflow-x: auto;
-}
-
-/* Dropdown select style */
-.debug-select {
-    width: 100%;
-    padding: 6px 10px;
-    background: rgba(10, 20, 35, 0.9);
-    border: 1px solid rgba(124, 196, 237, 0.3);
-    border-radius: 4px;
-    color: #7cc4ed;
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    cursor: pointer;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-.debug-select:hover {
-    border-color: rgba(124, 196, 237, 0.6);
-}
-
-.debug-select:focus {
-    border-color: rgba(124, 196, 237, 0.8);
-    box-shadow: 0 0 8px rgba(124, 196, 237, 0.3);
-}
-
-.debug-select option {
-    background: rgba(10, 20, 35, 1);
-    color: #7cc4ed;
-}
-
 /* HUE Color Preview */
 .debug-hue-preview {
     display: inline-block;
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     border-radius: 3px;
-    margin: 0 6px;
-    vertical-align: middle;
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 0 6px currentColor;
 }
 
-.debug-slider--hue input[type="range"] {
-    height: 8px;
-    border-radius: 4px;
+.debug-particles-total {
+    font-size: 9px;
+    color: rgba(124, 196, 237, 0.4);
+    text-align: center;
+    margin-top: 8px;
 }
 
-.debug-slider--hue input[type="range"]::-webkit-slider-thumb {
-    width: 16px;
-    height: 16px;
-    border: 2px solid #fff;
+/* Scrollbar styling */
+.debug-panel::-webkit-scrollbar {
+    width: 6px;
 }
 
-.debug-slider--hue input[type="range"]::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border: 2px solid #fff;
+.debug-panel::-webkit-scrollbar-track {
+    background: rgba(124, 196, 237, 0.05);
+    border-radius: 3px;
+}
+
+.debug-panel::-webkit-scrollbar-thumb {
+    background: rgba(124, 196, 237, 0.3);
+    border-radius: 3px;
+}
+
+.debug-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(124, 196, 237, 0.5);
 }
