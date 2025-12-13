@@ -178,9 +178,9 @@ export const CockpitHUD = () => {
 
     return (
         <div className={`cockpit-hud ${isVisible ? 'cockpit-hud--visible' : ''}`}>
-            {/* Glass effect overlay */}
+            {/* Glass effect overlay - Reflection removed */}
             <div className="cockpit-glass">
-                <div className="cockpit-glass__reflection" />
+                {/* <div className="cockpit-glass__reflection" /> */}
                 <div className="cockpit-glass__scanlines" />
             </div>
             

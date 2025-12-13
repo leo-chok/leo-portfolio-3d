@@ -36,7 +36,8 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
     const color = useMemo(() => hueToColor(sunHue, 80, 65), [sunHue])
     
     // Memoized offset for HudCallout
-    const calloutOffset = useMemo(() => [size * 0.6 + 1.5, size * 0.6, 0], [size])
+    // Closer to sun radius (size * 0.6)
+    const calloutOffset = useMemo(() => [size * 0.6 + 0.8, size * 0.3, 0], [size])
     
     // Register body
     useEffect(() => {
@@ -96,8 +97,18 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
             
             <pointLight color={color} intensity={intensity} distance={200} decay={1.5} />
             
-            <HudReticle radius={size * 0.6 * 1.3} visible={hovered || trackedRef?.current === groupRef.current} />
-            <HudCallout name={name} sectionId={id} visible={hovered || trackedRef?.current === groupRef.current} offset={calloutOffset} />
+            <HudReticle 
+                radius={size * 0.6 * 1.3} 
+                visible={hovered || trackedRef?.current === groupRef.current} 
+                isTracked={trackedRef?.current === groupRef.current}
+            />
+            <HudCallout 
+                name={name} 
+                sectionId={id} 
+                visible={hovered || trackedRef?.current === groupRef.current} 
+                offset={calloutOffset}
+                classification="STAR"
+            />
         </group>
     )
 }

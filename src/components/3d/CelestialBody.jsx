@@ -45,7 +45,8 @@ export const CelestialBody = ({
     const baseColor = useMemo(() => new THREE.Color(color), [color])
     const initialColor = useMemo(() => baseColor.clone().multiplyScalar(emissiveMultiplier), [baseColor, emissiveMultiplier])
     // Memoized offset for HudCallout (avoids array allocation on every render)
-    const calloutOffset = useMemo(() => [size + 2, size, 0], [size])
+    // Closer to planet (x = size + 0.8) and lower (y = size * 0.5)
+    const calloutOffset = useMemo(() => [size + 0.8, size * 0.5, 0], [size])
     
     // Note: Color updates handled by FresnelGlowMaterial via props
     
@@ -97,8 +98,18 @@ export const CelestialBody = ({
                 />
             </mesh>
             
-            <HudReticle radius={size * 1.5} visible={hovered || trackedRef?.current === groupRef.current} />
-            <HudCallout name={name} sectionId={id} visible={hovered || trackedRef?.current === groupRef.current} offset={calloutOffset} />
+            <HudReticle 
+                radius={size * 1.2} 
+                visible={hovered || trackedRef?.current === groupRef.current} 
+                isTracked={trackedRef?.current === groupRef.current}
+            />
+            <HudCallout 
+                name={name} 
+                sectionId={id} 
+                visible={hovered || trackedRef?.current === groupRef.current} 
+                offset={calloutOffset}
+                classification={isPlanet ? 'PLANET' : 'MOON'}
+            />
             
             {satellites.map((sat, index) => {
                 const tiltX = (index * 37) % 90

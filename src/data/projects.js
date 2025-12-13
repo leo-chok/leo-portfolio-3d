@@ -4,15 +4,6 @@
  */
 export const projects = [
     {
-        id: 'keepgoals',
-        title: "KeepGoals",
-        description: "Application web fullstack pour suivre vos objectifs financiers personnels et concrétiser vos projets de vie. Définissez vos objectifs, enregistrez vos contributions et visualisez votre progression en temps réel.",
-        image: "/images/keepgoals.png",
-        github: "https://github.com/leo-chok/financial-dashboard/tree/main",
-        demo: "https://financial-dashboard-frontend-chi.vercel.app/",
-        stack: ["React", "Vite", "Tailwind CSS", "Node.js", "Express", "MongoDB"]
-    },
-    {
         id: 'toothy',
         title: "Toothy",
         description: "Application mobile ludique pour suivre l'assiduité au brossage des dents. Gamification avec système de points et tableau de bord statistiques sur l'hygiène dentaire.",
@@ -30,6 +21,15 @@ export const projects = [
         demo: "https://youtu.be/CRcOUVc1OcA",
         video: true,
         stack: ["React Native", "Expo", "Node.js", "Express", "MongoDB"]
+    },
+    {
+        id: 'keepgoals',
+        title: "KeepGoals",
+        description: "Application web fullstack pour suivre vos objectifs financiers personnels et concrétiser vos projets de vie. Définissez vos objectifs, enregistrez vos contributions et visualisez votre progression en temps réel.",
+        image: "/images/keepgoals.png",
+        github: "https://github.com/leo-chok/financial-dashboard/tree/main",
+        demo: "https://financial-dashboard-frontend-chi.vercel.app/",
+        stack: ["React", "Vite", "Tailwind CSS", "Node.js", "Express", "MongoDB"]
     },
     {
         id: 'pokedex',
