@@ -2,10 +2,9 @@ import { Canvas } from '@react-three/fiber'
 import { Suspense, useState } from 'react'
 import { Loader } from '@react-three/drei'
 import { Experience } from './components/core/Experience'
-import { NavigationPanel } from './components/hud/NavigationPanel'
 import { CockpitHUD } from './components/hud/CockpitHUD'
 import { DebugPanel } from './components/hud/DebugPanel'
-import { ContentManager } from './components/hud/ContentManager'
+import { WindowManager } from './components/hud/WindowManager'
 import { LoadingScreen } from './components/hud/LoadingScreen'
 
 function App() {
@@ -43,8 +42,7 @@ function App() {
       </Canvas>
       <Loader />
       <CockpitHUD />
-      <NavigationPanel />
-      <ContentManager />
+      <WindowManager />
       <DebugPanel />
     </>
   )

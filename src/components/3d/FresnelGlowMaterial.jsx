@@ -1,7 +1,7 @@
 import { shaderMaterial } from '@react-three/drei'
 import { extend, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { useRef, useMemo, forwardRef } from 'react'
+import { useRef, useMemo, forwardRef, useEffect } from 'react'
 
 /**
  * FresnelGlowMaterial - Rim light effect for sci-fi glow without bloom
@@ -90,6 +90,17 @@ export const FresnelGlowMaterial = forwardRef(({
             materialRef.current.uTime = state.clock.elapsedTime
         }
     })
+    
+    // Update uniforms when props change (fixes hover issue)
+    useEffect(() => {
+        if (materialRef.current) {
+            materialRef.current.uColor = new THREE.Color(color)
+            materialRef.current.uGlowColor = new THREE.Color(glowColor || color)
+            materialRef.current.uIntensity = intensity
+            materialRef.current.uFresnelPower = fresnelPower
+            materialRef.current.uGlowStrength = glowStrength
+        }
+    }, [color, glowColor, intensity, fresnelPower, glowStrength])
     
     return (
         <fresnelGlowShader

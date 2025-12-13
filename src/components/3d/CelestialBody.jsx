@@ -34,9 +34,9 @@ export const CelestialBody = ({
     const setTrackedRef = useCameraStore(state => state.setTrackedRef)
     const stopTracking = useCameraStore(state => state.stopTracking)
     
-    // Get emissive values from debug store
-    const planetEmissive = useDebugStore(state => state.planetEmissive)
-    const moonEmissive = useDebugStore(state => state.moonEmissive)
+    // Get emissive values from debug store (with fallbacks)
+    const planetEmissive = useDebugStore(state => state.planetEmissive) ?? 1.5
+    const moonEmissive = useDebugStore(state => state.moonEmissive) ?? 2.0
     
     const isPlanet = size >= SIZES.moon * 1.5
     const emissiveMultiplier = isPlanet ? planetEmissive : moonEmissive
@@ -91,9 +91,9 @@ export const CelestialBody = ({
                 <FresnelGlowMaterial
                     ref={materialRef}
                     color={color}
-                    intensity={hovered ? emissiveMultiplier * 1.3 : emissiveMultiplier}
-                    fresnelPower={isPlanet ? 2.0 : 2.5}
-                    glowStrength={isPlanet ? 0.8 : 0.6}
+                    intensity={hovered ? emissiveMultiplier * 0.9 : emissiveMultiplier * 0.6}
+                    fresnelPower={isPlanet ? 3.0 : 3.5}
+                    glowStrength={isPlanet ? 1.2 : 1.0}
                 />
             </mesh>
             

@@ -5,11 +5,27 @@ import { Billboard, Text } from '@react-three/drei'
 import { COLORS } from '../../config/galaxyConfig'
 import { useDebugStore } from '../../stores/debugStore'
 
+// Icon to emoji/symbol mapping
+const ICON_MAP = {
+    // Hardskills (tech)
+    'react': '⚛',
+    'node-js': '🟢',
+    'js': 'JS',
+    'html5': '🌐',
+    'css3-alt': '🎨',
+    'docker': '🐳',
+    'github': '🐙',
+    // Softskills
+    'users': '👥',
+    'comments': '💬',
+    'lightbulb': '💡',
+    'handshake': '🤝',
+    'brain': '🧠',
+}
+
 /**
- * Satellite Component - Highly optimized
- * - Simple 3D sphere (no Html)
- * - Color updates on hover change only (not every frame)
- * - Minimal useFrame work
+ * Satellite Component - Optimized with icon support
+ * Shows icon symbol instead of sphere
  */
 export const Satellite = ({ 
     name, 
@@ -21,26 +37,18 @@ export const Satellite = ({
     onClick 
 }) => {
     const orbitRef = useRef()
-    const meshRef = useRef()
     const orbitAngle = useRef(initialAngle)
     const [hovered, setHovered] = useState(false)
     
     const color = COLORS.hud
-    const satelliteEmissive = useDebugStore(state => state.satelliteEmissive)
+    const satelliteEmissive = useDebugStore(state => state.satelliteEmissive) ?? 1.5
     
     // Pre-computed values (memoized)
     const tiltXRad = useMemo(() => (orbitTilt.x * Math.PI) / 180, [orbitTilt.x])
     const tiltYRad = useMemo(() => (orbitTilt.y * Math.PI) / 180, [orbitTilt.y])
-    const baseColor = useMemo(() => new THREE.Color(color), [color])
-    const initialColor = useMemo(() => baseColor.clone().multiplyScalar(satelliteEmissive), [baseColor, satelliteEmissive])
     
-    // Update color ONLY on hover or emissive change
-    useEffect(() => {
-        if (meshRef.current?.material) {
-            const multiplier = hovered ? satelliteEmissive * 2 : satelliteEmissive
-            meshRef.current.material.color.copy(baseColor).multiplyScalar(multiplier)
-        }
-    }, [hovered, satelliteEmissive, baseColor])
+    // Get icon symbol
+    const iconSymbol = icon ? (ICON_MAP[icon] || '●') : '●'
     
     // Minimal useFrame - just orbit rotation
     useFrame((state, delta) => {
@@ -50,28 +58,31 @@ export const Satellite = ({
         }
     })
     
-    const size = 0.08
+    const size = 0.15
     
     return (
         <group rotation={[tiltXRad, tiltYRad, 0]}>
             <group ref={orbitRef}>
                 <group position={[orbitRadius, 0, 0]}>
-                    <mesh
-                        ref={meshRef}
+                    <Billboard
+                        follow={true}
                         onClick={(e) => { e.stopPropagation(); onClick?.() }}
                         onPointerOver={() => { document.body.style.cursor = 'pointer'; setHovered(true) }}
                         onPointerOut={() => { document.body.style.cursor = 'auto'; setHovered(false) }}
                     >
-                        <sphereGeometry args={[size, 8, 8]} />
-                        <meshBasicMaterial 
-                            color={initialColor}
-                            toneMapped={false}
-                        />
-                    </mesh>
+                        <Text 
+                            fontSize={size} 
+                            color={hovered ? '#ffffff' : color}
+                            anchorX="center" 
+                            anchorY="middle"
+                        >
+                            {iconSymbol}
+                        </Text>
+                    </Billboard>
                     
                     {hovered && name && (
-                        <Billboard position={[0, 0.3, 0]}>
-                            <Text fontSize={0.12} color={COLORS.hud} anchorX="center" anchorY="bottom">
+                        <Billboard position={[0, 0.25, 0]}>
+                            <Text fontSize={0.1} color={COLORS.hud} anchorX="center" anchorY="bottom">
                                 {name}
                             </Text>
                         </Billboard>
@@ -81,3 +92,4 @@ export const Satellite = ({
         </group>
     )
 }
+

@@ -129,6 +129,8 @@
     );
     border-top: 1px solid rgba(124, 196, 237, 0.2);
     border-bottom: 1px solid rgba(124, 196, 237, 0.1);
+    z-index: 500;
+    pointer-events: auto;
 }
 
 .cockpit-topbar__left,
@@ -151,86 +153,167 @@
 }
 
 .cockpit-topbar__title {
+    background: transparent;
+    border: 1px solid transparent;
     color: rgba(124, 196, 237, 0.9);
+    font-family: 'Orbitron', monospace;
     font-size: 14px;
     letter-spacing: 4px;
     text-transform: uppercase;
     min-width: 200px;
     text-align: center;
+    cursor: pointer;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.cockpit-topbar__title:hover {
+    border-color: rgba(124, 196, 237, 0.3);
+    background: rgba(124, 196, 237, 0.05);
+}
+
+.cockpit-topbar__title--active {
+    border-color: rgba(124, 196, 237, 0.5);
+    background: rgba(124, 196, 237, 0.1);
+}
+
+.cockpit-topbar__dropdown-icon {
+    font-size: 8px;
+    opacity: 0.6;
+    transition: transform 0.2s ease;
+}
+
+.cockpit-topbar__title--active .cockpit-topbar__dropdown-icon {
+    transform: rotate(180deg);
 }
 
 /* ===========================
-   NAVIGATION ARROWS
+   DROPDOWN MENU
    =========================== */
 
 .cockpit-topbar__center {
     display: flex;
     align-items: center;
     gap: 20px;
+    position: relative;
 }
+
+.cockpit-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 10px;
+    min-width: 250px;
+    background: linear-gradient(
+        135deg,
+        rgba(124, 196, 237, 0.05) 0%,
+        rgba(10, 20, 35, 0.95) 50%,
+        rgba(124, 196, 237, 0.02) 100%
+    );
+    border: 1px solid rgba(124, 196, 237, 0.3);
+    border-radius: 8px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow: hidden;
+    animation: dropdownOpen 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes dropdownOpen {
+    from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.cockpit-dropdown__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    color: rgba(124, 196, 237, 0.7);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.1);
+}
+
+.cockpit-dropdown__item:last-child {
+    border-bottom: none;
+}
+
+.cockpit-dropdown__item:hover {
+    background: rgba(124, 196, 237, 0.1);
+    color: rgba(124, 196, 237, 1);
+}
+
+.cockpit-dropdown__item--active {
+    background: rgba(100, 237, 180, 0.1);
+    color: rgba(100, 237, 180, 0.9);
+    border-left: 3px solid rgba(100, 237, 180, 0.7);
+}
+
+.cockpit-dropdown__index {
+    color: rgba(124, 196, 237, 0.4);
+    font-size: 9px;
+}
+
+.cockpit-dropdown__item--active .cockpit-dropdown__index {
+    color: rgba(100, 237, 180, 0.5);
+}
+
+.cockpit-dropdown__name {
+    flex: 1;
+}
+
+/* ===========================
+   NAVIGATION ARROWS - Minimal Chevrons
+   =========================== */
 
 .cockpit-nav-arrow {
     pointer-events: auto;
     background: transparent;
-    border: 1px solid rgba(124, 196, 237, 0.3);
-    color: rgba(124, 196, 237, 0.7);
-    width: 36px;
-    height: 36px;
+    border: none;
+    color: rgba(124, 196, 237, 0.5);
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     position: relative;
-    transition: all 0.3s ease;
-    clip-path: polygon(
-        10% 0%, 90% 0%,
-        100% 25%, 100% 75%,
-        90% 100%, 10% 100%,
-        0% 75%, 0% 25%
-    );
+    transition: all 0.2s ease;
 }
 
-.cockpit-nav-arrow::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(124, 196, 237, 0.05) 0%,
-        rgba(124, 196, 237, 0.1) 50%,
-        rgba(124, 196, 237, 0.05) 100%
-    );
-    clip-path: inherit;
-    z-index: -1;
+.cockpit-nav-arrow__icon {
+    font-size: 28px;
+    font-weight: 200;
+    line-height: 1;
+    font-family: system-ui, sans-serif;
+    transition: all 0.2s ease;
 }
 
 .cockpit-nav-arrow:hover {
-    border-color: rgba(124, 196, 237, 0.8);
     color: rgba(124, 196, 237, 1);
-    box-shadow: 
-        0 0 15px rgba(124, 196, 237, 0.3),
-        inset 0 0 10px rgba(124, 196, 237, 0.1);
-    transform: scale(1.1);
+    text-shadow: 0 0 15px rgba(124, 196, 237, 0.6);
 }
 
-.cockpit-nav-arrow:hover::before {
-    background: linear-gradient(
-        135deg,
-        rgba(124, 196, 237, 0.1) 0%,
-        rgba(124, 196, 237, 0.2) 50%,
-        rgba(124, 196, 237, 0.1) 100%
-    );
+.cockpit-nav-arrow:hover .cockpit-nav-arrow__icon {
+    transform: scale(1.2);
 }
 
 .cockpit-nav-arrow:active {
     transform: scale(0.95);
-}
-
-.cockpit-nav-arrow__icon {
-    font-size: 24px;
-    font-weight: 300;
-    line-height: 1;
-    font-family: 'Orbitron', monospace;
 }
 
 @media (max-width: 768px) {
@@ -368,44 +451,58 @@
 }
 
 /* ===========================
-   BOTTOM STATUS BAR
+   BOTTOM BAR - ANALYZE BUTTON
    =========================== */
 
 .cockpit-bottombar {
     position: absolute;
-    bottom: 30px;
-    left: 100px;
-    right: 100px;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     justify-content: center;
-    gap: 40px;
+    z-index: 100;
+    pointer-events: auto;
+}
+
+/* ===========================
+   RIGHT SIDE STATUS PANEL
+   =========================== */
+
+.cockpit-status-panel {
+    position: absolute;
+    right: 30px;
+    bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     padding: 10px;
 }
 
-.cockpit-bottombar__item {
+.cockpit-status-panel__item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: rgba(124, 196, 237, 0.4);
-    font-size: 9px;
-    letter-spacing: 2px;
+    gap: 10px;
+    color: rgba(100, 237, 124, 0.6);
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
 }
 
-.cockpit-bottombar__dot {
-    width: 6px;
-    height: 6px;
+.cockpit-status-panel__dot {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: rgba(124, 196, 237, 0.6);
+    background: rgba(100, 237, 124, 0.7);
+    box-shadow: 0 0 8px rgba(100, 237, 124, 0.5);
     animation: dotPulse 2s ease-in-out infinite;
 }
 
-.cockpit-bottombar__dot--green {
-    background: rgba(100, 237, 124, 0.6);
+.cockpit-status-panel__dot--green {
     animation-delay: 0.5s;
 }
 
-.cockpit-bottombar__dot--blue {
-    background: rgba(100, 180, 237, 0.6);
+.cockpit-status-panel__dot--blue {
     animation-delay: 1s;
 }
 
@@ -413,3 +510,179 @@
     0%, 100% { opacity: 0.4; }
     50% { opacity: 1; }
 }
+
+/* ============================
+   ANALYZE BUTTON & LOADING
+   ============================ */
+
+.cockpit-analyze {
+    display: flex;
+    justify-content: center;
+}
+
+/* HoloWindow-style Analyze Button - LARGE */
+.cockpit-analyze__button {
+    position: relative;
+    padding: 18px 50px;
+    background: linear-gradient(
+        135deg,
+        rgba(100, 237, 180, 0.08) 0%,
+        rgba(20, 40, 35, 0.9) 50%,
+        rgba(100, 237, 180, 0.05) 100%
+    );
+    border: 2px solid rgba(100, 237, 180, 0.4);
+    border-radius: 8px;
+    color: rgba(100, 237, 180, 0.95);
+    font-family: 'Orbitron', monospace;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    box-shadow: 
+        0 0 15px rgba(100, 237, 180, 0.1),
+        inset 0 1px 0 rgba(100, 237, 180, 0.1);
+    z-index: 10;
+}
+
+/* Corner brackets like HoloWindow */
+.cockpit-analyze__button::before,
+.cockpit-analyze__button::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: rgba(100, 237, 180, 0.6);
+    border-style: solid;
+    transition: all 0.3s ease;
+}
+
+.cockpit-analyze__button::before {
+    top: 3px;
+    left: 3px;
+    border-width: 2px 0 0 2px;
+    border-top-left-radius: 4px;
+}
+
+.cockpit-analyze__button::after {
+    bottom: 3px;
+    right: 3px;
+    border-width: 0 2px 2px 0;
+    border-bottom-right-radius: 4px;
+}
+
+/* Shimmer animation overlay */
+.cockpit-analyze__shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(100, 237, 180, 0.15), transparent);
+    animation: analyzeShimmer 2.5s infinite;
+    pointer-events: none;
+}
+
+@keyframes analyzeShimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.cockpit-analyze__button:hover {
+    background: linear-gradient(
+        135deg,
+        rgba(100, 237, 180, 0.15) 0%,
+        rgba(20, 50, 40, 0.95) 50%,
+        rgba(100, 237, 180, 0.1) 100%
+    );
+    border-color: rgba(100, 237, 180, 0.7);
+    box-shadow: 
+        0 0 25px rgba(100, 237, 180, 0.25),
+        0 0 50px rgba(100, 237, 180, 0.1),
+        inset 0 1px 0 rgba(100, 237, 180, 0.2);
+    transform: scale(1.02);
+}
+
+.cockpit-analyze__button:hover::before,
+.cockpit-analyze__button:hover::after {
+    border-color: rgba(100, 237, 180, 0.9);
+    width: 16px;
+    height: 16px;
+}
+
+.cockpit-analyze__button:active {
+    transform: scale(0.98);
+    box-shadow: 0 0 10px rgba(100, 237, 180, 0.2);
+}
+
+.cockpit-analyze__text {
+    position: relative;
+    z-index: 2;
+}
+
+/* Loading state - HoloWindow styled */
+.cockpit-analyze__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 25px;
+    background: linear-gradient(
+        135deg,
+        rgba(100, 237, 180, 0.05) 0%,
+        rgba(10, 20, 25, 0.85) 100%
+    );
+    border: 1px solid rgba(100, 237, 180, 0.3);
+    border-radius: 6px;
+    backdrop-filter: blur(8px);
+}
+
+.cockpit-analyze__loading-bar {
+    width: 150px;
+    height: 8px;
+    background: rgba(10, 20, 25, 0.6);
+    border: 1px solid rgba(100, 237, 180, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.cockpit-analyze__loading-fill {
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(100, 237, 180, 0.9), 
+        rgba(150, 255, 200, 0.9),
+        rgba(100, 237, 180, 0.9)
+    );
+    border-radius: 3px;
+    transition: width 0.05s linear;
+    box-shadow: 
+        0 0 10px rgba(100, 237, 180, 0.6),
+        0 0 20px rgba(100, 237, 180, 0.3);
+}
+
+.cockpit-analyze__loading-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: rgba(100, 237, 180, 0.8);
+    letter-spacing: 2px;
+    animation: blink 0.8s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Already analyzed - warning style */
+.cockpit-analyze__done {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: rgba(255, 180, 80, 0.9);
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 140, 50, 0.3);
+}
+
+

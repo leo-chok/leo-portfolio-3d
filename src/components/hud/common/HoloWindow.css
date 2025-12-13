@@ -5,8 +5,11 @@
 
 .holo-window {
     position: relative;
-    width: 600px; /* Default width */
+    width: 600px;
+    min-width: 300px;
+    min-height: 200px;
     max-width: 90vw;
+    max-height: 85vh;
     background: linear-gradient(
         135deg,
         rgba(124, 196, 237, 0.05) 0%,
@@ -22,6 +25,27 @@
     display: flex;
     flex-direction: column;
     animation: windowOpen 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    resize: both;
+}
+
+/* Custom resize handle */
+.holo-window::after {
+    content: '';
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(
+        135deg,
+        transparent 50%,
+        rgba(124, 196, 237, 0.3) 50%,
+        rgba(124, 196, 237, 0.5) 75%,
+        rgba(124, 196, 237, 0.3) 100%
+    );
+    border-radius: 0 0 6px 0;
+    cursor: se-resize;
+    pointer-events: none;
 }
 
 @keyframes windowOpen {
@@ -139,9 +163,97 @@
     letter-spacing: 2px;
 }
 
+/* Header Actions */
+.holo-window__header-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 5px;
+}
+
+.holo-window__minimize,
+.holo-window__restore,
+.holo-window__close {
+    background: none;
+    border: none;
+    color: rgba(124, 196, 237, 0.6);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.holo-window__minimize:hover { color: #7cc4ed; }
+.holo-window__restore:hover { color: #64edb4; }
+.holo-window__restore:hover .holo-window__restore-icon,
+.holo-window__restore:hover .holo-window__restore-icon::before {
+    border-color: #64edb4;
+}
+.holo-window__close:hover { color: #ff4d4d; }
+
+/* Restore icon - two overlapping squares */
+.holo-window__restore-icon {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid rgba(124, 196, 237, 0.6);
+    position: relative;
+    margin-top: 3px;
+}
+
+.holo-window__restore-icon::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid rgba(124, 196, 237, 0.6);
+    top: -4px;
+    left: 4px;
+    background: rgba(10, 20, 35, 0.9);
+}
+
+/* ============================
+   MINIMIZED STATE
+   ============================ */
+
+.holo-window--minimized {
+    width: auto;
+    height: auto !important;
+    min-width: 200px;
+    max-width: 300px;
+    min-height: unset;
+    animation: none;
+    resize: none;
+}
+
+/* Hide resize handle when minimized */
+.holo-window--minimized::after {
+    display: none;
+}
+
+.holo-window--minimized .holo-window__header {
+    border-bottom: none;
+    border-radius: 8px;
+    background: linear-gradient(
+        135deg,
+        rgba(124, 196, 237, 0.08) 0%,
+        rgba(10, 20, 35, 0.9) 100%
+    );
+}
+
+.holo-window--minimized .holo-window__title {
+    font-size: 11px;
+}
+
+.holo-window-wrapper--minimized {
+    /* Smaller shadow for minimized */
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+}
+
 @media (max-width: 768px) {
     .holo-window {
         width: 95%;
         max-width: 95%;
     }
 }
+

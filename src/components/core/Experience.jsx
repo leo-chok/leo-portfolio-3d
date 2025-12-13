@@ -30,7 +30,7 @@ export const Experience = ({ startAnimation = false }) => {
                 enablePan={true} 
                 makeDefault 
                 autoRotate={false}
-                autoRotateSpeed={0.3}
+                autoRotateSpeed={0.1}
                 target={[0, 0, 0]}
                 maxDistance={150}
                 minDistance={5}
