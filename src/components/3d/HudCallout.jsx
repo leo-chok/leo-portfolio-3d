@@ -3,17 +3,33 @@ import { useFrame } from '@react-three/fiber'
 import { Text, Line, Billboard } from '@react-three/drei'
 import * as THREE from 'three'
 import gsap from 'gsap'
+import { useWindowStore } from '../../stores/windowStore'
+import { useDecryptingText } from '../../utils/textUtils'
 
 const HUD_COLOR = '#00d4ff'
 
 // Pre-allocated reusable arrays (outside component to avoid GC)
 const ORIGIN = [0, 0, 0]
 
-export const HudCallout = ({ name, visible = false, offset = [4, 3, 0] }) => {
+export const HudCallout = ({ name, sectionId, visible = false, offset = [4, 3, 0] }) => {
     const lineRef = useRef()
     const textRef = useRef()
     const [drawProgress, setDrawProgress] = useState(0)
     const [showText, setShowText] = useState(false)
+    
+    // Get analysis state from store
+    const analyzedSections = useWindowStore((state) => state.analyzedSections)
+    const decryptingSection = useWindowStore((state) => state.decryptingSection)
+    const loadingProgress = useWindowStore((state) => state.loadingProgress)
+    
+    const isAnalyzed = sectionId ? analyzedSections.has(sectionId) : false
+    const isDecrypting = sectionId && decryptingSection === sectionId
+    
+    // Calculate duration based on loading progress (sync with loading bar)
+    const decryptDuration = 500 // ms
+    
+    // Use decrypting text hook
+    const displayName = useDecryptingText(name, isDecrypting, decryptDuration, isAnalyzed)
     
     // Memoize offset-dependent calculations
     const midPoint = useMemo(() => [offset[0] * 0.3, offset[1] * 0.6, 0], [offset[0], offset[1]])
@@ -135,7 +151,7 @@ export const HudCallout = ({ name, visible = false, offset = [4, 3, 0] }) => {
                         font="/fonts/Orbitron-Bold.ttf"
                         letterSpacing={0.1}
                     >
-                        {name}
+                        {displayName}
                         <meshBasicMaterial 
                             color={HUD_COLOR} 
                             transparent 

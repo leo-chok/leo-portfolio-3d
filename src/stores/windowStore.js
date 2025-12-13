@@ -42,6 +42,12 @@ export const useWindowStore = create((set, get) => ({
     loadingSection: null,
     loadingProgress: 0,
     
+    // Sections that have been analyzed (names revealed permanently)
+    analyzedSections: new Set(),
+    
+    // Currently decrypting section (for animation sync)
+    decryptingSection: null,
+    
     /**
      * Open a window for a section
      * - Checks for duplicates (brings existing to front instead)
@@ -146,7 +152,12 @@ export const useWindowStore = create((set, get) => ({
         const moonCount = getMoonCount(sectionId)
         const duration = 300 + moonCount * 100
         
-        set({ loadingSection: sectionId, loadingProgress: 0 })
+        // Start loading AND decryption animation
+        set({ 
+            loadingSection: sectionId, 
+            loadingProgress: 0,
+            decryptingSection: sectionId 
+        })
         
         // Animate progress
         const startTime = Date.now()
@@ -158,11 +169,33 @@ export const useWindowStore = create((set, get) => ({
                 set({ loadingProgress: progress })
                 requestAnimationFrame(animate)
             } else {
-                // Loading complete - open window
+                // Loading complete - mark as analyzed and open window
+                const { analyzedSections } = get()
+                const newAnalyzed = new Set(analyzedSections)
+                newAnalyzed.add(sectionId)
+                
+                set({ 
+                    analyzedSections: newAnalyzed,
+                    decryptingSection: null 
+                })
                 get().openWindow(sectionId)
             }
         }
         requestAnimationFrame(animate)
+    },
+    
+    /**
+     * Open existing data (already analyzed section)
+     */
+    openData: (sectionId) => {
+        get().openWindow(sectionId)
+    },
+    
+    /**
+     * Check if a section has been analyzed (permanently)
+     */
+    isAnalyzed: (sectionId) => {
+        return get().analyzedSections.has(sectionId)
     },
     
     /**

@@ -33,7 +33,7 @@ function App() {
 
       <Canvas
         shadows
-        camera={{ position: [0, 80, 250], fov: 45 }}
+        camera={{ position: [0, 200, 500], fov: 45 }}
       >
         <color attach="background" args={['#050a0f']} />
         <Suspense fallback={null}>

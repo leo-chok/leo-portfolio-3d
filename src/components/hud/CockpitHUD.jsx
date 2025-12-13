@@ -1,7 +1,9 @@
 import { useCameraStore } from '../../stores/cameraStore'
 import { useWindowStore } from '../../stores/windowStore'
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { GALAXY_MAP } from '../../config/galaxyConfig'
+import { useScrambledText, useDecryptingText } from '../../utils/textUtils'
 import './CockpitHUD.css'
 
 // Build navigation list: Overview (00) + sun + planets
@@ -24,6 +26,9 @@ export const CockpitHUD = () => {
     const loadingSection = useWindowStore((state) => state.loadingSection)
     const loadingProgress = useWindowStore((state) => state.loadingProgress)
     const windows = useWindowStore((state) => state.windows)
+    const analyzedSections = useWindowStore((state) => state.analyzedSections)
+    const decryptingSection = useWindowStore((state) => state.decryptingSection)
+    const openData = useWindowStore((state) => state.openData)
     
     const [activeSection, setActiveSection] = useState('overview')
     const [isVisible, setIsVisible] = useState(false)
@@ -42,10 +47,42 @@ export const CockpitHUD = () => {
         return section?.name || 'OVERVIEW'
     }, [activeSection])
     
+    // Check if current section is analyzed
+    const isCurrentAnalyzed = activeSection === 'overview' || analyzedSections.has(activeSection)
+    const isDecrypting = decryptingSection === activeSection
+    
+    // Use decrypting text for header
+    const displayTitle = useDecryptingText(sectionDisplayName, isDecrypting, 500, isCurrentAnalyzed)
+    
     // Check if current section already has window open
     const sectionHasWindow = useMemo(() => {
         return windows.some(w => w.sectionId === activeSection)
     }, [windows, activeSection])
+    
+    // Score tracking - count analyzable sections (all except overview)
+    const totalAnalyzable = NAV_SECTIONS.filter(s => !s.isOverview).length
+    const analyzedCount = analyzedSections.size
+    const allDiscovered = analyzedCount >= totalAnalyzable
+    
+    // Success modal state
+    const [showSuccessModal, setShowSuccessModal] = useState(false)
+    const [dismissedSuccess, setDismissedSuccess] = useState(false)
+    
+    // Show success modal when all discovered (only once, not if dismissed)
+    useEffect(() => {
+        if (allDiscovered && !showSuccessModal && !dismissedSuccess) {
+            // Small delay to let the last decryption animation finish
+            const timer = setTimeout(() => setShowSuccessModal(true), 1000)
+            return () => clearTimeout(timer)
+        }
+    }, [allDiscovered, dismissedSuccess])
+    
+    // Close modal handler
+    const closeSuccessModal = useCallback(() => {
+        setShowSuccessModal(false)
+        setDismissedSuccess(true)
+        returnToOverview()
+    }, [returnToOverview])
     
     // Navigate to a section (handles overview specially)
     const goToSection = useCallback((section) => {
@@ -69,12 +106,18 @@ export const CockpitHUD = () => {
         goToSection(NAV_SECTIONS[newIndex])
     }, [currentIndex, goToSection])
     
-    // Handle analyze button click
+    // Handle analyze/open data button click
     const handleAnalyze = useCallback(() => {
-        if (trackedId && !sectionHasWindow && !loadingSection) {
-            startLoading(trackedId)
+        if (trackedId && !loadingSection) {
+            if (!analyzedSections.has(trackedId)) {
+                // First time - analyze
+                startLoading(trackedId)
+            } else if (!sectionHasWindow) {
+                // Already analyzed, window closed - open data
+                openData(trackedId)
+            }
         }
-    }, [trackedId, sectionHasWindow, loadingSection, startLoading])
+    }, [trackedId, sectionHasWindow, loadingSection, startLoading, openData, analyzedSections])
     
     // Toggle dropdown
     const toggleDropdown = useCallback(() => {
@@ -169,25 +212,30 @@ export const CockpitHUD = () => {
                         className={`cockpit-topbar__title ${isDropdownOpen ? 'cockpit-topbar__title--active' : ''}`}
                         onClick={toggleDropdown}
                     >
-                        {sectionDisplayName}
+                        {displayTitle}
                         <span className="cockpit-topbar__dropdown-icon">▼</span>
                     </button>
                     
                     {/* Dropdown menu */}
                     {isDropdownOpen && (
                         <div className="cockpit-dropdown">
-                            {NAV_SECTIONS.map((section, index) => (
-                                <button
-                                    key={section.id}
-                                    className={`cockpit-dropdown__item ${section.id === activeSection ? 'cockpit-dropdown__item--active' : ''}`}
-                                    onClick={() => handleDropdownSelect(section)}
-                                >
-                                    <span className="cockpit-dropdown__index">
-                                        {String(index).padStart(2, '0')}
-                                    </span>
-                                    <span className="cockpit-dropdown__name">{section.name}</span>
-                                </button>
-                            ))}
+                            {NAV_SECTIONS.map((section, index) => {
+                                const isSectionAnalyzed = section.isOverview || analyzedSections.has(section.id)
+                                return (
+                                    <button
+                                        key={section.id}
+                                        className={`cockpit-dropdown__item ${section.id === activeSection ? 'cockpit-dropdown__item--active' : ''}`}
+                                        onClick={() => handleDropdownSelect(section)}
+                                    >
+                                        <span className="cockpit-dropdown__index">
+                                            {String(index).padStart(2, '0')}
+                                        </span>
+                                        <span className={`cockpit-dropdown__name ${!isSectionAnalyzed ? 'cockpit-dropdown__name--encrypted' : ''}`}>
+                                            {isSectionAnalyzed ? section.name : '???'}
+                                        </span>
+                                    </button>
+                                )
+                            })}
                         </div>
                     )}
                     
@@ -219,10 +267,18 @@ export const CockpitHUD = () => {
                                         style={{ width: `${loadingProgress * 100}%` }}
                                     />
                                 </div>
-                                <span className="cockpit-analyze__loading-text">ANALYZING...</span>
+                                <span className="cockpit-analyze__loading-text">DECRYPTING...</span>
                             </div>
                         ) : sectionHasWindow ? (
-                            <span className="cockpit-analyze__done">ALREADY ANALYZED</span>
+                            <span className="cockpit-analyze__done">ALREADY OPENED</span>
+                        ) : analyzedSections.has(trackedId) ? (
+                            <button 
+                                className="cockpit-analyze__button cockpit-analyze__button--open"
+                                onClick={handleAnalyze}
+                            >
+                                <span className="cockpit-analyze__shimmer" />
+                                <span className="cockpit-analyze__text">OPEN DATA</span>
+                            </button>
                         ) : (
                             <button 
                                 className="cockpit-analyze__button"
@@ -236,21 +292,54 @@ export const CockpitHUD = () => {
                 )}
             </div>
             
-            {/* Right side status panel */}
-            <div className="cockpit-status-panel">
-                <div className="cockpit-status-panel__item">
-                    <span className="cockpit-status-panel__dot" />
-                    <span>SHIELDS NOMINAL</span>
+            {/* Right side - Discovery Score */}
+            <div className="cockpit-score">
+                <div className="cockpit-score__label">DÉCOUVERTES</div>
+                <div className={`cockpit-score__value ${allDiscovered ? 'cockpit-score__value--complete' : ''}`}>
+                    {analyzedCount}/{totalAnalyzable}
                 </div>
-                <div className="cockpit-status-panel__item">
-                    <span className="cockpit-status-panel__dot cockpit-status-panel__dot--green" />
-                    <span>ENGINES ACTIVE</span>
+                <div className="cockpit-score__bar">
+                    <div 
+                        className="cockpit-score__fill"
+                        style={{ width: `${(analyzedCount / totalAnalyzable) * 100}%` }}
+                    />
                 </div>
-                <div className="cockpit-status-panel__item">
-                    <span className="cockpit-status-panel__dot cockpit-status-panel__dot--blue" />
-                    <span>SCANNER READY</span>
-                </div>
+                {!allDiscovered && (
+                    <div className="cockpit-score__hint">Analysez pour découvrir</div>
+                )}
             </div>
+            
+            {/* Success Modal - Portal to ensure it's on top */}
+            {showSuccessModal && createPortal(
+                <div className="success-modal">
+                    <div 
+                        className="success-modal__backdrop" 
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            closeSuccessModal()
+                        }} 
+                    />
+                    <div className="success-modal__content" onClick={(e) => e.stopPropagation()}>
+                        <div className="success-modal__icon">🎉</div>
+                        <div className="success-modal__title">MISSION ACCOMPLIE</div>
+                        <div className="success-modal__subtitle">Système entièrement décrypté</div>
+                        <div className="success-modal__message">
+                            Félicitations, explorateur ! Vous avez découvert toutes les sections de ce système stellaire.
+                            Vous pouvez maintenant vous relaxer et contempler l'univers...
+                        </div>
+                        <button 
+                            className="success-modal__button"
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                closeSuccessModal()
+                            }}
+                        >
+                            CONTEMPLER
+                        </button>
+                    </div>
+                </div>,
+                document.body
+            )}
         </div>
     )
 }

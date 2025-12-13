@@ -98,7 +98,7 @@ export const CelestialBody = ({
             </mesh>
             
             <HudReticle radius={size * 1.5} visible={hovered || trackedRef?.current === groupRef.current} />
-            <HudCallout name={name} visible={hovered || trackedRef?.current === groupRef.current} offset={calloutOffset} />
+            <HudCallout name={name} sectionId={id} visible={hovered || trackedRef?.current === groupRef.current} offset={calloutOffset} />
             
             {satellites.map((sat, index) => {
                 const tiltX = (index * 37) % 90

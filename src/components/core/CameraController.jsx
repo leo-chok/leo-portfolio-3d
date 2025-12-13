@@ -12,7 +12,7 @@ import { useCameraStore } from '../../stores/cameraStore'
 const _worldPos = new THREE.Vector3()
 const _desiredCamPos = new THREE.Vector3()
 const _moveDelta = new THREE.Vector3()
-const _overviewPos = new THREE.Vector3(0, 25, 80)
+const _overviewPos = new THREE.Vector3(0, 40, 120)
 const _overviewTarget = new THREE.Vector3(0, 0, 0)
 
 /**
@@ -74,17 +74,17 @@ export const CameraController = ({ startAnimation = false }) => {
         controls.enabled = false
         controls.autoRotate = false
         
-        // Set starting position
-        camera.position.set(0, 80, 250)
+        // Set starting position - very far away
+        camera.position.set(0, 200, 500)
         camera.lookAt(0, 0, 0)
         controls.target.set(0, 0, 0)
         
         // Animate to overview position
         gsap.to(camera.position, {
-            x: 0,
-            y: 10,
-            z: 40,
-            duration: 5,
+            x: _overviewPos.x,
+            y: _overviewPos.y,
+            z: _overviewPos.z,
+            duration: 6,
             ease: "power2.inOut",
             onUpdate: () => {
                 camera.lookAt(0, 0, 0)

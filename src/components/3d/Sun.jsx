@@ -97,7 +97,7 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
             <pointLight color={color} intensity={intensity} distance={200} decay={1.5} />
             
             <HudReticle radius={size * 0.6 * 1.3} visible={hovered || trackedRef?.current === groupRef.current} />
-            <HudCallout name={name} visible={hovered || trackedRef?.current === groupRef.current} offset={calloutOffset} />
+            <HudCallout name={name} sectionId={id} visible={hovered || trackedRef?.current === groupRef.current} offset={calloutOffset} />
         </group>
     )
 }

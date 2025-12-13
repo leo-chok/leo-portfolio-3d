@@ -78,13 +78,14 @@ export const LoadingScreen = ({ onComplete, onReadyToAnimate }) => {
                     <div className="loading-screen__version">v3.0.0 // STELLAR EDITION</div>
                 </div>
                 
-                {/* Terminal */}
+                {/* Terminal - HoloWindow style */}
                 <div className="loading-terminal">
                     <div className="loading-terminal__header">
-                        <span className="loading-terminal__dot loading-terminal__dot--red" />
-                        <span className="loading-terminal__dot loading-terminal__dot--yellow" />
-                        <span className="loading-terminal__dot loading-terminal__dot--green" />
+                        <span className="loading-terminal__grip">⠿</span>
                         <span className="loading-terminal__title">SYSTEM BOOTSTRAP</span>
+                        <span className="loading-terminal__status">
+                            {progress >= 100 ? '● READY' : '○ LOADING'}
+                        </span>
                     </div>
                     
                     <div className="loading-terminal__body">
