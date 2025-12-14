@@ -48,6 +48,9 @@ export const useWindowStore = create((set, get) => ({
     // Currently decrypting section (for animation sync)
     decryptingSection: null,
     
+    // Currently selected project (for project detail windows)
+    selectedProject: null,
+    
     /**
      * Open a window for a section
      * - Checks for duplicates (brings existing to front instead)
@@ -147,6 +150,7 @@ export const useWindowStore = create((set, get) => ({
     /**
      * Start loading animation for a section
      * Duration: 300ms base + 100ms per moon
+     * For moons (no SECTION_CONFIG), only marks as analyzed without opening window
      */
     startLoading: (sectionId) => {
         const moonCount = getMoonCount(sectionId)
@@ -169,16 +173,22 @@ export const useWindowStore = create((set, get) => ({
                 set({ loadingProgress: progress })
                 requestAnimationFrame(animate)
             } else {
-                // Loading complete - mark as analyzed and open window
+                // Loading complete - mark as analyzed
                 const { analyzedSections } = get()
                 const newAnalyzed = new Set(analyzedSections)
                 newAnalyzed.add(sectionId)
                 
                 set({ 
                     analyzedSections: newAnalyzed,
-                    decryptingSection: null 
+                    decryptingSection: null,
+                    loadingSection: null,
+                    loadingProgress: 0
                 })
-                get().openWindow(sectionId)
+                
+                // Only open window for main sections (not moons)
+                if (SECTION_CONFIG[sectionId]) {
+                    get().openWindow(sectionId)
+                }
             }
         }
         requestAnimationFrame(animate)
@@ -189,6 +199,45 @@ export const useWindowStore = create((set, get) => ({
      */
     openData: (sectionId) => {
         get().openWindow(sectionId)
+    },
+    
+    /**
+     * Open a project detail window (for moons/portfolio cards)
+     * Creates a window with type 'project' and stores projectData
+     */
+    openProjectWindow: (projectData) => {
+        if (!projectData) return false
+        
+        const { windows, bringToFront } = get()
+        const projectWindowId = `project-${projectData.id}`
+        
+        // Check if already open
+        const existing = windows.find(w => w.sectionId === projectWindowId)
+        if (existing) {
+            bringToFront(existing.id)
+            return false
+        }
+        
+        // Create new project window
+        const newWindow = {
+            id: generateWindowId(),
+            sectionId: projectWindowId,
+            type: 'project',
+            title: 'PROJECT DETAIL',
+            subtitle: projectData.title.toUpperCase(),
+            projectData: projectData,
+            isMinimized: false,
+            position: { x: 100 + windows.length * 30, y: 120 + windows.length * 30 },
+            zIndex: get().topZIndex + 1,
+        }
+        
+        set((state) => ({
+            windows: [...state.windows, newWindow],
+            topZIndex: state.topZIndex + 1,
+            selectedProject: projectData,
+        }))
+        
+        return true
     },
     
     /**

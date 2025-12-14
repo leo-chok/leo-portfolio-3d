@@ -23,9 +23,12 @@ export const useCameraStore = create((set, get) => ({
     // Registry of celestial body refs by ID
     bodyRegistry: {},
     
+    // Project data for currently tracked moon (null for planets/sun)
+    trackedProjectData: null,
+    
     // Register a celestial body
-    registerBody: (id, ref, size) => set((state) => ({
-        bodyRegistry: { ...state.bodyRegistry, [id]: { ref, size } }
+    registerBody: (id, ref, size, projectData = null) => set((state) => ({
+        bodyRegistry: { ...state.bodyRegistry, [id]: { ref, size, projectData } }
     })),
     
     // Unregister a celestial body
@@ -43,7 +46,8 @@ export const useCameraStore = create((set, get) => ({
                 trackedRef: body.ref, 
                 trackedId: id,
                 isTracking: true, 
-                targetSize: body.size, 
+                targetSize: body.size,
+                trackedProjectData: body.projectData || null,
                 pendingNavigationId: null 
             })
         } else {
@@ -53,15 +57,16 @@ export const useCameraStore = create((set, get) => ({
     },
     
     // Set the tracked reference and size (called from direct clicks)
-    setTrackedRef: (ref, size = 1.5, id = null) => set({ 
+    setTrackedRef: (ref, size = 1.5, id = null, projectData = null) => set({ 
         trackedRef: ref, 
         trackedId: id,
         isTracking: true, 
-        targetSize: size 
+        targetSize: size,
+        trackedProjectData: projectData
     }),
     
     // Stop tracking
-    stopTracking: () => set({ trackedRef: null, trackedId: null, isTracking: false }),
+    stopTracking: () => set({ trackedRef: null, trackedId: null, isTracking: false, trackedProjectData: null }),
     
     // Return to initial overview position
     isReturningToOverview: false,

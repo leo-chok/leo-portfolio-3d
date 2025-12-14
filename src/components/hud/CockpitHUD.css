@@ -693,72 +693,59 @@
 }
 
 /* ======================================
-   DISCOVERY SCORE
+   DISCOVERY SCORE (Equalizer Style)
    ====================================== */
 .cockpit-score {
     position: fixed;
     top: 40px;
     right: 50px;
     z-index: 100;
-    padding: 12px 20px;
-    background: linear-gradient(
-        135deg,
-        rgba(10, 20, 35, 0.85) 0%,
-        rgba(124, 196, 237, 0.05) 100%
-    );
-    border: 1px solid rgba(124, 196, 237, 0.2);
-    border-radius: 4px;
-    backdrop-filter: blur(6px);
-    min-width: 140px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-}
-
-.cockpit-score::before {
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    width: 15px;
-    height: 15px;
-    border-top: 2px solid rgba(124, 196, 237, 0.8);
-    border-left: 2px solid rgba(124, 196, 237, 0.8);
-    border-top-left-radius: 4px;
-}
-
-.cockpit-score::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    right: -1px;
-    width: 15px;
-    height: 15px;
-    border-bottom: 2px solid rgba(124, 196, 237, 0.8);
-    border-right: 2px solid rgba(124, 196, 237, 0.8);
-    border-bottom-right-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
 
 .cockpit-score__label {
     font-family: 'Orbitron', monospace;
-    font-size: 10px;
+    font-size: 9px;
     color: rgba(124, 196, 237, 0.6);
     letter-spacing: 2px;
-    margin-bottom: 5px;
     text-transform: uppercase;
+}
+
+.cockpit-score__equalizer {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 60px;
+}
+
+.cockpit-score__bar-segment {
+    height: 6px;
+    width: 100%;
+    background: rgba(124, 196, 237, 0.15);
+    border-radius: 1px;
+    transition: all 0.4s ease-out;
+}
+
+.cockpit-score__bar-segment--active {
+    background: rgba(100, 237, 180, 0.9);
+    box-shadow: 0 0 8px rgba(100, 237, 180, 0.5);
 }
 
 .cockpit-score__value {
     font-family: 'Orbitron', monospace;
-    font-size: 20px;
+    font-size: 14px;
     font-weight: 700;
     color: rgba(124, 196, 237, 1);
     letter-spacing: 2px;
-    text-shadow: 0 0 15px rgba(124, 196, 237, 0.6);
-    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(124, 196, 237, 0.4);
 }
 
 .cockpit-score__value--complete {
     color: rgba(100, 237, 180, 1);
-    text-shadow: 0 0 20px rgba(100, 237, 180, 0.5);
+    text-shadow: 0 0 15px rgba(100, 237, 180, 0.6);
     animation: scoreComplete 1s ease-in-out;
 }
 
@@ -767,28 +754,56 @@
     50% { transform: scale(1.1); }
 }
 
-.cockpit-score__bar {
-    height: 4px;
-    background: rgba(124, 196, 237, 0.1);
-    border-radius: 2px;
-    overflow: hidden;
+/* ======================================
+   STATUS INDICATORS (Bottom Right)
+   ====================================== */
+.cockpit-status {
+    position: fixed;
+    bottom: 40px;
+    right: 50px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.cockpit-score__fill {
-    height: 100%;
-    background: linear-gradient(90deg, rgba(124, 196, 237, 0.8), #7cc4ed);
-    border-radius: 2px;
-    transition: width 0.5s ease-out;
-    box-shadow: 0 0 10px rgba(124, 196, 237, 0.5);
+.cockpit-status__indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.cockpit-score__hint {
+.cockpit-status__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(80, 80, 80, 0.5);
+    transition: all 0.3s ease;
+}
+
+.cockpit-status__indicator--active .cockpit-status__dot {
+    background: rgba(100, 237, 180, 0.9);
+    box-shadow: 0 0 8px rgba(100, 237, 180, 0.6);
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+    0%, 100% { 
+        opacity: 1;
+        box-shadow: 0 0 8px rgba(100, 237, 180, 0.6);
+    }
+    50% { 
+        opacity: 0.7;
+        box-shadow: 0 0 4px rgba(100, 237, 180, 0.3);
+    }
+}
+
+.cockpit-status__label {
     font-family: 'Orbitron', monospace;
-    font-size: 8px;
-    color: rgba(255, 180, 80, 0.6);
-    letter-spacing: 1px;
-    margin-top: 8px;
-    text-align: center;
+    font-size: 9px;
+    color: rgba(100, 237, 180, 0.7);
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
 
 /* ======================================

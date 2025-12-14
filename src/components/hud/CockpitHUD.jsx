@@ -17,6 +17,7 @@ export const CockpitHUD = () => {
     const isTracking = useCameraStore((state) => state.isTracking)
     const trackedRef = useCameraStore((state) => state.trackedRef)
     const trackedId = useCameraStore((state) => state.trackedId)
+    const trackedProjectData = useCameraStore((state) => state.trackedProjectData)
     const bodyRegistry = useCameraStore((state) => state.bodyRegistry)
     const navigateTo = useCameraStore((state) => state.navigateTo)
     const returnToOverview = useCameraStore((state) => state.returnToOverview)
@@ -29,6 +30,7 @@ export const CockpitHUD = () => {
     const analyzedSections = useWindowStore((state) => state.analyzedSections)
     const decryptingSection = useWindowStore((state) => state.decryptingSection)
     const openData = useWindowStore((state) => state.openData)
+    const openProjectWindow = useWindowStore((state) => state.openProjectWindow)
     
     const [activeSection, setActiveSection] = useState('overview')
     const [isVisible, setIsVisible] = useState(false)
@@ -59,10 +61,16 @@ export const CockpitHUD = () => {
         return windows.some(w => w.sectionId === activeSection)
     }, [windows, activeSection])
     
-    // Score tracking - count analyzable sections (all except overview)
+    // Score tracking - count only main sections (planets + sun), not moons
     const totalAnalyzable = NAV_SECTIONS.filter(s => !s.isOverview).length
-    const analyzedCount = analyzedSections.size
+    const navSectionIds = useMemo(() => NAV_SECTIONS.map(s => s.id), [])
+    const analyzedCount = useMemo(() => {
+        return [...analyzedSections].filter(id => navSectionIds.includes(id)).length
+    }, [analyzedSections, navSectionIds])
     const allDiscovered = analyzedCount >= totalAnalyzable
+    
+    // Check if current tracked target is a main section (not a moon)
+    const isMainSection = trackedId ? navSectionIds.includes(trackedId) : false
     
     // Success modal state
     const [showSuccessModal, setShowSuccessModal] = useState(false)
@@ -109,15 +117,24 @@ export const CockpitHUD = () => {
     // Handle analyze/open data button click
     const handleAnalyze = useCallback(() => {
         if (trackedId && !loadingSection) {
-            if (!analyzedSections.has(trackedId)) {
-                // First time - analyze
+            // Check if this is a moon (has projectData)
+            if (trackedProjectData) {
+                // Moon - open project window directly
+                if (!analyzedSections.has(trackedId)) {
+                    // Mark as analyzed for decryption effect
+                    startLoading(trackedId)
+                }
+                // Open the project detail window
+                openProjectWindow(trackedProjectData)
+            } else if (!analyzedSections.has(trackedId)) {
+                // Main section - first time analyze
                 startLoading(trackedId)
             } else if (!sectionHasWindow) {
                 // Already analyzed, window closed - open data
                 openData(trackedId)
             }
         }
-    }, [trackedId, sectionHasWindow, loadingSection, startLoading, openData, analyzedSections])
+    }, [trackedId, trackedProjectData, sectionHasWindow, loadingSection, startLoading, openData, openProjectWindow, analyzedSections])
     
     // Toggle dropdown
     const toggleDropdown = useCallback(() => {
@@ -292,21 +309,42 @@ export const CockpitHUD = () => {
                 )}
             </div>
             
-            {/* Right side - Discovery Score */}
+            {/* Right side - Discovery Score (Equalizer Style) */}
             <div className="cockpit-score">
                 <div className="cockpit-score__label">DÉCOUVERTES</div>
+                <div className="cockpit-score__equalizer">
+                    {[...Array(10)].map((_, i) => {
+                        // 2 bars per discovery, from bottom to top
+                        const barIndex = 9 - i // Reverse so 0 is top, 9 is bottom
+                        const fillLevel = analyzedCount * 2 // 2 bars per discovery
+                        const isActive = barIndex < fillLevel
+                        return (
+                            <div 
+                                key={i}
+                                className={`cockpit-score__bar-segment ${isActive ? 'cockpit-score__bar-segment--active' : ''}`}
+                            />
+                        )
+                    })}
+                </div>
                 <div className={`cockpit-score__value ${allDiscovered ? 'cockpit-score__value--complete' : ''}`}>
                     {analyzedCount}/{totalAnalyzable}
                 </div>
-                <div className="cockpit-score__bar">
-                    <div 
-                        className="cockpit-score__fill"
-                        style={{ width: `${(analyzedCount / totalAnalyzable) * 100}%` }}
-                    />
+            </div>
+            
+            {/* Bottom Right - Status Indicators */}
+            <div className="cockpit-status">
+                <div className="cockpit-status__indicator cockpit-status__indicator--active">
+                    <span className="cockpit-status__dot" />
+                    <span className="cockpit-status__label">SHIELD</span>
                 </div>
-                {!allDiscovered && (
-                    <div className="cockpit-score__hint">Analysez pour découvrir</div>
-                )}
+                <div className="cockpit-status__indicator cockpit-status__indicator--active">
+                    <span className="cockpit-status__dot" />
+                    <span className="cockpit-status__label">ENGINE</span>
+                </div>
+                <div className="cockpit-status__indicator cockpit-status__indicator--active">
+                    <span className="cockpit-status__dot" />
+                    <span className="cockpit-status__label">SCANNER</span>
+                </div>
             </div>
             
             {/* Success Modal - Portal to ensure it's on top */}

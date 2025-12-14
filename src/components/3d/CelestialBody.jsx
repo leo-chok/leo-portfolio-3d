@@ -20,6 +20,7 @@ export const CelestialBody = ({
     color = COLORS.planet,
     intensity = INTENSITY.planet,
     satellites = [],
+    projectData = null,
     onClick,
     children 
 }) => {
@@ -50,13 +51,13 @@ export const CelestialBody = ({
     
     // Note: Color updates handled by FresnelGlowMaterial via props
     
-    // Register body for navigation
+    // Register body for navigation (include projectData for moons)
     useEffect(() => {
         if (id && groupRef.current) {
-            registerBody(id, groupRef, size)
+            registerBody(id, groupRef, size, projectData)
         }
         return () => { if (id) unregisterBody(id) }
-    }, [id, size, registerBody, unregisterBody])
+    }, [id, size, projectData, registerBody, unregisterBody])
     
     // Simple rotation - minimal useFrame work
     useFrame((state, delta) => {
@@ -74,7 +75,7 @@ export const CelestialBody = ({
             onClick?.(null, null)
             return
         }
-        setTrackedRef(groupRef, size, id)
+        setTrackedRef(groupRef, size, id, projectData)
         const worldPos = new THREE.Vector3()
         groupRef.current?.getWorldPosition(worldPos)
         onClick?.([worldPos.x, worldPos.y, worldPos.z], size)
