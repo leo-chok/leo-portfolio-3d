@@ -1,0 +1,217 @@
+/* ======================================
+   SPACESHIP HUD
+   ====================================== */
+.spaceship-hud {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* ======================================
+   SPEEDOMETER (Bottom Right)
+   ====================================== */
+.spaceship-speedometer {
+    position: fixed;
+    bottom: 40px;
+    right: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.spaceship-speedometer__label {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    color: rgba(124, 196, 237, 0.6);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.spaceship-speedometer__equalizer {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 60px;
+}
+
+.spaceship-speedometer__bar {
+    height: 6px;
+    width: 100%;
+    background: rgba(124, 196, 237, 0.15);
+    border-radius: 1px;
+    transition: all 0.15s ease-out;
+}
+
+.spaceship-speedometer__bar--active {
+    background: rgba(100, 237, 180, 0.9);
+    box-shadow: 0 0 8px rgba(100, 237, 180, 0.5);
+}
+
+.spaceship-speedometer__bar--boost {
+    background: rgba(255, 180, 80, 0.9);
+    box-shadow: 0 0 10px rgba(255, 180, 80, 0.6);
+    animation: boostPulse 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes boostPulse {
+    from { opacity: 0.8; }
+    to { opacity: 1; }
+}
+
+.spaceship-speedometer__value {
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: rgba(124, 196, 237, 1);
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(124, 196, 237, 0.4);
+}
+
+.spaceship-speedometer__value--boost {
+    color: rgba(255, 180, 80, 1);
+    text-shadow: 0 0 15px rgba(255, 180, 80, 0.6);
+}
+
+.spaceship-speedometer__unit {
+    font-size: 10px;
+    opacity: 0.6;
+}
+
+/* ======================================
+   CONTROLS HINT (Bottom Center)
+   ====================================== */
+.spaceship-controls-hint {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.spaceship-controls-hint__keys {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: rgba(124, 196, 237, 0.5);
+}
+
+.spaceship-controls-hint__keys .key {
+    padding: 4px 8px;
+    background: rgba(124, 196, 237, 0.1);
+    border: 1px solid rgba(124, 196, 237, 0.3);
+    border-radius: 4px;
+    color: rgba(124, 196, 237, 0.8);
+    font-size: 12px;
+}
+
+.spaceship-controls-hint__keys .key.spacer {
+    margin-left: 12px;
+}
+
+.spaceship-controls-hint__keys .key-label {
+    color: rgba(124, 196, 237, 0.4);
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+.spaceship-controls-hint__exit {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: rgba(255, 180, 80, 0.7);
+    letter-spacing: 1px;
+    padding: 8px 16px;
+    background: rgba(255, 180, 80, 0.05);
+    border: 1px solid rgba(255, 180, 80, 0.2);
+    border-radius: 4px;
+}
+
+.spaceship-controls-hint__exit .key {
+    display: inline-block;
+    padding: 2px 8px;
+    margin: 0 4px;
+    background: rgba(255, 180, 80, 0.15);
+    border: 1px solid rgba(255, 180, 80, 0.4);
+    border-radius: 4px;
+    color: rgba(255, 180, 80, 1);
+    font-weight: bold;
+}
+
+/* ======================================
+   BOOST INDICATOR
+   ====================================== */
+.spaceship-boost-indicator {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255, 180, 80, 1);
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px rgba(255, 180, 80, 0.8);
+    animation: boostBlink 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes boostBlink {
+    from { opacity: 0.7; }
+    to { opacity: 1; }
+}
+
+/* ======================================
+   BOUNDARY WARNING (Center Alert)
+   ====================================== */
+.spaceship-boundary-warning {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 40px;
+    background: rgba(255, 50, 50, 0.1);
+    border: 2px solid rgba(255, 80, 80, 0.6);
+    border-radius: 8px;
+    animation: warningPulse 0.4s ease-in-out infinite alternate;
+}
+
+.spaceship-boundary-warning__text {
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: #ff4444;
+    letter-spacing: 6px;
+    text-shadow: 
+        0 0 10px rgba(255, 68, 68, 0.8),
+        0 0 30px rgba(255, 68, 68, 0.5),
+        0 0 60px rgba(255, 68, 68, 0.3);
+}
+
+.spaceship-boundary-warning__subtext {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: rgba(255, 100, 100, 0.8);
+    letter-spacing: 3px;
+}
+
+@keyframes warningPulse {
+    from { 
+        opacity: 0.7;
+        border-color: rgba(255, 80, 80, 0.4);
+        box-shadow: 0 0 20px rgba(255, 50, 50, 0.2);
+    }
+    to { 
+        opacity: 1;
+        border-color: rgba(255, 80, 80, 0.8);
+        box-shadow: 0 0 40px rgba(255, 50, 50, 0.4);
+    }
+}

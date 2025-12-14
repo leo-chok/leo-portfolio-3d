@@ -3,8 +3,9 @@ import * as THREE from 'three'
 import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
 
-// Import store with individual selectors for optimization
+// Import stores with individual selectors for optimization
 import { useCameraStore } from '../../stores/cameraStore'
+import { useSpaceshipStore } from '../../stores/spaceshipStore'
 
 // ============================================
 // PRE-ALLOCATED VECTORS (avoid GC in useFrame)
@@ -14,6 +15,8 @@ const _desiredCamPos = new THREE.Vector3()
 const _moveDelta = new THREE.Vector3()
 const _overviewPos = new THREE.Vector3(0, 40, 120)
 const _overviewTarget = new THREE.Vector3(0, 0, 0)
+const _shipCamOffset = new THREE.Vector3(0, 0.1, 0.5) // Much closer: behind and slightly above ship
+const _shipLookAhead = new THREE.Vector3(0, 0, -2) // Look ahead of ship
 
 /**
  * CameraController - Unified Camera System
@@ -22,13 +25,14 @@ const _overviewTarget = new THREE.Vector3(0, 0, 0)
  * - Intro cinematic animation (on startAnimation=true)
  * - Tracking celestial bodies (approach + follow)
  * - Return to overview
+ * - Spaceship 3rd person follow mode
  * 
  * Optimizations:
  * - Pre-allocated Vector3 (no allocations in render loop)
  * - Individual Zustand selectors (minimal re-renders)
  * - Single controls.update() call per frame
  */
-export const CameraController = ({ startAnimation = false }) => {
+export const CameraController = ({ startAnimation = false, shipRef }) => {
     const { camera } = useThree()
     const controls = useThree((state) => state.controls)
     
@@ -45,6 +49,10 @@ export const CameraController = ({ startAnimation = false }) => {
     const approachProgress = useRef(0)
     const previousTrackedRef = useRef(null)
     const returnProgress = useRef(0)
+    
+    // === SPACESHIP MODE ===
+    const isSpaceshipMode = useSpaceshipStore(state => state.isSpaceshipMode)
+    const shipCameraLag = useRef(new THREE.Vector3())
     
     // === INTRO ANIMATION STATE ===
     const introPlayed = useRef(false)
@@ -101,6 +109,43 @@ export const CameraController = ({ startAnimation = false }) => {
     // === MAIN FRAME LOOP ===
     useFrame((state, delta) => {
         if (!controls || introActive.current) return
+        
+        // ===== SPACESHIP MODE (Immersive 3rd person) =====
+        if (isSpaceshipMode && shipRef?.current) {
+            // Disable orbit controls in spaceship mode
+            controls.enabled = false
+            controls.autoRotate = false
+            
+            // Get ship world position and quaternion
+            const shipPos = shipRef.current.position
+            const shipQuat = shipRef.current.quaternion
+            
+            // Calculate desired camera position (behind and above ship, in ship's local space)
+            const offset = _shipCamOffset.clone().applyQuaternion(shipQuat)
+            _desiredCamPos.copy(shipPos).add(offset)
+            
+            // Smooth camera position follow with lag
+            const posLag = 0.04 // Position lag
+            camera.position.lerp(_desiredCamPos, posLag)
+            
+            // Calculate look target (ahead of ship in ship's local space)
+            const lookTarget = _shipLookAhead.clone().applyQuaternion(shipQuat).add(shipPos)
+            
+            // Make camera look at the target
+            camera.lookAt(lookTarget)
+            
+            // Apply ship's roll to camera (immersive rotation)
+            // Get ship's up vector and use it to adjust camera roll
+            const shipUp = new THREE.Vector3(0, 1, 0).applyQuaternion(shipQuat)
+            camera.up.lerp(shipUp, 0.08) // Smooth roll transition
+            
+            return
+        } else if (!isSpaceshipMode && !controls.enabled) {
+            // Re-enable controls when exiting spaceship mode
+            controls.enabled = true
+            // Reset camera up vector to default
+            camera.up.set(0, 1, 0)
+        }
         
         // ===== RETURN TO OVERVIEW =====
         if (isReturningToOverview) {

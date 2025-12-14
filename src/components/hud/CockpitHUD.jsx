@@ -1,10 +1,15 @@
 import { useCameraStore } from '../../stores/cameraStore'
 import { useWindowStore } from '../../stores/windowStore'
+import { useSpaceshipStore } from '../../stores/spaceshipStore'
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
-import { createPortal } from 'react-dom'
 import { GALAXY_MAP } from '../../config/galaxyConfig'
 import { useScrambledText, useDecryptingText } from '../../utils/textUtils'
 import './CockpitHUD.css'
+
+// Extracted components
+import { SuccessModal } from './components/SuccessModal/SuccessModal'
+import { StatusIndicators } from './components/StatusIndicators/StatusIndicators'
+import { DiscoveryScore } from './components/DiscoveryScore/DiscoveryScore'
 
 // Build navigation list: Overview (00) + sun + planets
 const NAV_SECTIONS = [
@@ -192,6 +197,13 @@ export const CockpitHUD = () => {
     // Show analyze button only when tracking and not in overview
     const showAnalyzeButton = isTracking && trackedId && activeSection !== 'overview'
     const isLoading = loadingSection === trackedId
+    
+    // Spaceship mode
+    const isSpaceshipMode = useSpaceshipStore(state => state.isSpaceshipMode)
+    const enterSpaceshipMode = useSpaceshipStore(state => state.enterSpaceshipMode)
+    
+    // Hide HUD in spaceship mode
+    if (isSpaceshipMode) return null
 
     return (
         <div className={`cockpit-hud ${isVisible ? 'cockpit-hud--visible' : ''}`}>
@@ -309,75 +321,22 @@ export const CockpitHUD = () => {
                 )}
             </div>
             
-            {/* Right side - Discovery Score (Equalizer Style) */}
-            <div className="cockpit-score">
-                <div className="cockpit-score__label">DÉCOUVERTES</div>
-                <div className="cockpit-score__equalizer">
-                    {[...Array(10)].map((_, i) => {
-                        // 2 bars per discovery, from bottom to top
-                        const barIndex = 9 - i // Reverse so 0 is top, 9 is bottom
-                        const fillLevel = analyzedCount * 2 // 2 bars per discovery
-                        const isActive = barIndex < fillLevel
-                        return (
-                            <div 
-                                key={i}
-                                className={`cockpit-score__bar-segment ${isActive ? 'cockpit-score__bar-segment--active' : ''}`}
-                            />
-                        )
-                    })}
-                </div>
-                <div className={`cockpit-score__value ${allDiscovered ? 'cockpit-score__value--complete' : ''}`}>
-                    {analyzedCount}/{totalAnalyzable}
-                </div>
-            </div>
+            {/* Right side - Discovery Score + Spaceship Button */}
+            <DiscoveryScore 
+                analyzedCount={analyzedCount}
+                totalAnalyzable={totalAnalyzable}
+                allDiscovered={allDiscovered}
+                onLaunchSpaceship={enterSpaceshipMode}
+            />
             
             {/* Bottom Right - Status Indicators */}
-            <div className="cockpit-status">
-                <div className="cockpit-status__indicator cockpit-status__indicator--active">
-                    <span className="cockpit-status__dot" />
-                    <span className="cockpit-status__label">SHIELD</span>
-                </div>
-                <div className="cockpit-status__indicator cockpit-status__indicator--active">
-                    <span className="cockpit-status__dot" />
-                    <span className="cockpit-status__label">ENGINE</span>
-                </div>
-                <div className="cockpit-status__indicator cockpit-status__indicator--active">
-                    <span className="cockpit-status__dot" />
-                    <span className="cockpit-status__label">SCANNER</span>
-                </div>
-            </div>
+            <StatusIndicators />
             
-            {/* Success Modal - Portal to ensure it's on top */}
-            {showSuccessModal && createPortal(
-                <div className="success-modal">
-                    <div 
-                        className="success-modal__backdrop" 
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            closeSuccessModal()
-                        }} 
-                    />
-                    <div className="success-modal__content" onClick={(e) => e.stopPropagation()}>
-                        <div className="success-modal__icon">🎉</div>
-                        <div className="success-modal__title">MISSION ACCOMPLIE</div>
-                        <div className="success-modal__subtitle">Système entièrement décrypté</div>
-                        <div className="success-modal__message">
-                            Félicitations, explorateur ! Vous avez découvert toutes les sections de ce système stellaire.
-                            Vous pouvez maintenant vous relaxer et contempler l'univers...
-                        </div>
-                        <button 
-                            className="success-modal__button"
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                closeSuccessModal()
-                            }}
-                        >
-                            CONTEMPLER
-                        </button>
-                    </div>
-                </div>,
-                document.body
-            )}
+            {/* Success Modal */}
+            <SuccessModal 
+                isOpen={showSuccessModal} 
+                onClose={closeSuccessModal} 
+            />
         </div>
     )
 }

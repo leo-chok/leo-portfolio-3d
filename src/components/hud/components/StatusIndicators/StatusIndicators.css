@@ -1,0 +1,51 @@
+/* ======================================
+   STATUS INDICATORS (Bottom Right)
+   ====================================== */
+.cockpit-status {
+    position: fixed;
+    bottom: 40px;
+    right: 50px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cockpit-status__indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cockpit-status__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(80, 80, 80, 0.5);
+    transition: all 0.3s ease;
+}
+
+.cockpit-status__indicator--active .cockpit-status__dot {
+    background: rgba(100, 237, 180, 0.9);
+    box-shadow: 0 0 8px rgba(100, 237, 180, 0.6);
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+    0%, 100% { 
+        opacity: 1;
+        box-shadow: 0 0 8px rgba(100, 237, 180, 0.6);
+    }
+    50% { 
+        opacity: 0.7;
+        box-shadow: 0 0 4px rgba(100, 237, 180, 0.3);
+    }
+}
+
+.cockpit-status__label {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    color: rgba(100, 237, 180, 0.7);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}

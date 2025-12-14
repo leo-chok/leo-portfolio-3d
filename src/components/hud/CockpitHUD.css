@@ -717,15 +717,15 @@
 .cockpit-score__equalizer {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
     width: 60px;
 }
 
 .cockpit-score__bar-segment {
-    height: 6px;
+    height: 12px;
     width: 100%;
     background: rgba(124, 196, 237, 0.15);
-    border-radius: 1px;
+    border-radius: 2px;
     transition: all 0.4s ease-out;
 }
 
@@ -752,6 +752,14 @@
 @keyframes scoreComplete {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
+}
+
+/* Spaceship button inside score column */
+.cockpit-score .cockpit-spaceship-btn {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-top: 10px;
 }
 
 /* ======================================
@@ -923,4 +931,49 @@
     border-color: rgba(100, 237, 180, 0.8);
     box-shadow: 0 0 20px rgba(100, 237, 180, 0.3);
     transform: translateY(-2px);
+}
+
+/* ======================================
+   SPACESHIP BUTTON (Top Right - under discoveries)
+   Reward after discovering all planets
+   ====================================== */
+.cockpit-spaceship-btn {
+    position: fixed;
+    top: 80px;
+    right: 30px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background: rgba(10, 20, 35, 0.8);
+    border: 1px solid rgba(124, 196, 237, 0.4);
+    border-radius: 8px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(6px);
+}
+
+.cockpit-spaceship-btn:hover {
+    border-color: rgba(100, 237, 180, 0.8);
+    background: rgba(10, 30, 25, 0.9);
+    box-shadow: 0 0 20px rgba(100, 237, 180, 0.4);
+    transform: scale(1.1);
+}
+
+.cockpit-spaceship-btn__icon {
+    width: 28px;
+    height: 28px;
+    filter: 
+        brightness(0) saturate(100%)
+        invert(70%) sepia(50%) saturate(500%) hue-rotate(170deg);
+    transition: filter 0.3s ease;
+}
+
+.cockpit-spaceship-btn:hover .cockpit-spaceship-btn__icon {
+    filter: 
+        brightness(0) saturate(100%)
+        invert(80%) sepia(50%) saturate(500%) hue-rotate(100deg)
+        drop-shadow(0 0 8px rgba(100, 237, 180, 0.8));
 }
