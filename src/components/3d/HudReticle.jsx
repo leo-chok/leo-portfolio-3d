@@ -180,7 +180,7 @@ export const HudReticle = ({ radius = 3.2, visible = false, isTracked = false })
     
     return (
         <Billboard follow={true}>
-            {/* Outer rotating ring - very subtle */}
+            {/* Outer rotating ring with graduations */}
             <group ref={outerRingRef}>
                 <Line
                     points={outerRingPoints}
@@ -190,7 +190,7 @@ export const HudReticle = ({ radius = 3.2, visible = false, isTracked = false })
                     opacity={0.25}
                 />
                 
-                {/* Tick marks */}
+                {/* Tick marks (graduations) */}
                 {tickMarks.map((tick, i) => (
                     <Line
                         key={`tick-${i}`}
@@ -203,22 +203,7 @@ export const HudReticle = ({ radius = 3.2, visible = false, isTracked = false })
                 ))}
             </group>
             
-            {/* Inner counter-rotating elements */}
-            <group ref={innerRingRef}>
-                {/* Lock-on arcs */}
-                {lockArcs.map((arc, i) => (
-                    <Line
-                        key={`lock-${i}`}
-                        points={arc}
-                        color={HUD_COLOR_ACCENT}
-                        lineWidth={2}
-                        transparent
-                        opacity={lockOpacity * 0.5}
-                    />
-                ))}
-            </group>
-            
-            {/* Targeting brackets with breathing animation */}
+            {/* 4 corner brackets with breathing animation */}
             <group ref={bracketsRef}>
                 {targetingBrackets.map((bracket, i) => (
                     <Line
@@ -231,73 +216,6 @@ export const HudReticle = ({ radius = 3.2, visible = false, isTracked = false })
                     />
                 ))}
             </group>
-            
-            {/* Rotating scan line - very subtle */}
-            <group ref={scanLineRef}>
-                <Line
-                    points={scanLine}
-                    color={HUD_COLOR}
-                    lineWidth={1}
-                    transparent
-                    opacity={0.15}
-                    dashed
-                    dashSize={0.1}
-                    gapSize={0.15}
-                />
-            </group>
-            
-            {/* Center crosshair */}
-            {crosshair.horizontal.map((line, i) => (
-                <Line
-                    key={`h-${i}`}
-                    points={line}
-                    color={HUD_COLOR}
-                    lineWidth={1.5}
-                    transparent
-                    opacity={0.8}
-                />
-            ))}
-            {crosshair.vertical.map((line, i) => (
-                <Line
-                    key={`v-${i}`}
-                    points={line}
-                    color={HUD_COLOR}
-                    lineWidth={1.5}
-                    transparent
-                    opacity={0.8}
-                />
-            ))}
-            
-            {/* Center dot */}
-            <mesh>
-                <circleGeometry args={[radius * 0.02, 16]} />
-                <meshBasicMaterial 
-                    color={HUD_COLOR_ACCENT}
-                    transparent
-                    opacity={0.9}
-                    toneMapped={false}
-                />
-            </mesh>
-            
-            {/* Corner dots for depth */}
-            {[0, Math.PI/2, Math.PI, Math.PI * 1.5].map((angle, i) => (
-                <mesh 
-                    key={`corner-${i}`}
-                    position={[
-                        Math.cos(angle) * radius * 0.85 * 0.707,
-                        Math.sin(angle) * radius * 0.85 * 0.707,
-                        0
-                    ]}
-                >
-                    <circleGeometry args={[radius * 0.015, 8]} />
-                    <meshBasicMaterial 
-                        color={HUD_COLOR}
-                        transparent
-                        opacity={0.5}
-                        toneMapped={false}
-                    />
-                </mesh>
-            ))}
         </Billboard>
     )
 }

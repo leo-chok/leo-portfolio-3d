@@ -10,7 +10,7 @@ export const SpaceDust = ({ count = 6000 }) => {
   // Generate random positions in a SPHERE (not cube)
   const particles = useMemo(() => {
     const temp = new Float32Array(count * 3)
-    const radius = 160 // Match Stars radius
+    const radius = 300 // Match Stars radius
     
     for (let i = 0; i < count; i++) {
       // Spherical distribution
@@ -36,7 +36,7 @@ export const SpaceDust = ({ count = 6000 }) => {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.15}
+        size={0.1}
         color={DUST_COLOR}
         sizeAttenuation={true}
         transparent

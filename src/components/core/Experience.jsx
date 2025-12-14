@@ -3,8 +3,10 @@ import { OrbitControls, Stars } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { SolarSystem } from '../3d/SolarSystem'
 import { SpaceDust } from '../3d/SpaceDust'
+import { MilkyWay } from '../3d/MilkyWay'
 import { SpaceshipController } from '../3d/SpaceshipController'
 import { BarrierEffect } from '../3d/BarrierEffect'
+import { Mothership } from '../3d/Mothership'
 import { CameraController } from './CameraController'
 import { Effects } from './Effects'
 import { useDebugStore } from '../../stores/debugStore'
@@ -49,11 +51,18 @@ export const Experience = ({ startAnimation = false }) => {
             <ambientLight intensity={0.3} />
             <pointLight position={[10, 10, 10]} intensity={0.8} />
             
-            {/* Stars with speed=0 to avoid continuous animation */}
-            <Stars radius={100} depth={50} count={starsCount} factor={4} saturation={0} fade speed={0} />
+            {/* Background stars */}
+            <Stars radius={150} depth={200} count={starsCount} factor={10} saturation={0} fade speed={0} />
+            
+            {/* Milky Way disk - tilted galactic plane */}
+            <MilkyWay count={3000} innerRadius={200} outerRadius={600} />
+            
             <SpaceDust count={dustCount} />
             
             <SolarSystem />
+            
+            {/* Autonomous cargo ship NPC */}
+            <Mothership />
             
             {/* Spaceship mode components */}
             {isSpaceshipMode && (

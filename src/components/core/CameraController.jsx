@@ -210,9 +210,14 @@ export const CameraController = ({ startAnimation = false, shipRef }) => {
             }
         } else {
             // ===== TRACKING PHASE =====
-            // Only update the target to follow the celestial body
-            // Let the user freely orbit around it
-            controls.target.lerp(_worldPos, 0.1)
+            // Calculate how much the target moved since last frame
+            const deltaPos = _worldPos.clone().sub(lastTargetPos.current)
+            
+            // Move camera along with the target (maintains orbit position)
+            camera.position.add(deltaPos)
+            
+            // Update the orbit controls target to follow
+            controls.target.lerp(_worldPos, 0.15)
             
             // Remember position for next frame
             lastTargetPos.current.copy(_worldPos)

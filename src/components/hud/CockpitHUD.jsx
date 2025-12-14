@@ -122,6 +122,14 @@ export const CockpitHUD = () => {
     // Handle analyze/open data button click
     const handleAnalyze = useCallback(() => {
         if (trackedId && !loadingSection) {
+            // Special case: Mothership (no window, just decrypt)
+            if (trackedId === 'mothership') {
+                if (!analyzedSections.has(trackedId)) {
+                    startLoading(trackedId)
+                }
+                return
+            }
+            
             // Check if this is a moon (has projectData)
             if (trackedProjectData) {
                 // Moon - open project window directly

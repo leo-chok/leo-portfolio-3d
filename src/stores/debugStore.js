@@ -18,8 +18,8 @@ export const useDebugStore = create((set, get) => ({
     toggleDebugPanel: () => set((state) => ({ showDebugPanel: !state.showDebugPanel })),
     
     // === PARTICLE COUNTS ===
-    starsCount: 2000,
-    dustCount: 1500,
+    starsCount: 6000,
+    dustCount: 3000,
     setStarsCount: (value) => set({ starsCount: value }),
     setDustCount: (value) => set({ dustCount: value }),
     
