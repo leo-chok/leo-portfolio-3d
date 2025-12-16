@@ -6,6 +6,8 @@ import { PresentationView } from './views/PresentationView'
 import { PortfolioView } from './views/PortfolioView'
 import { FormationView } from './views/FormationView'
 import { SkillsView } from './views/SkillsView'
+import { HardSkillsView } from './views/HardSkillsView'
+import { SoftSkillsView } from './views/SoftSkillsView'
 import { ContactView } from './views/ContactView'
 import { ProjectDetailView } from './views/ProjectDetailView'
 
@@ -26,6 +28,8 @@ const SECTION_VIEWS = {
     portfolio: PortfolioView,
     formation: FormationView,
     skills: SkillsView,
+    'moon-hardskills': HardSkillsView,
+    'moon-softskills': SoftSkillsView,
     contact: ContactView,
 }
 
@@ -34,15 +38,19 @@ export const WindowManager = () => {
     const closeWindow = useWindowStore((state) => state.closeWindow)
     const minimizeWindow = useWindowStore((state) => state.minimizeWindow)
     const restoreWindow = useWindowStore((state) => state.restoreWindow)
+    const toggleMaximize = useWindowStore((state) => state.toggleMaximize)
     const bringToFront = useWindowStore((state) => state.bringToFront)
     const updatePosition = useWindowStore((state) => state.updatePosition)
     const openProjectWindow = useWindowStore((state) => state.openProjectWindow)
     
-    if (windows.length === 0) return null
+    // Filter out minimized windows - they are rendered in Taskbar instead
+    const visibleWindows = windows.filter(w => !w.isMinimized)
+    
+    if (visibleWindows.length === 0) return null
     
     return (
         <>
-            {windows.map((window) => {
+            {visibleWindows.map((window) => {
                 // Handle project detail windows
                 if (window.type === 'project' && window.projectData) {
                     return (
@@ -52,10 +60,12 @@ export const WindowManager = () => {
                             subtitle={window.subtitle}
                             initialPosition={window.position}
                             isMinimized={window.isMinimized}
+                            isMaximized={window.isMaximized}
                             zIndex={window.zIndex}
                             onClose={() => closeWindow(window.id)}
                             onMinimize={() => minimizeWindow(window.id)}
                             onRestore={() => restoreWindow(window.id)}
+                            onMaximize={() => toggleMaximize(window.id)}
                             onFocus={() => bringToFront(window.id)}
                         >
                             <ProjectDetailView 
@@ -86,10 +96,12 @@ export const WindowManager = () => {
                         subtitle={window.subtitle}
                         initialPosition={window.position}
                         isMinimized={window.isMinimized}
+                        isMaximized={window.isMaximized}
                         zIndex={window.zIndex}
                         onClose={() => closeWindow(window.id)}
                         onMinimize={() => minimizeWindow(window.id)}
                         onRestore={() => restoreWindow(window.id)}
+                        onMaximize={() => toggleMaximize(window.id)}
                         onFocus={() => bringToFront(window.id)}
                     >
                         <ViewComponent {...viewProps} />

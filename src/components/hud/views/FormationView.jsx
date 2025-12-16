@@ -1,39 +1,45 @@
-import { presentation } from '../../../data/presentation'
+import { formations } from '../../../data/formations'
 import './FormationView.css'
 
 /**
- * FormationView - Education and Experience display
- * Uses experience data from presentation.js
+ * FormationView - Education display with timeline graduation
+ * Uses formations data from formations.js
  */
 export const FormationView = () => {
-    const { experience } = presentation
-    
     return (
         <div className="view-formation">
+            {/* Timeline graduation ruler on the left */}
+            <div className="formation-ruler">
+                {formations.items.map((_, index) => (
+                    <div key={index} className="formation-ruler__section">
+                        <span className="formation-ruler__major" />
+                        <div className="formation-ruler__minors">
+                            <span /><span /><span /><span /><span />
+                        </div>
+                    </div>
+                ))}
+            </div>
+
             <div className="formation-timeline">
-                {experience.map((exp, index) => (
+                {formations.items.map((item, index) => (
                     <div key={index} className="formation-item">
                         <div className="formation-item__marker">
                             <span className="formation-item__dot" />
-                            {index < experience.length - 1 && <span className="formation-item__line" />}
+                            {index < formations.items.length - 1 && <span className="formation-item__line" />}
                         </div>
                         
                         <div className="formation-item__content">
                             <div className="formation-item__header">
-                                <h4 className="formation-item__title">{exp.title}</h4>
-                                <span className="formation-item__type">{exp.type}</span>
+                                <h4 className="formation-item__title">{item.title}</h4>
+                                {item.subtitle && (
+                                    <span className="formation-item__subtitle">{item.subtitle}</span>
+                                )}
                             </div>
                             
-                            <div className="formation-item__company">{exp.company}</div>
-                            <div className="formation-item__period">{exp.period}</div>
+                            <div className="formation-item__school">{item.school}</div>
+                            <div className="formation-item__period">{item.period}</div>
                             
-                            {exp.highlights && (
-                                <ul className="formation-item__highlights">
-                                    {exp.highlights.map((highlight, i) => (
-                                        <li key={i}>{highlight}</li>
-                                    ))}
-                                </ul>
-                            )}
+                            <p className="formation-item__description">{item.description}</p>
                         </div>
                     </div>
                 ))}

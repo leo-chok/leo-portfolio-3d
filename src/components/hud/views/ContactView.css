@@ -1,5 +1,6 @@
 /* ===========================
    CONTACT VIEW STYLES
+   Sci-Fi Communication Terminal
    =========================== */
 
 .view-contact {
@@ -20,44 +21,107 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    animation: infoReveal 0.5s ease-out;
+}
+
+@keyframes infoReveal {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Status indicator */
+.view-contact__status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: rgba(100, 237, 180, 0.8);
+    letter-spacing: 2px;
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+.view-contact__status-icon {
+    animation: iconPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
 }
 
 .view-contact__cta {
-    color: rgba(200, 220, 240, 0.9);
-    font-size: 14px;
+    color: rgba(200, 220, 240, 0.85);
+    font-size: 13px;
     line-height: 1.6;
     margin: 0;
+    animation: textFadeIn 0.5s ease-out 0.2s backwards;
 }
 
+@keyframes textFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Contact Details */
 .view-contact__details {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .view-contact__item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    color: rgba(124, 196, 237, 0.8);
-    font-size: 13px;
+    gap: 8px;
+    color: rgba(124, 196, 237, 0.7);
+    font-size: 12px;
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: all 0.3s ease;
+    font-family: 'Orbitron', monospace;
+    animation: itemReveal 0.4s ease-out backwards;
+}
+
+.view-contact__item:nth-child(1) { animation-delay: 0.1s; }
+.view-contact__item:nth-child(2) { animation-delay: 0.2s; }
+
+@keyframes itemReveal {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.view-contact__item-bracket {
+    color: rgba(100, 237, 180, 0.4);
+    transition: color 0.3s ease;
 }
 
 .view-contact__item:hover {
     color: rgba(124, 196, 237, 1);
 }
 
+.view-contact__item:hover .view-contact__item-bracket {
+    color: rgba(100, 237, 180, 0.8);
+}
+
 .view-contact__icon {
-    width: 16px;
-    color: rgba(124, 196, 237, 0.6);
+    width: 14px;
+    color: rgba(124, 196, 237, 0.5);
+    transition: color 0.3s ease;
+}
+
+.view-contact__item:hover .view-contact__icon {
+    color: rgba(100, 237, 180, 0.8);
 }
 
 /* Social Links */
 .view-contact__social {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
@@ -65,105 +129,246 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 16px;
-    background: rgba(124, 196, 237, 0.1);
-    border: 1px solid rgba(124, 196, 237, 0.3);
-    border-radius: 4px;
-    color: rgba(124, 196, 237, 0.9);
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid rgba(124, 196, 237, 0.2);
+    border-radius: 2px;
+    color: rgba(124, 196, 237, 0.7);
     text-decoration: none;
-    font-size: 12px;
+    font-size: 11px;
     font-family: 'Orbitron', monospace;
     letter-spacing: 1px;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: btnReveal 0.4s ease-out backwards;
+}
+
+.view-contact__social-btn:nth-child(1) { animation-delay: 0.3s; }
+.view-contact__social-btn:nth-child(2) { animation-delay: 0.4s; }
+
+@keyframes btnReveal {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .view-contact__social-btn:hover {
-    background: rgba(124, 196, 237, 0.2);
-    border-color: rgba(124, 196, 237, 0.6);
-    box-shadow: 0 0 10px rgba(124, 196, 237, 0.2);
+    background: rgba(100, 237, 180, 0.05);
+    border-color: rgba(100, 237, 180, 0.4);
+    color: rgba(100, 237, 180, 0.9);
+}
+
+/* Shimmer on social buttons */
+.view-contact__social-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(100, 237, 180, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.view-contact__social-btn:hover::before {
+    left: 100%;
 }
 
 /* Form Section */
 .view-contact__form-container {
     flex: 1;
-    background: rgba(124, 196, 237, 0.03);
+    background: transparent;
     border: 1px solid rgba(124, 196, 237, 0.15);
-    border-radius: 4px;
+    border-radius: 2px;
     padding: 20px;
+    position: relative;
+    animation: formReveal 0.5s ease-out 0.2s backwards;
+}
+
+@keyframes formReveal {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Corner brackets on form */
+.view-contact__form-container::before,
+.view-contact__form-container::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-color: rgba(124, 196, 237, 0.3);
+    border-style: solid;
+}
+
+.view-contact__form-container::before {
+    top: -1px;
+    left: -1px;
+    border-width: 1px 0 0 1px;
+}
+
+.view-contact__form-container::after {
+    bottom: -1px;
+    right: -1px;
+    border-width: 0 1px 1px 0;
+}
+
+.view-contact__form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.1);
 }
 
 .view-contact__form-title {
-    margin: 0 0 16px 0;
-    color: rgba(124, 196, 237, 0.7);
+    color: rgba(124, 196, 237, 0.6);
+    font-family: 'Orbitron', monospace;
     font-size: 11px;
     letter-spacing: 2px;
+}
+
+.view-contact__form-status {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    color: rgba(100, 237, 180, 0.7);
+    letter-spacing: 1px;
+    animation: statusBlink 2s ease-in-out infinite;
+}
+
+@keyframes statusBlink {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
 }
 
 .view-contact__form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .view-contact__field {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    animation: fieldReveal 0.4s ease-out backwards;
+}
+
+.view-contact__field:nth-child(1) { animation-delay: 0.3s; }
+.view-contact__field:nth-child(2) { animation-delay: 0.4s; }
+.view-contact__field:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes fieldReveal {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 .view-contact__field label {
-    color: rgba(124, 196, 237, 0.5);
-    font-size: 10px;
-    letter-spacing: 1px;
+    color: rgba(124, 196, 237, 0.4);
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
 }
 
 .view-contact__field input,
 .view-contact__field textarea {
-    background: rgba(10, 20, 35, 0.8);
-    border: 1px solid rgba(124, 196, 237, 0.2);
-    border-radius: 4px;
+    background: rgba(10, 20, 35, 0.6);
+    border: 1px solid rgba(124, 196, 237, 0.15);
+    border-radius: 2px;
     padding: 10px 12px;
     color: rgba(200, 220, 240, 0.9);
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .view-contact__field input:focus,
 .view-contact__field textarea:focus {
-    border-color: rgba(124, 196, 237, 0.5);
+    border-color: rgba(100, 237, 180, 0.4);
+    box-shadow: 0 0 10px rgba(100, 237, 180, 0.1);
 }
 
 .view-contact__field input::placeholder,
 .view-contact__field textarea::placeholder {
-    color: rgba(124, 196, 237, 0.3);
+    color: rgba(124, 196, 237, 0.25);
 }
 
 .view-contact__field textarea {
     resize: vertical;
-    min-height: 80px;
+    min-height: 70px;
 }
 
+/* Submit button */
 .view-contact__submit {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     padding: 12px 20px;
-    background: linear-gradient(135deg, rgba(124, 196, 237, 0.2), rgba(124, 196, 237, 0.1));
-    border: 1px solid rgba(124, 196, 237, 0.4);
-    border-radius: 4px;
-    color: rgba(124, 196, 237, 1);
+    background: transparent;
+    border: 1px solid rgba(100, 237, 180, 0.3);
+    border-radius: 2px;
+    color: rgba(100, 237, 180, 0.9);
     font-family: 'Orbitron', monospace;
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 2px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: submitReveal 0.4s ease-out 0.6s backwards;
+}
+
+@keyframes submitReveal {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .view-contact__submit:hover {
-    background: linear-gradient(135deg, rgba(124, 196, 237, 0.3), rgba(124, 196, 237, 0.2));
-    border-color: rgba(124, 196, 237, 0.7);
-    box-shadow: 0 0 15px rgba(124, 196, 237, 0.3);
+    background: rgba(100, 237, 180, 0.1);
+    border-color: rgba(100, 237, 180, 0.6);
+    box-shadow: 0 0 20px rgba(100, 237, 180, 0.2);
+}
+
+.view-contact__submit-icon {
+    transition: transform 0.3s ease;
+}
+
+.view-contact__submit:hover .view-contact__submit-icon {
+    transform: translateX(3px);
+}
+
+/* Sending state */
+.view-contact__submit.sending {
+    background: rgba(100, 237, 180, 0.15);
+    pointer-events: none;
+}
+
+.view-contact__submit.sending .view-contact__submit-icon {
+    animation: sendingPulse 0.5s ease-in-out infinite;
+}
+
+@keyframes sendingPulse {
+    0%, 100% { transform: translateX(0); opacity: 1; }
+    50% { transform: translateX(5px); opacity: 0.5; }
+}
+
+/* Shimmer on submit */
+.view-contact__submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(100, 237, 180, 0.15), transparent);
+    animation: submitShimmer 3s ease-in-out infinite;
+}
+
+@keyframes submitShimmer {
+    0% { left: -100%; }
+    30% { left: 100%; }
+    100% { left: 100%; }
 }

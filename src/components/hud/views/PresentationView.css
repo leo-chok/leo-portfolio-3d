@@ -1,6 +1,6 @@
 /* ===========================
    PRESENTATION VIEW STYLES
-   Content specific styles
+   Sci-Fi animated content
    =========================== */
 
 .view-presentation {
@@ -14,6 +14,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    animation: photoReveal 0.6s ease-out;
+}
+
+@keyframes photoReveal {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 .view-presentation__photo-frame {
@@ -27,21 +34,34 @@
     box-shadow: 0 0 15px rgba(124, 196, 237, 0.1);
 }
 
-.view-presentation__photo-frame::before {
+/* Corner brackets animation */
+.view-presentation__photo-frame::before,
+.view-presentation__photo-frame::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(124, 196, 237, 0.1) 0%,
-        transparent 50%,
-        rgba(124, 196, 237, 0.05) 100%
-    );
-    pointer-events: none;
-    z-index: 2;
+    width: 20px;
+    height: 20px;
+    border-color: rgba(124, 196, 237, 0.6);
+    border-style: solid;
+    z-index: 3;
+    animation: bracketPulse 3s ease-in-out infinite;
+}
+
+.view-presentation__photo-frame::before {
+    top: 8px;
+    left: 8px;
+    border-width: 2px 0 0 2px;
+}
+
+.view-presentation__photo-frame::after {
+    bottom: 8px;
+    right: 8px;
+    border-width: 0 2px 2px 0;
+}
+
+@keyframes bracketPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
 }
 
 .view-presentation__photo-label {
@@ -50,6 +70,12 @@
     font-size: 10px;
     color: rgba(124, 196, 237, 0.6);
     letter-spacing: 2px;
+    animation: labelBlink 2s ease-in-out infinite;
+}
+
+@keyframes labelBlink {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; color: rgba(124, 196, 237, 0.9); }
 }
 
 /* Text section */
@@ -66,21 +92,121 @@
     letter-spacing: 2px;
     margin: 0 0 15px 0;
     text-transform: uppercase;
+    animation: subtitleReveal 0.5s ease-out;
+    position: relative;
+}
+
+@keyframes subtitleReveal {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Typing cursor effect on subtitle */
+.view-presentation__subtitle::after {
+    content: '_';
+    animation: cursorBlink 1s step-end infinite;
+    color: rgba(100, 237, 180, 0.8);
+}
+
+@keyframes cursorBlink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
 }
 
 .view-presentation__bio {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.view-presentation__bio p {
+.view-presentation__paragraph {
     font-family: 'Segoe UI', sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: 13px;
+    line-height: 1.5;
     color: rgba(200, 220, 240, 0.8);
-    margin: 0 0 10px 0;
+    margin: 0;
+    animation: paragraphFadeIn 0.4s ease-out backwards;
 }
 
-/* Stats */
+/* Staggered paragraph reveal */
+.view-presentation__paragraph:nth-child(1) { animation-delay: 0.1s; }
+.view-presentation__paragraph:nth-child(2) { animation-delay: 0.2s; }
+.view-presentation__paragraph:nth-child(3) { animation-delay: 0.3s; }
+.view-presentation__paragraph:nth-child(4) { animation-delay: 0.4s; }
+.view-presentation__paragraph:nth-child(5) { animation-delay: 0.5s; }
+.view-presentation__paragraph:nth-child(6) { animation-delay: 0.6s; }
+.view-presentation__paragraph:nth-child(7) { animation-delay: 0.7s; }
+
+@keyframes paragraphFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Bold styling with subtle glow */
+.view-presentation__paragraph strong {
+    color: #7cc4ed;
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(124, 196, 237, 0.3);
+}
+
+/* Intro paragraph - slightly larger */
+.view-presentation__paragraph--intro {
+    font-size: 14px;
+    color: rgba(220, 235, 250, 0.9);
+    margin-bottom: 8px;
+}
+
+/* Parcours - normal with separator after */
+.view-presentation__paragraph--parcours {
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.1);
+    margin-bottom: 6px;
+}
+
+/* Actuel - grouped together with animated border */
+.view-presentation__paragraph--actuel {
+    padding-left: 12px;
+    border-left: 2px solid rgba(124, 196, 237, 0.3);
+    position: relative;
+}
+
+.view-presentation__paragraph--actuel::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(100, 237, 180, 0.6), transparent);
+    animation: borderGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes borderGlow {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+/* Vision - emphasized */
+.view-presentation__paragraph--vision {
+    margin-top: 8px;
+    font-style: italic;
+    color: rgba(200, 220, 240, 0.7);
+}
+
+/* Passion */
+.view-presentation__paragraph--passion {
+    color: rgba(180, 210, 240, 0.75);
+}
+
+/* Fun fact - lighter, smaller */
+.view-presentation__paragraph--fun {
+    font-size: 12px;
+    color: rgba(160, 200, 240, 0.6);
+    margin-top: 6px;
+}
+
+/* Stats with animation */
 .view-presentation__stats {
     display: flex;
     gap: 20px;
@@ -93,6 +219,16 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    animation: statReveal 0.4s ease-out backwards;
+}
+
+.view-presentation__stat:nth-child(1) { animation-delay: 0.6s; }
+.view-presentation__stat:nth-child(2) { animation-delay: 0.7s; }
+.view-presentation__stat:nth-child(3) { animation-delay: 0.8s; }
+
+@keyframes statReveal {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .view-presentation__stat-label {
@@ -112,11 +248,23 @@
 .view-presentation__stat-value--active {
     color: #64ed7c;
     text-shadow: 0 0 10px rgba(100, 237, 124, 0.5);
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+    0%, 100% { text-shadow: 0 0 10px rgba(100, 237, 124, 0.5); }
+    50% { text-shadow: 0 0 20px rgba(100, 237, 124, 0.8), 0 0 30px rgba(100, 237, 124, 0.4); }
 }
 
 /* Status Badge */
 .view-presentation__status {
     margin: 15px 0;
+    animation: badgeReveal 0.5s ease-out 0.5s backwards;
+}
+
+@keyframes badgeReveal {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 .view-presentation__status-badge {
@@ -129,6 +277,26 @@
     font-size: 11px;
     color: rgba(255, 200, 100, 0.9);
     letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer on badge */
+.view-presentation__status-badge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 200, 100, 0.2), transparent);
+    animation: badgeShimmer 4s ease-in-out infinite;
+}
+
+@keyframes badgeShimmer {
+    0% { left: -100%; }
+    20% { left: 100%; }
+    100% { left: 100%; }
 }
 
 /* Skills Preview */

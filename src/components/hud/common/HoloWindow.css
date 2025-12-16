@@ -8,7 +8,6 @@
     width: 600px;
     min-width: 300px;
     min-height: 200px;
-    max-width: 90vw;
     max-height: 85vh;
     background: linear-gradient(
         135deg,
@@ -250,10 +249,102 @@
     filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
 }
 
+/* ============================
+   MAXIMIZED STATE
+   ============================ */
+
+.holo-window-wrapper--maximized {
+    position: fixed !important;
+    top: 100px !important;
+    left: 40px !important;
+    transform: none !important;
+}
+
+.holo-window--maximized {
+    width: calc(100vw - 200px) !important;
+    height: calc(100vh - 180px) !important;
+    max-width: none;
+    max-height: none;
+    animation: windowMaximize 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    resize: none;
+}
+
+.holo-window--maximized .holo-window__content {
+    max-height: calc(100vh - 280px);
+    flex: 1;
+}
+
+/* Hide resize handle when maximized */
+.holo-window--maximized::after {
+    display: none;
+}
+
+@keyframes windowMaximize {
+    from { opacity: 0.8; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Maximize button */
+.holo-window__maximize {
+    background: none;
+    border: none;
+    color: rgba(124, 196, 237, 0.6);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.holo-window__maximize:hover { color: #64edb4; }
+.holo-window__maximize:hover .holo-window__maximize-icon,
+.holo-window__maximize:hover .holo-window__maximize-icon--restore::before,
+.holo-window__maximize:hover .holo-window__maximize-icon--restore::after {
+    border-color: #64edb4;
+}
+
+/* Maximize icon - single square */
+.holo-window__maximize-icon {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid rgba(124, 196, 237, 0.6);
+    position: relative;
+    margin-top: 3px;
+}
+
+/* Restore icon (when maximized) - two overlapping squares */
+.holo-window__maximize-icon--restore {
+    width: 8px;
+    height: 8px;
+}
+
+.holo-window__maximize-icon--restore::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid rgba(124, 196, 237, 0.6);
+    top: -4px;
+    left: 4px;
+    background: rgba(10, 20, 35, 0.9);
+}
+
 @media (max-width: 768px) {
     .holo-window {
         width: 95%;
         max-width: 95%;
     }
+    
+    .holo-window--maximized {
+        width: 100vw !important;
+        height: 100vh !important;
+        top: 0 !important;
+        left: 0 !important;
+    }
+    
+    .holo-window-wrapper--maximized {
+        top: 0 !important;
+        left: 0 !important;
+    }
 }
-

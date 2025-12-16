@@ -1,0 +1,118 @@
+/* ===========================
+   TASKBAR STYLES
+   Minimal design matching header
+   =========================== */
+
+.taskbar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    padding: 8px 15px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(124, 196, 237, 0.05) 20%,
+        rgba(124, 196, 237, 0.05) 80%,
+        transparent
+    );
+    border-top: 1px solid rgba(124, 196, 237, 0.1);
+    border-bottom: 1px solid rgba(124, 196, 237, 0.2);
+    z-index: 500;
+    pointer-events: auto;
+    font-family: 'Orbitron', monospace;
+}
+
+.taskbar__items {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(124, 196, 237, 0.3) transparent;
+}
+
+/* Custom scrollbar */
+.taskbar__items::-webkit-scrollbar {
+    height: 3px;
+}
+
+.taskbar__items::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.taskbar__items::-webkit-scrollbar-thumb {
+    background: rgba(124, 196, 237, 0.3);
+    border-radius: 2px;
+}
+
+/* Individual item - minimal pill style */
+.taskbar__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.taskbar__item:hover {
+    background: rgba(124, 196, 237, 0.08);
+    border-bottom-color: rgba(124, 196, 237, 0.6);
+}
+
+.taskbar__title {
+    font-size: 10px;
+    color: rgba(124, 196, 237, 0.7);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+}
+
+.taskbar__item:hover .taskbar__title {
+    color: #7cc4ed;
+}
+
+.taskbar__close {
+    background: none;
+    border: none;
+    color: rgba(124, 196, 237, 0.4);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0 2px;
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.taskbar__close:hover { 
+    color: #ff4d4d; 
+}
+
+/* Animation */
+.taskbar__item {
+    animation: taskbarItemAppear 0.25s ease-out;
+}
+
+@keyframes taskbarItemAppear {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .taskbar {
+        width: 90%;
+    }
+}

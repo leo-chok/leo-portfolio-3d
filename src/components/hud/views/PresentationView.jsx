@@ -6,10 +6,7 @@ import './PresentationView.css'
  * Uses data from presentation.js for clean architecture
  */
 export const PresentationView = () => {
-    const { name, title, subtitle, tagline, status, about, skills } = presentation
-    
-    // Get first 3 skill categories for compact display
-    const topSkills = Object.entries(skills).slice(0, 3)
+    const { name, title, subtitle, tagline, status, about } = presentation
     
     return (
         <div className="view-presentation">
@@ -32,7 +29,11 @@ export const PresentationView = () => {
                 
                 <div className="view-presentation__bio">
                     {about.map((paragraph, index) => (
-                        <p key={index}>{paragraph}</p>
+                        <p 
+                            key={index} 
+                            className={`view-presentation__paragraph view-presentation__paragraph--${paragraph.type}`}
+                            dangerouslySetInnerHTML={{ __html: paragraph.text }}
+                        />
                     ))}
                 </div>
                 
@@ -43,25 +44,13 @@ export const PresentationView = () => {
                     </span>
                 </div>
                 
-                {/* Skills Preview */}
-                <div className="view-presentation__skills">
-                    {topSkills.map(([category, items]) => (
-                        <div key={category} className="view-presentation__skill-group">
-                            <span className="view-presentation__skill-category">{category}</span>
-                            <div className="view-presentation__skill-tags">
-                                {items.slice(0, 4).map(skill => (
-                                    <span key={skill} className="view-presentation__skill-tag">{skill}</span>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
+
                 
                 {/* Stats */}
                 <div className="view-presentation__stats">
                     <div className="view-presentation__stat">
                         <span className="view-presentation__stat-label">EXPERIENCE</span>
-                        <span className="view-presentation__stat-value">10+ YEARS</span>
+                        <span className="view-presentation__stat-value">2 YEARS</span>
                     </div>
                     <div className="view-presentation__stat">
                         <span className="view-presentation__stat-label">SPECIALTY</span>
@@ -69,7 +58,7 @@ export const PresentationView = () => {
                     </div>
                     <div className="view-presentation__stat">
                         <span className="view-presentation__stat-label">STATUS</span>
-                        <span className="view-presentation__stat-value view-presentation__stat-value--active">SEEKING</span>
+                        <span className="view-presentation__stat-value view-presentation__stat-value--active">EN POSTE</span>
                     </div>
                 </div>
             </div>

@@ -8,19 +8,25 @@ export const ProjectDetailView = ({ project, onBack }) => {
 
     return (
         <div className="project-detail-view">
-            <button className="back-btn" onClick={onBack}>
-                <FontAwesomeIcon icon={faArrowLeft} /> Back to List
-            </button>
             
             <div className="detail-header">
-                <h2 className="detail-title">{project.title}</h2>
+                <div className="detail-header__text">
+                    <h2 className="detail-title">{project.title}</h2>
+                    {project.subtitle && (
+                        <span className="detail-subtitle">{project.subtitle}</span>
+                    )}
+                </div>
                 <div className="detail-links">
-                    <a href={project.demo} target="_blank" rel="noopener noreferrer" className="detail-link primary">
-                        <FontAwesomeIcon icon={faExternalLinkAlt} /> Live Demo
-                    </a>
-                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="detail-link">
-                        <FontAwesomeIcon icon={faGithub} /> Code
-                    </a>
+                    {project.demo && (
+                        <a href={project.demo} target="_blank" rel="noopener noreferrer" className="detail-link primary">
+                            <FontAwesomeIcon icon={faExternalLinkAlt} /> Demo
+                        </a>
+                    )}
+                    {project.github && (
+                        <a href={project.github} target="_blank" rel="noopener noreferrer" className="detail-link">
+                            <FontAwesomeIcon icon={faGithub} /> Code
+                        </a>
+                    )}
                     {project.video && (
                          <a href={project.video} target="_blank" rel="noopener noreferrer" className="detail-link">
                             <FontAwesomeIcon icon={faPlay} /> Video
@@ -32,20 +38,25 @@ export const ProjectDetailView = ({ project, onBack }) => {
             <div className="detail-content">
                 <div className="detail-image-container">
                     <img src={project.image} alt={project.title} className="detail-image" />
+                    <div className="detail-image__overlay">
+                        <span className="detail-image__label">PROJECT SCAN</span>
+                    </div>
                 </div>
                 
                 <div className="detail-info">
-                    <h3>About the Project</h3>
+                    <h3>// DESCRIPTION</h3>
                     <p className="detail-description">{project.description}</p>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </p>
                     
-                    <h3>Technologies</h3>
+                    <h3>// TECHNOLOGIES</h3>
                     <div className="detail-stack">
-                        {project.stack.map((tech) => (
-                            <span key={tech} className="detail-tech-tag">{tech}</span>
+                        {project.stack.map((tech, index) => (
+                            <span 
+                                key={tech} 
+                                className="detail-tech-tag"
+                                style={{ '--delay': `${index * 0.1}s` }}
+                            >
+                                {tech}
+                            </span>
                         ))}
                     </div>
                 </div>

@@ -7,71 +7,42 @@ export const presentation = {
     title: "Développeur Full-Stack",
     subtitle: "Web et Applications",
     
-    tagline: "Passionné de code et d'expériences interactives",
+    tagline: "Créateur visuel devenu développeur - Entre code et 3D",
     
     status: {
         type: "alternance",
-        text: "En recherche d'alternance sur 2 ans",
-        school: "Master avec Epitech"
+        text: "Développeur-Concepteur ServiceNow chez Swiss Life",
+        school: "Master Architecte des Systèmes d'Information - Epitech"
     },
     
     about: [
-        "Après plusieurs années dans la conception et l'infographie 3D, j'ai choisi de me réorienter vers ma passion pour la technologie en devenant Développeur Full-Stack.",
-        "Curieux et passionné par l'évolution technologique, notamment la VR/AR, je cherche maintenant une alternance pour continuer à monter en compétences, avec un intérêt marqué pour le métier de Software Engineer.",
-        "Le monde du développement est en constante évolution, et je mise avant tout sur une compréhension complète d'une architecture propre, et une vision globale d'un projet."
-    ],
-    
-    skills: {
-        'Front-End': ["HTML5", "CSS3", "JavaScript", "TypeScript", "React.js", "React Native", "Tailwind", "Next.js", "Redux"],
-        'Back-End': ["Node.js", "Express.js", "MongoDB", "Mongoose", "API REST"],
-        'DevOps': ["Git", "GitHub", "CI/CD", "Docker"],
-        'Méthodologies': ["Agile", "Scrum", "Trello", "Notion", "Clean Code"],
-        'Design & 3D': ["AutoCAD", "Revit", "Unreal Engine", "D5Render", "Blender"],
-        'Soft Skills': ["Teamwork", "Communication", "Adaptabilité", "Apprentissage", "Logique", "Curieux"]
-    },
-    
-    experience: [
         {
-            title: "Formation Développeur Full-Stack",
-            company: "La Capsule (Lille)",
-            type: "Bootcamp Intensif",
-            period: "3 mois",
-            highlights: [
-                "Stack principale : React, React Native, Node.js, Express, MongoDB",
-                "Méthodologies Agile (Scrum) & Pratiques Clean Code",
-                "Gestion de projet avec Git/GitHub",
-                "Développement d'une application Full-Stack en équipe (projet final)"
-            ]
+            type: "intro",
+            text: "Depuis toujours, <strong>j'aime créer</strong>. D'abord avec des formes, des volumes et de la lumière. Puis avec des lignes de code."
         },
         {
-            title: "Dessinateur / Infographiste 3D",
-            company: "Freelance (LEO 3D Design)",
-            type: "Indépendant",
-            period: "Jan 2023 - Maintenant",
-            highlights: [
-                "Conception de plans et rendus 3D",
-                "Modélisation pour communication visuelle"
-            ]
+            type: "parcours",
+            text: "Après un <strong>BTS en communication visuelle</strong> et plusieurs années comme dessinateur-projeteur et infographiste 3D, j'ai choisi de suivre une autre passion : la technologie. En 2025, j'intègre un bootcamp intensif à <strong>La Capsule</strong> pour devenir développeur Full-Stack, avant de poursuivre en <strong>Master Architecte des Systèmes d'Information à Epitech</strong>."
         },
         {
-            title: "Dessinateur en Architecture",
-            company: "AUDD",
-            type: "CDI",
-            period: "Août 2016 - Déc 2022",
-            highlights: [
-                "Création de plans architecturaux 2D/3D",
-                "Rendus photoréalistes (D5Render, Unreal Engine)"
-            ]
+            type: "actuel",
+            text: "Aujourd'hui, en parallèle de mon master, je suis en alternance chez <strong>Swiss Life</strong> en tant que <strong>Développeur-Concepteur ServiceNow</strong>. J'y conçois et optimise des outils internes pour fluidifier les processus."
         },
         {
-            title: "Conception 2D/3D & Suivi de Projet",
-            company: "ESCATECH",
-            type: "CDI",
-            period: "Août 2012 - Juin 2016",
-            highlights: [
-                "Conception de plans d'architecture 2D/3D (AutoCAD, Revit)",
-                "Études de faisabilité & Suivi de chantier"
-            ]
+            type: "actuel",
+            text: "En parallèle, je dirige <strong>LEO Design 3D</strong>, une activité de modélisation 3D dédiée aux architectes : rendus photoréalistes, visualisations immersives, et projection fidèle des projets."
+        },
+        {
+            type: "vision",
+            text: "Ce <strong>double regard</strong> développeur et créateur visuel me permet d'aborder chaque projet avec la même exigence : concevoir des solutions <strong>précises, esthétiques et durables</strong>."
+        },
+        {
+            type: "passion",
+            text: "Curieux des nouvelles technologies (<strong>VR, AR</strong>), j'explore en continu les ponts entre ces deux mondes. Parce qu'au fond, coder ou modéliser, c'est toujours la même chose : <strong>donner vie à une idée</strong>."
+        },
+        {
+            type: "fun",
+            text: "Ps : j'ai même commencé à coder <strong>mon propre jeu en VR</strong> ! 🎮"
         }
     ]
 }

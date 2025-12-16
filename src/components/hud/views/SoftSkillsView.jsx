@@ -3,18 +3,20 @@ import { skills } from '../../../data/skills'
 import './SkillsView.css'
 
 /**
- * SkillsView - Skills display organized by categories and subcategories
- * Uses skills data from skills.js
- * Each tag gets a random shimmer delay for natural animation
+ * SoftSkillsView - Human and interpersonal skills display
+ * Filters: Soft Skills, Langues
  */
-export const SkillsView = () => {
+export const SoftSkillsView = () => {
+    // Filter only soft skill categories
+    const softCategories = ['Soft Skills', 'Langues']
+    const filteredSkills = skills.categories.filter(cat => softCategories.includes(cat.name))
+
     // Generate random delays once on mount for each skill
     const randomDelays = useMemo(() => {
         const delays = {}
-        skills.categories.forEach(cat => {
+        filteredSkills.forEach(cat => {
             cat.subcategories.forEach(sub => {
                 sub.items.forEach(skill => {
-                    // Random delay between 0 and 8 seconds
                     delays[skill] = Math.random() * 8
                 })
             })
@@ -24,7 +26,7 @@ export const SkillsView = () => {
 
     return (
         <div className="view-skills">
-            {skills.categories.map((category) => (
+            {filteredSkills.map((category) => (
                 <div key={category.name} className="skills-category">
                     <h3 className="skills-category__title">{category.name}</h3>
                     

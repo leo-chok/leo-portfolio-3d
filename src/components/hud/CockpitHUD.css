@@ -436,7 +436,7 @@
 
 .cockpit-bottombar {
     position: absolute;
-    bottom: 40px;
+    bottom: 100px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -500,57 +500,47 @@
     justify-content: center;
 }
 
-/* HoloWindow-style Analyze Button - LARGE */
+/* Analyze Button - Minimal with brackets */
 .cockpit-analyze__button {
     position: relative;
-    padding: 18px 50px;
-    background: linear-gradient(
-        135deg,
-        rgba(100, 237, 180, 0.08) 0%,
-        rgba(20, 40, 35, 0.9) 50%,
-        rgba(100, 237, 180, 0.05) 100%
-    );
-    border: 2px solid rgba(100, 237, 180, 0.4);
-    border-radius: 8px;
-    color: rgba(100, 237, 180, 0.95);
+    padding: 14px 40px;
+    background: transparent;
+    border: none;
+    border-top: 1px solid rgba(100, 237, 180, 0.15);
+    border-bottom: 1px solid rgba(100, 237, 180, 0.25);
+    color: rgba(100, 237, 180, 0.85);
     font-family: 'Orbitron', monospace;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     letter-spacing: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
     overflow: hidden;
-    backdrop-filter: blur(8px);
-    box-shadow: 
-        0 0 15px rgba(100, 237, 180, 0.1),
-        inset 0 1px 0 rgba(100, 237, 180, 0.1);
     z-index: 10;
 }
 
-/* Corner brackets like HoloWindow */
+/* Corner brackets only - minimal */
 .cockpit-analyze__button::before,
 .cockpit-analyze__button::after {
     content: '';
     position: absolute;
-    width: 12px;
-    height: 12px;
-    border-color: rgba(100, 237, 180, 0.6);
+    width: 14px;
+    height: 14px;
+    border-color: rgba(100, 237, 180, 0.5);
     border-style: solid;
     transition: all 0.3s ease;
 }
 
 .cockpit-analyze__button::before {
-    top: 3px;
-    left: 3px;
+    top: 0;
+    left: 0;
     border-width: 2px 0 0 2px;
-    border-top-left-radius: 4px;
 }
 
 .cockpit-analyze__button::after {
-    bottom: 3px;
-    right: 3px;
+    bottom: 0;
+    right: 0;
     border-width: 0 2px 2px 0;
-    border-bottom-right-radius: 4px;
 }
 
 /* Shimmer animation overlay */
@@ -571,25 +561,15 @@
 }
 
 .cockpit-analyze__button:hover {
-    background: linear-gradient(
-        135deg,
-        rgba(100, 237, 180, 0.15) 0%,
-        rgba(20, 50, 40, 0.95) 50%,
-        rgba(100, 237, 180, 0.1) 100%
-    );
-    border-color: rgba(100, 237, 180, 0.7);
-    box-shadow: 
-        0 0 25px rgba(100, 237, 180, 0.25),
-        0 0 50px rgba(100, 237, 180, 0.1),
-        inset 0 1px 0 rgba(100, 237, 180, 0.2);
-    transform: scale(1.02);
+    color: rgba(100, 237, 180, 1);
+    text-shadow: 0 0 15px rgba(100, 237, 180, 0.5);
 }
 
 .cockpit-analyze__button:hover::before,
 .cockpit-analyze__button:hover::after {
     border-color: rgba(100, 237, 180, 0.9);
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 }
 
 .cockpit-analyze__button:active {
@@ -665,25 +645,17 @@
     text-shadow: 0 0 10px rgba(255, 140, 50, 0.3);
 }
 
-/* Open Data button variant */
+/* Open Data button variant - same minimal style */
 .cockpit-analyze__button--open {
-    border-color: rgba(100, 237, 180, 0.5);
-    background: linear-gradient(
-        135deg,
-        rgba(100, 237, 180, 0.05) 0%,
-        rgba(20, 50, 40, 0.9) 50%,
-        rgba(100, 237, 180, 0.03) 100%
-    );
+    color: rgba(100, 237, 180, 0.7);
 }
 
 .cockpit-analyze__button--open .cockpit-analyze__text {
-    color: rgba(100, 237, 180, 0.9);
-    text-shadow: 0 0 10px rgba(100, 237, 180, 0.3);
+    color: inherit;
 }
 
 .cockpit-analyze__button--open:hover {
-    border-color: rgba(100, 237, 180, 0.8);
-    box-shadow: 0 0 20px rgba(100, 237, 180, 0.2);
+    color: rgba(100, 237, 180, 1);
 }
 
 /* Encrypted dropdown names */

@@ -26,5 +26,5 @@ export const contact = {
     // Formspree endpoint for contact form
     formEndpoint: "https://formspree.io/f/manedeyw",
     
-    cta: "Prêt à discuter de projets innovants ou d'une opportunité d'alternance ? Contactez-moi !"
+    cta: "Prêt à discuter de projets innovants ? Contactez-moi !"
 }

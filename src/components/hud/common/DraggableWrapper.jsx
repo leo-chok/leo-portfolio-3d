@@ -16,6 +16,7 @@ export const DraggableWrapper = ({
     initialPosition = { x: 0, y: 0 },
     enabled = true,
     className = '',
+    style = {},
     onDragStart,
     onDragEnd,
     position: controlledPosition // Rename to avoid conflict with state
@@ -91,7 +92,7 @@ export const DraggableWrapper = ({
                 left: position.x,
                 top: position.y,
                 cursor: isDragging ? 'grabbing' : (enabled && !handleSelector ? 'grab' : undefined),
-                zIndex: isDragging ? 1000 : undefined, // Pop to top when dragging
+                zIndex: isDragging ? 10000 : (style.zIndex ? style.zIndex + 100 : 100),
                 touchAction: 'none'
             }}
             onMouseDown={handleMouseDown}

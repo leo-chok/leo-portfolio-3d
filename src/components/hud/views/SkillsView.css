@@ -1,49 +1,181 @@
 /* ===========================
    SKILLS VIEW STYLES
+   Sci-Fi animated design
    =========================== */
 
 .view-skills {
     padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
 }
 
+/* Category with staggered reveal animation */
 .skills-category {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    animation: categoryReveal 0.5s ease-out backwards;
+}
+
+.skills-category:nth-child(1) { animation-delay: 0s; }
+.skills-category:nth-child(2) { animation-delay: 0.1s; }
+.skills-category:nth-child(3) { animation-delay: 0.2s; }
+.skills-category:nth-child(4) { animation-delay: 0.3s; }
+.skills-category:nth-child(5) { animation-delay: 0.4s; }
+.skills-category:nth-child(6) { animation-delay: 0.5s; }
+
+@keyframes categoryReveal {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .skills-category__title {
     margin: 0;
     font-family: 'Orbitron', monospace;
-    font-size: 12px;
-    color: rgba(124, 196, 237, 0.7);
+    font-size: 13px;
+    color: rgba(100, 237, 180, 0.9);
     letter-spacing: 2px;
     text-transform: uppercase;
-    padding-bottom: 6px;
-    border-bottom: 1px solid rgba(124, 196, 237, 0.2);
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(100, 237, 180, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Scan line effect on category titles */
+.skills-category__title::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(100, 237, 180, 0.2), transparent);
+    animation: titleScan 3s ease-in-out ;
+}
+
+@keyframes titleScan {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
+}
+
+.skills-subcategory {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 10px;
+    border-left: 1px solid rgba(124, 196, 237, 0.1);
+}
+
+.skills-subcategory__title {
+    margin: 0;
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: rgba(124, 196, 237, 0.6);
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .skills-category__tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
 }
 
+/* Skill tags with shimmer animation */
 .skills-tag {
-    padding: 6px 12px;
-    background: linear-gradient(135deg, rgba(124, 196, 237, 0.1), rgba(124, 196, 237, 0.05));
-    border: 1px solid rgba(124, 196, 237, 0.25);
-    border-radius: 4px;
-    font-size: 12px;
-    color: rgba(200, 220, 240, 0.85);
-    transition: all 0.2s ease;
+    padding: 4px 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.2);
+    font-size: 11px;
+    color: rgba(200, 220, 240, 0.75);
+    transition: all 0.3s ease;
+    position: relative;
+    animation: tagFadeIn 0.4s ease-out backwards;
+    overflow: hidden;
 }
 
+/* Random shimmer effect - uses CSS variable from JS */
+.skills-tag::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(124, 196, 237, 0.2), transparent);
+    animation: tagShimmer 10s ease-in-out infinite;
+    animation-delay: var(--shimmer-delay, 0s);
+}
+
+@keyframes tagShimmer {
+    0% { left: -100%; }
+    10% { left: 100%; }
+    100% { left: 100%; }
+}
+
+@keyframes tagFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover effect with glow */
 .skills-tag:hover {
-    background: linear-gradient(135deg, rgba(124, 196, 237, 0.2), rgba(124, 196, 237, 0.1));
+    color: rgba(124, 196, 237, 1);
+    border-bottom-color: rgba(124, 196, 237, 0.8);
+    text-shadow: 0 0 8px rgba(124, 196, 237, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Bracket effect on hover */
+.skills-tag::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
     border-color: rgba(124, 196, 237, 0.5);
-    box-shadow: 0 0 10px rgba(124, 196, 237, 0.2);
+    border-style: solid;
+    border-width: 0 1px 1px 0;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.skills-tag:hover::after {
+    width: 6px;
+    height: 6px;
+    opacity: 1;
+}
+
+/* Subtle pulse on the whole view */
+.view-skills::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(100, 237, 180, 0.3), transparent);
+    animation: linePulse 2s ease-in-out infinite;
+}
+
+@keyframes linePulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
 }

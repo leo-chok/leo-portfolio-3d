@@ -35,9 +35,12 @@ export const PortfolioView = ({ onProjectSelect }) => {
                         <div className="project-card__content">
                             <div className="project-header">
                                 <h3 className="project-title">{project.title}</h3>
+                                {project.subtitle && (
+                                    <span className="project-subtitle">{project.subtitle}</span>
+                                )}
                             </div>
                             
-                            <p className="project-description">{project.description}</p>
+                            <p className="project-description">{project.short_description || project.description}</p>
                             
                             <div className="project-stack">
                                 {project.stack.map((tech) => (

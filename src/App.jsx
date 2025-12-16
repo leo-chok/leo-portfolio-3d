@@ -6,6 +6,7 @@ import { CockpitHUD } from './components/hud/CockpitHUD'
 import { SpaceshipHUD } from './components/hud/SpaceshipHUD'
 import { DebugPanel } from './components/hud/DebugPanel'
 import { WindowManager } from './components/hud/WindowManager'
+import { Taskbar } from './components/hud/common/Taskbar'
 import { LoadingScreen } from './components/hud/LoadingScreen'
 import { useSpaceshipStore } from './stores/spaceshipStore'
 
@@ -65,6 +66,7 @@ function App() {
       <CockpitHUD />
       {isSpaceshipMode && <SpaceshipHUD />}
       <WindowManager />
+      <Taskbar />
       <DebugPanel />
     </>
   )

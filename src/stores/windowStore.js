@@ -19,6 +19,8 @@ const SECTION_CONFIG = {
     formation: { title: 'FORMATION', subtitle: 'EXPERIENCE LOG' },
     skills: { title: 'COMPÉTENCES', subtitle: 'SKILLS DATABASE' },
     contact: { title: 'CONTACT', subtitle: 'COMMUNICATION LINK' },
+    'moon-hardskills': { title: 'HARD SKILLS', subtitle: 'TECHNICAL SYSTEMS' },
+    'moon-softskills': { title: 'SOFT SKILLS', subtitle: 'HUMAN INTERFACE' },
 }
 
 // Get moon count for a section (for loading time calculation)
@@ -77,6 +79,7 @@ export const useWindowStore = create((set, get) => ({
             title: config.title,
             subtitle: config.subtitle,
             isMinimized: false,
+            isMaximized: false,
             position: { x: 50, y: 100 + windows.length * 30 }, // Cascade effect
             zIndex: get().topZIndex + 1,
         }
@@ -102,11 +105,12 @@ export const useWindowStore = create((set, get) => ({
     
     /**
      * Minimize a window (show only header)
+     * Also resets maximized state to avoid conflicts
      */
     minimizeWindow: (windowId) => {
         set((state) => ({
             windows: state.windows.map(w => 
-                w.id === windowId ? { ...w, isMinimized: true } : w
+                w.id === windowId ? { ...w, isMinimized: true, isMaximized: false } : w
             )
         }))
     },
@@ -119,6 +123,19 @@ export const useWindowStore = create((set, get) => ({
         set((state) => ({
             windows: state.windows.map(w => 
                 w.id === windowId ? { ...w, isMinimized: false } : w
+            )
+        }))
+        bringToFront(windowId)
+    },
+    
+    /**
+     * Toggle maximize state of a window
+     */
+    toggleMaximize: (windowId) => {
+        const { bringToFront } = get()
+        set((state) => ({
+            windows: state.windows.map(w => 
+                w.id === windowId ? { ...w, isMaximized: !w.isMaximized } : w
             )
         }))
         bringToFront(windowId)
@@ -227,6 +244,7 @@ export const useWindowStore = create((set, get) => ({
             subtitle: projectData.title.toUpperCase(),
             projectData: projectData,
             isMinimized: false,
+            isMaximized: false,
             position: { x: 100 + windows.length * 30, y: 120 + windows.length * 30 },
             zIndex: get().topZIndex + 1,
         }

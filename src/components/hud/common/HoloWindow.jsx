@@ -1,9 +1,10 @@
+import { useMemo } from 'react'
 import { DraggableWrapper } from './DraggableWrapper'
 import './HoloWindow.css'
 
 /**
  * HoloWindow - Generic Sci-Fi Window Frame
- * Supports minimize/restore functionality
+ * Supports minimize/restore/maximize functionality
  * 
  * @param {Object} props
  * @param {string} props.title - Window Title
@@ -12,10 +13,12 @@ import './HoloWindow.css'
  * @param {Object} props.initialPosition - {x, y}
  * @param {Object} props.position - Controlled position {x, y}
  * @param {boolean} props.isMinimized - Whether window is minimized
+ * @param {boolean} props.isMaximized - Whether window is maximized
  * @param {number} props.zIndex - Window z-index for stacking
  * @param {Function} props.onClose - Close callback
  * @param {Function} props.onMinimize - Minimize callback
  * @param {Function} props.onRestore - Restore callback (click on minimized header)
+ * @param {Function} props.onMaximize - Maximize/unmaximize toggle callback
  * @param {Function} props.onFocus - Bring to front callback
  */
 export const HoloWindow = ({ 
@@ -25,12 +28,17 @@ export const HoloWindow = ({
     initialPosition,
     position,
     isMinimized = false,
+    isMaximized = false,
     zIndex = 1,
     onClose,
     onMinimize,
     onRestore,
+    onMaximize,
     onFocus,
 }) => {
+    // Calculate initial width as 50% of viewport (in pixels) - computed once on mount
+    const initialWidth = useMemo(() => Math.floor(window.innerWidth * 0.5), [])
+
     const handleRestoreClick = (e) => {
         e.stopPropagation()
         if (onRestore) onRestore()
@@ -41,21 +49,41 @@ export const HoloWindow = ({
         if (onMinimize) onMinimize()
     }
 
+    const handleMaximizeClick = (e) => {
+        e.stopPropagation()
+        if (onMaximize) onMaximize()
+    }
+
     const handleCloseClick = (e) => {
         e.stopPropagation()
         if (onClose) onClose()
     }
+
+    // Build class names
+    const windowClasses = [
+        'holo-window',
+        isMinimized && 'holo-window--minimized',
+        isMaximized && 'holo-window--maximized',
+    ].filter(Boolean).join(' ')
+
+    const wrapperClasses = [
+        'holo-window-wrapper',
+        isMinimized && 'holo-window-wrapper--minimized',
+        isMaximized && 'holo-window-wrapper--maximized',
+    ].filter(Boolean).join(' ')
 
     return (
         <DraggableWrapper 
             handleSelector=".holo-window__header"
             initialPosition={initialPosition}
             position={position}
-            className={`holo-window-wrapper ${isMinimized ? 'holo-window-wrapper--minimized' : ''}`}
+            className={wrapperClasses}
             style={{ zIndex }}
+            enabled={!isMaximized}
         >
             <div 
-                className={`holo-window ${isMinimized ? 'holo-window--minimized' : ''}`}
+                className={windowClasses}
+                style={{ width: isMaximized ? undefined : initialWidth }}
                 onMouseDown={onFocus}
             >
                 {!isMinimized && <div className="holo-window__scanlines" />}
@@ -90,6 +118,16 @@ export const HoloWindow = ({
                                 title="Minimize"
                             >
                                 −
+                            </button>
+                        )}
+                        {/* Maximize button - only when not minimized */}
+                        {onMaximize && !isMinimized && (
+                            <button 
+                                className="holo-window__maximize" 
+                                onClick={handleMaximizeClick}
+                                title={isMaximized ? "Restore" : "Maximize"}
+                            >
+                                <span className={`holo-window__maximize-icon ${isMaximized ? 'holo-window__maximize-icon--restore' : ''}`} />
                             </button>
                         )}
                         {/* Restore button - only when minimized */}
