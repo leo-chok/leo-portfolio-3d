@@ -4,6 +4,7 @@ import { useGLTF } from '@react-three/drei'
 import { useSpaceshipStore } from '../../../stores/spaceshipStore'
 import { ShipDust } from './ShipDust'
 import { EngineGlow } from './EngineGlow'
+import { ShipHUD3D, Crosshair } from './hud'
 import * as THREE from 'three'
 
 /**
@@ -288,6 +289,12 @@ export const SpaceshipController = forwardRef((props, ref) => {
             
             {/* Ship dust particles - follows ship */}
             <ShipDust />
+            
+            {/* 3D HUD floating around ship */}
+            <ShipHUD3D />
+            
+            {/* Targeting crosshair in front */}
+            <Crosshair />
         </group>
     )
 })

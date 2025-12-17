@@ -16,22 +16,40 @@ export const EngineGlow = ({
     layers = 2
 }) => {
     const groupRef = useRef()
-    const intensityRef = useRef(1) // Current intensity (1 = normal, 1.5 = max boost)
+    const intensityRef = useRef(0.3) // Current intensity (0.3 = idle, 1.5 = max speed)
+    const timeRef = useRef(0)
     
-    // Smooth transition for boost effect - read from store directly to avoid re-renders
-    useFrame(() => {
-        // Read isBoosting from store without subscribing (no re-render)
-        const isBoosting = useSpaceshipStore.getState().isBoosting
-        const targetIntensity = isBoosting ? 1.5 : 1
+    // Max speed for scaling
+    const MAX_SPEED = 1117
+    
+    // Smooth transition for glow effect based on speed + flicker effect
+    useFrame((state, delta) => {
+        // Read speed from store without subscribing (no re-render)
+        const speed = useSpaceshipStore.getState().speed
+        
+        // Calculate target intensity based on speed (0.3 to 1.5)
+        const speedFactor = Math.min(speed / MAX_SPEED, 1)
+        const targetIntensity = 0.3 + speedFactor * 1.2
+        
         // Lerp towards target (smooth transition)
         intensityRef.current += (targetIntensity - intensityRef.current) * 0.1
         
-        // Update sprite scales
+        // Flicker/pulse effect - faster and more intense at higher speeds
+        timeRef.current += delta * (5 + speedFactor * 15) // Speed up flicker with velocity
+        const flicker = 1 + Math.sin(timeRef.current) * 0.08 * (0.3 + speedFactor * 0.7)
+        const flicker2 = 1 + Math.sin(timeRef.current * 1.7 + 1) * 0.05 * speedFactor
+        
+        // Update sprite scales and opacity with flicker
         if (groupRef.current) {
             groupRef.current.children.forEach((sprite, i) => {
+                const layerFlicker = i === 0 ? flicker : flicker2
                 const baseSize = size * (1 + i * 0.8)
-                const newSize = baseSize * intensityRef.current
+                const newSize = baseSize * intensityRef.current * layerFlicker
                 sprite.scale.set(newSize, newSize, 1)
+                
+                // Update opacity based on intensity with subtle flicker
+                const baseOpacity = opacity / (i + 1)
+                sprite.material.opacity = baseOpacity * intensityRef.current * layerFlicker
             })
         }
     })

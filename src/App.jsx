@@ -3,7 +3,7 @@ import { Suspense, useState, useEffect } from 'react'
 import { Loader } from '@react-three/drei'
 import { Experience } from './components/core/Experience'
 import { CockpitHUD } from './components/hud/CockpitHUD'
-import { SpaceshipHUD } from './components/hud/SpaceshipHUD'
+import { SpaceshipControls } from './components/hud/SpaceshipControls'
 import { DebugPanel } from './components/hud/DebugPanel'
 import { WindowManager } from './components/hud/WindowManager'
 import { Taskbar } from './components/hud/common/Taskbar'
@@ -64,7 +64,7 @@ function App() {
       </Canvas>
       <Loader />
       <CockpitHUD />
-      {isSpaceshipMode && <SpaceshipHUD />}
+      <SpaceshipControls />
       <WindowManager />
       <Taskbar />
       <DebugPanel />

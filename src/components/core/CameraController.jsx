@@ -133,6 +133,25 @@ export const CameraController = ({ startAnimation = false, shipRef }) => {
             const posLag = 0.1
             camera.position.lerp(_desiredCamPos, posLag)
             
+            // === CAMERA SHAKE (speed-based amplitude, constant slow frequency) ===
+            const speed = useSpaceshipStore.getState().speed
+            const MAX_SPEED = 1117
+            const speedFactor = Math.min(speed / MAX_SPEED, 1)
+            
+            // Base amplitude even at rest, increases with speed
+            const baseAmplitude = 0.00008
+            const speedAmplitude = speedFactor * 0.002
+            const amplitude = baseAmplitude + speedAmplitude
+            
+            const time = state.clock.elapsedTime
+            
+            // Slow constant frequency for smooth organic movement
+            const shakeX = (Math.sin(time * 2.5) * 0.6 + Math.sin(time * 4.1) * 0.4) * amplitude
+            const shakeY = (Math.sin(time * 3.2) * 0.6 + Math.sin(time * 5.3) * 0.4) * amplitude
+            
+            camera.position.x += shakeX
+            camera.position.y += shakeY
+            
             // Calculate look target (ahead of ship in ship's local space)
             // Reuse vector instead of clone()
             _tempLookTarget.copy(_shipLookAhead).applyQuaternion(shipQuat).add(shipPos)

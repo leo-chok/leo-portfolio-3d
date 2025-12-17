@@ -1,0 +1,138 @@
+/* ===========================
+   SPACESHIP CONTROLS OVERLAY
+   Minimal sci-fi design
+   =========================== */
+
+/* Exit hint - top center */
+.ship-exit-hint {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(200, 130, 80, 0.4);
+    z-index: 100;
+    animation: exitReveal 0.5s ease-out backwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes exitReveal {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Controls - bottom center */
+.ship-controls {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 30px;
+    padding: 12px 25px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.2);
+    z-index: 100;
+    animation: controlsReveal 0.5s ease-out backwards;
+}
+
+/* Bracket decorations on controls */
+.ship-controls::before,
+.ship-controls::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 8px;
+    height: 8px;
+    border-color: rgba(124, 196, 237, 0.4);
+    border-style: solid;
+}
+
+.ship-controls::before {
+    left: 0;
+    border-width: 0 0 1px 1px;
+}
+
+.ship-controls::after {
+    right: 0;
+    border-width: 0 1px 1px 0;
+}
+
+@keyframes controlsReveal {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.ship-control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: groupFadeIn 0.4s ease-out backwards;
+}
+
+.ship-control-group:nth-child(1) { animation-delay: 0.1s; }
+.ship-control-group:nth-child(2) { animation-delay: 0.2s; }
+.ship-control-group:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes groupFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Key styling - minimal with glow */
+.ship-key {
+    padding: 5px 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.4);
+    color: rgba(124, 196, 237, 0.9);
+    font-family: 'Orbitron', 'Consolas', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(124, 196, 237, 0.3);
+}
+
+/* Exit key - orange/brown accent */
+.ship-exit-hint .ship-key {
+    color: rgba(220, 150, 90, 0.95);
+    border-bottom-color: rgba(200, 130, 80, 0.5);
+    text-shadow: 0 0 8px rgba(200, 130, 80, 0.3);
+}
+
+/* Label styling */
+.ship-label {
+    color: rgba(200, 220, 240, 0.5);
+    font-family: 'Orbitron', 'Segoe UI', sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.ship-exit-hint .ship-label {
+    color: rgba(200, 150, 100, 0.6);
+}
