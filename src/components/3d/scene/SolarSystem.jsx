@@ -1,8 +1,8 @@
-import { GALAXY_MAP } from '../../config/galaxyConfig'
+import { GALAXY_MAP } from '../../../config/galaxyConfig'
 import { Sun } from './Sun'
 import { CelestialBody } from './CelestialBody'
 import { OrbitingBody } from './OrbitingBody'
-import { useDebugStore, hueToColor } from '../../stores/debugStore'
+import { useDebugStore, hueToColor } from '../../../stores/debugStore'
 
 /**
  * SolarSystem Component - Main orchestrator

@@ -17,6 +17,10 @@ const _overviewPos = new THREE.Vector3(0, 40, 120)
 const _overviewTarget = new THREE.Vector3(0, 0, 0)
 const _shipCamOffset = new THREE.Vector3(0, 0.1, 0.5) // Much closer: behind and slightly above ship
 const _shipLookAhead = new THREE.Vector3(0, 0, -2) // Look ahead of ship
+// Reusable vectors for spaceship camera (avoid GC)
+const _tempOffset = new THREE.Vector3()
+const _tempLookTarget = new THREE.Vector3()
+const _tempShipUp = new THREE.Vector3()
 
 /**
  * CameraController - Unified Camera System
@@ -121,23 +125,24 @@ export const CameraController = ({ startAnimation = false, shipRef }) => {
             const shipQuat = shipRef.current.quaternion
             
             // Calculate desired camera position (behind and above ship, in ship's local space)
-            const offset = _shipCamOffset.clone().applyQuaternion(shipQuat)
-            _desiredCamPos.copy(shipPos).add(offset)
+            // Reuse vectors instead of clone() to avoid GC
+            _tempOffset.copy(_shipCamOffset).applyQuaternion(shipQuat)
+            _desiredCamPos.copy(shipPos).add(_tempOffset)
             
             // Smooth camera position follow with lag
-            const posLag = 0.04 // Position lag
+            const posLag = 0.1
             camera.position.lerp(_desiredCamPos, posLag)
             
             // Calculate look target (ahead of ship in ship's local space)
-            const lookTarget = _shipLookAhead.clone().applyQuaternion(shipQuat).add(shipPos)
+            // Reuse vector instead of clone()
+            _tempLookTarget.copy(_shipLookAhead).applyQuaternion(shipQuat).add(shipPos)
             
             // Make camera look at the target
-            camera.lookAt(lookTarget)
+            camera.lookAt(_tempLookTarget)
             
             // Apply ship's roll to camera (immersive rotation)
-            // Get ship's up vector and use it to adjust camera roll
-            const shipUp = new THREE.Vector3(0, 1, 0).applyQuaternion(shipQuat)
-            camera.up.lerp(shipUp, 0.08) // Smooth roll transition
+            _tempShipUp.set(0, 1, 0).applyQuaternion(shipQuat)
+            camera.up.lerp(_tempShipUp, 0.08) // Smooth roll transition
             
             return
         } else if (!isSpaceshipMode && !controls.enabled) {

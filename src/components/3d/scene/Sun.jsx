@@ -1,13 +1,13 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { INTENSITY } from '../../config/galaxyConfig'
-import { HudReticle } from './HudReticle'
-import { HudCallout } from './HudCallout'
-import { FresnelGlowMaterial } from './FresnelGlowMaterial'
-import { GlowHalo } from './GlowHalo'
-import { useCameraStore } from '../../stores/cameraStore'
-import { useDebugStore, hueToColor } from '../../stores/debugStore'
+import { INTENSITY } from '../../../config/galaxyConfig'
+import { HudReticle } from '../hud3d/HudReticle'
+import { HudCallout } from '../hud3d/HudCallout'
+import { FresnelGlowMaterial } from '../materials/FresnelGlowMaterial'
+import { GlowHalo } from '../materials/GlowHalo'
+import { useCameraStore } from '../../../stores/cameraStore'
+import { useDebugStore, hueToColor } from '../../../stores/debugStore'
 
 /**
  * Sun Component - HYBRID: Fresnel rim light + Halo sprite

@@ -1,69 +1,56 @@
 import { useSpaceshipStore } from '../../stores/spaceshipStore'
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import './SpaceshipHUD.css'
 
 /**
  * SpaceshipHUD - HUD overlay for spaceship mode
  * 
  * Features:
- * - Speedometer (vertical equalizer bar + km/s value)
- * - Interstellar speeds simulation
+ * - Speedometer (vertical equalizer bar + km/h value)
  * - Smooth animated gauge transitions
  * - "Press T to exit" hint
  * - Boost indicator
  */
 
-// Interstellar speed simulation
-const SPEED_MULTIPLIER = 300 // Convert game speed to km/s
+// Speed thresholds in km/h
+const MAX_SPEED_KMH = 1117
 
 export const SpaceshipHUD = () => {
-    const speed = useSpaceshipStore(state => state.speed)
-    const maxSpeed = useSpaceshipStore(state => state.maxSpeed)
+    const speed = useSpaceshipStore(state => state.speed) // Already in km/h
     const isBoosting = useSpaceshipStore(state => state.isBoosting)
-    const boostMultiplier = useSpaceshipStore(state => state.boostMultiplier)
     const barrierIntensity = useSpaceshipStore(state => state.barrierIntensity)
     
     // Animated fill level (0-100%)
     const [animatedFill, setAnimatedFill] = useState(0)
+    const targetFillRef = useRef(0)
     
-    // Convert game speed to interstellar speed (km/s)
+    // Display speed directly in km/h (already the right unit from store)
     const displaySpeed = useMemo(() => {
-        const baseSpeed = speed * SPEED_MULTIPLIER * (1 - barrierIntensity)
-        return Math.round(baseSpeed)
+        return Math.round(speed * (1 - barrierIntensity))
     }, [speed, barrierIntensity])
     
-    // Gauge thresholds based on actual observed speeds
-    // Normal cruise: 300 km/s → 50%
-    // Boost cruise: 900 km/s → 100%
-    const NORMAL_MAX = 300  // km/s at normal max
-    const BOOST_MAX = 900   // km/s at boost max
-    
-    // Calculate target fill percentage
-    // 0% = stopped, 50% = normal max speed (300), 100% = boost max speed (900)
-    const targetFill = useMemo(() => {
-        if (displaySpeed <= 0) return 0
-        
-        if (isBoosting) {
-            // During boost, scale 0 to 100% based on 900 km/s
-            return Math.min((displaySpeed / BOOST_MAX) * 100, 100)
+    // Calculate target fill percentage and update ref
+    // 0% = stopped, 50% = half max (558 km/h), 100% = max speed (1117 km/h)
+    useEffect(() => {
+        if (displaySpeed <= 0) {
+            targetFillRef.current = 0
         } else {
-            // Normal cruise, scale 0 to 50% based on 300 km/s
-            return Math.min((displaySpeed / NORMAL_MAX) * 50, 50)
+            targetFillRef.current = Math.min((displaySpeed / MAX_SPEED_KMH) * 100, 100)
         }
-    }, [displaySpeed, isBoosting])
+    }, [displaySpeed])
     
-    // Smooth animation for fill level
+    // Smooth animation for fill level - runs continuously
     useEffect(() => {
         const interval = setInterval(() => {
             setAnimatedFill(prev => {
-                const diff = targetFill - prev
-                if (Math.abs(diff) < 0.5) return targetFill
+                const diff = targetFillRef.current - prev
+                if (Math.abs(diff) < 0.5) return targetFillRef.current
                 return prev + diff * 0.15 // Smooth lerp
             })
         }, 16) // ~60fps
         
         return () => clearInterval(interval)
-    }, [targetFill])
+    }, []) // Empty deps - runs once, uses ref for current target
     
     // Convert to bar count (10 bars)
     const fillLevel = Math.ceil((animatedFill / 100) * 10)
@@ -80,7 +67,8 @@ export const SpaceshipHUD = () => {
                     {[...Array(10)].map((_, i) => {
                         const barIndex = 9 - i // Reverse for bottom-to-top fill
                         const isActive = barIndex < fillLevel
-                        const isBoostBar = barIndex >= 5 && isActive
+                        const isBoostBar = barIndex >= 5 && barIndex < 9 && isActive
+                        const isMaxBar = barIndex === 9 && isActive // Last bar = MAX = RED
                         return (
                             <div 
                                 key={i}
@@ -88,13 +76,14 @@ export const SpaceshipHUD = () => {
                                     spaceship-speedometer__bar 
                                     ${isActive ? 'spaceship-speedometer__bar--active' : ''}
                                     ${isBoostBar ? 'spaceship-speedometer__bar--boost' : ''}
+                                    ${isMaxBar ? 'spaceship-speedometer__bar--max' : ''}
                                 `}
                             />
                         )
                     })}
                 </div>
                 <div className={`spaceship-speedometer__value ${isBoosting ? 'spaceship-speedometer__value--boost' : ''}`}>
-                    {formattedSpeed} <span className="spaceship-speedometer__unit">km/s</span>
+                    {formattedSpeed} <span className="spaceship-speedometer__unit">km/h</span>
                 </div>
             </div>
             
@@ -106,8 +95,10 @@ export const SpaceshipHUD = () => {
                     <span className="key">←</span>
                     <span className="key">→</span>
                     <span className="key-label">Piloter</span>
-                    <span className="key spacer">ESPACE</span>
-                    <span className="key-label">Boost</span>
+                    <span className="key spacer">SHIFT</span>
+                    <span className="key-label">Accélérer</span>
+                    <span className="key">CTRL</span>
+                    <span className="key-label">Freiner</span>
                 </div>
                 <div className="spaceship-controls-hint__exit">
                     Appuyez sur <span className="key">T</span> pour quitter

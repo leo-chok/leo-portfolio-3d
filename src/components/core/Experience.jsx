@@ -1,12 +1,15 @@
 import { useRef } from 'react'
 import { OrbitControls, Stars } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { SolarSystem } from '../3d/SolarSystem'
-import { SpaceDust } from '../3d/SpaceDust'
-import { MilkyWay } from '../3d/MilkyWay'
-import { SpaceshipController } from '../3d/SpaceshipController'
-import { BarrierEffect } from '../3d/BarrierEffect'
-import { Mothership } from '../3d/Mothership'
+import { 
+    SolarSystem, 
+    SpaceDust, 
+    MilkyWay, 
+    SpaceshipController, 
+    BarrierEffect, 
+    Mothership,
+    Nebula 
+} from '../3d'
 import { CameraController } from './CameraController'
 import { Effects } from './Effects'
 import { useDebugStore } from '../../stores/debugStore'
@@ -40,7 +43,7 @@ export const Experience = ({ startAnimation = false }) => {
                 enablePan={true} 
                 makeDefault 
                 autoRotate={false}
-                autoRotateSpeed={0.1}
+                autoRotateSpeed={0.04}
                 target={[0, 0, 0]}
                 maxDistance={150}
                 minDistance={5}
@@ -55,7 +58,10 @@ export const Experience = ({ startAnimation = false }) => {
             <Stars radius={150} depth={200} count={starsCount} factor={10} saturation={0} fade speed={0} />
             
             {/* Milky Way disk - tilted galactic plane */}
-            <MilkyWay count={3000} innerRadius={200} outerRadius={600} />
+            <MilkyWay />
+            
+            {/* Nebula clouds in background */}
+            <Nebula />
             
             <SpaceDust count={dustCount} />
             

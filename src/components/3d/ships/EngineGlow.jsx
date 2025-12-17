@@ -1,24 +1,27 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { useSpaceshipStore } from '../../../stores/spaceshipStore'
 import * as THREE from 'three'
 
 /**
  * EngineGlow - Sprite-based engine exhaust glow
  * Uses a radial gradient texture for smooth circular glow
  * Increases intensity progressively when boosting
+ * Reads isBoosting directly from store to avoid parent re-renders
  */
 export const EngineGlow = ({ 
     color = '#ff9944',
     size = 0.06,
     opacity = 0.8,
-    layers = 2,
-    isBoosting = false
+    layers = 2
 }) => {
     const groupRef = useRef()
     const intensityRef = useRef(1) // Current intensity (1 = normal, 1.5 = max boost)
     
-    // Smooth transition for boost effect
+    // Smooth transition for boost effect - read from store directly to avoid re-renders
     useFrame(() => {
+        // Read isBoosting from store without subscribing (no re-render)
+        const isBoosting = useSpaceshipStore.getState().isBoosting
         const targetIntensity = isBoosting ? 1.5 : 1
         // Lerp towards target (smooth transition)
         intensityRef.current += (targetIntensity - intensityRef.current) * 0.1

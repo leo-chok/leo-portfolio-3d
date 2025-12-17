@@ -10,11 +10,11 @@ import * as THREE from 'three'
  * - Red/Orange (cooler older stars)
  */
 export const MilkyWay = ({ 
-    count = 8000,
-    innerRadius = 200,
-    outerRadius = 600,
-    thickness = 200,  // Vertical spread of the disk
-    tilt = { x: 60, z: 30 }  // Degrees - different from solar system plane
+    count = 20000,
+    innerRadius = 1500,
+    outerRadius = 9000,
+    thickness = 1000,  // Vertical spread of the disk
+    tilt = { x: 10, z: 30 }  // Degrees - different from solar system plane
 }) => {
     const pointsRef = useRef()
     
@@ -24,14 +24,14 @@ export const MilkyWay = ({
         const colors = new Float32Array(count * 3)
         const sizes = new Float32Array(count)
         
-        // Star color palette (realistic stellar colors)
+        // Star color palette (more saturated for visibility)
         const starColors = [
-            new THREE.Color('#aaccff'),  // Blue-white (hot)
+            new THREE.Color('#3388ff'),  // Bright blue (hot)
+            new THREE.Color('#66ccff'),  // Cyan blue
             new THREE.Color('#ffffff'),  // Pure white
-            new THREE.Color('#fffaf0'),  // Warm white
-            new THREE.Color('#ffd699'),  // Yellow-orange
-            new THREE.Color('#ffaa88'),  // Orange-red (cool)
-            new THREE.Color('#88ccff'),  // Light blue
+            new THREE.Color('#ffcc44'),  // Golden yellow
+            new THREE.Color('#eef925'),  // Orange/Yellow
+            new THREE.Color('#d46f26'),  // Orange-red
         ]
         
         for (let i = 0; i < count; i++) {
@@ -63,7 +63,7 @@ export const MilkyWay = ({
             colors[i3 + 2] = color.b
             
             // Random size (smaller stars more common)
-            sizes[i] = 0.5 + Math.random() * 1.5
+            sizes[i] = 0.5 + Math.random() * 4
         }
         
         return { positions, colors, sizes }
@@ -99,13 +99,12 @@ export const MilkyWay = ({
                     />
                 </bufferGeometry>
                 <pointsMaterial
-                    size={1.5}
+                    size={2.5}
                     vertexColors
                     transparent
-                    opacity={0.8}
+                    opacity={0.9}
                     sizeAttenuation={true}
                     depthWrite={false}
-                    blending={THREE.AdditiveBlending}
                 />
             </points>
         </group>

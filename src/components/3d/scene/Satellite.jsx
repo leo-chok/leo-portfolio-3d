@@ -2,8 +2,8 @@ import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { Billboard, Text } from '@react-three/drei'
-import { COLORS } from '../../config/galaxyConfig'
-import { useDebugStore } from '../../stores/debugStore'
+import { COLORS } from '../../../config/galaxyConfig'
+import { useDebugStore } from '../../../stores/debugStore'
 
 // Icon to emoji/symbol mapping
 const ICON_MAP = {
@@ -92,4 +92,3 @@ export const Satellite = ({
         </group>
     )
 }
-

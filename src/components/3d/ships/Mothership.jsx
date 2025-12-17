@@ -1,10 +1,10 @@
 import { useRef, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
-import { useCameraStore } from '../../stores/cameraStore'
+import { useCameraStore } from '../../../stores/cameraStore'
 import { EngineGlow } from './EngineGlow'
-import { HudReticle } from './HudReticle'
-import { HudCallout } from './HudCallout'
+import { HudReticle } from '../hud3d/HudReticle'
+import { HudCallout } from '../hud3d/HudCallout'
 import * as THREE from 'three'
 
 /**
@@ -183,14 +183,6 @@ export const Mothership = () => {
                     scale={[0.05, 0.05, 0.05]}
                 />
                 
-                {/* ========================================
-                    ENGINE GLOWS - Adjust positions here!
-                    position={[X, Y, Z]} where:
-                    - X: left/right (negative = left)
-                    - Y: up/down (negative = down)
-                    - Z: forward/back (negative = behind model)
-                   ======================================== */}
-                
                 {/* Left engine */}
                 <group position={[-0.05, 0, -0.45]}>
                     <EngineGlow 
@@ -233,6 +225,3 @@ export const Mothership = () => {
 
 // Preload model
 useGLTF.preload('/mothership.glb')
-
-
-

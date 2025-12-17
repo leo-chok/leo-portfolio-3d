@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { useCameraStore } from './cameraStore'
 
 /**
  * Spaceship Store - Manages spaceship flight mode state
@@ -49,7 +50,7 @@ export const useSpaceshipStore = create((set, get) => ({
     
     /**
      * Exit spaceship mode
-     * Returns to normal camera/HUD
+     * Returns to normal camera/HUD with overview position
      */
     exitSpaceshipMode: () => {
         set({
@@ -57,6 +58,8 @@ export const useSpaceshipStore = create((set, get) => ({
             speed: 0,
             isBoosting: false
         })
+        // Return camera to overview orbiting position
+        useCameraStore.getState().returnToOverview()
     },
     
     /**

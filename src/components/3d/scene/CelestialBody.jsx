@@ -1,13 +1,13 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { COLORS, SIZES, INTENSITY } from '../../config/galaxyConfig'
-import { HudReticle } from './HudReticle'
-import { HudCallout } from './HudCallout'
+import { COLORS, SIZES, INTENSITY } from '../../../config/galaxyConfig'
+import { HudReticle } from '../hud3d/HudReticle'
+import { HudCallout } from '../hud3d/HudCallout'
 import { Satellite } from './Satellite'
-import { FresnelGlowMaterial } from './FresnelGlowMaterial'
-import { useCameraStore } from '../../stores/cameraStore'
-import { useDebugStore } from '../../stores/debugStore'
+import { FresnelGlowMaterial } from '../materials/FresnelGlowMaterial'
+import { useCameraStore } from '../../../stores/cameraStore'
+import { useDebugStore } from '../../../stores/debugStore'
 
 /**
  * CelestialBody Component - Optimized for performance

@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { COLORS } from '../../config/galaxyConfig'
+import { COLORS } from '../../../config/galaxyConfig'
 
 /**
  * OrbitRing Component - Visual representation of orbital path
