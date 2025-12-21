@@ -1,0 +1,207 @@
+/* ===========================
+   RESUME FORMATIONS TIMELINE STYLES
+   =========================== */
+
+.formations {
+    position: relative;
+    padding: 20px 0;
+}
+
+/* === VERTICAL LINE === */
+.formations__line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(124, 196, 237, 0.1);
+    transform: translateX(-50%);
+}
+
+.formations__line-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(
+        180deg,
+        rgba(124, 196, 237, 0.5) 0%,
+        rgba(124, 196, 237, 0.3) 50%,
+        rgba(124, 196, 237, 0.1) 100%
+    );
+    will-change: transform;
+}
+
+/* === ITEMS CONTAINER === */
+.formations__items {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+/* === ITEM === */
+.formations__item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    will-change: transform, opacity;
+}
+
+.formations__item--left {
+    justify-content: flex-start;
+    padding-right: calc(50% + 40px);
+    text-align: right;
+}
+
+.formations__item--right {
+    justify-content: flex-end;
+    padding-left: calc(50% + 40px);
+    text-align: left;
+}
+
+/* === DOT === */
+.formations__dot {
+    position: absolute;
+    left: 50%;
+    top: 15px;
+    width: 16px;
+    height: 16px;
+    background: #050a0f;
+    border: 2px solid rgba(124, 196, 237, 0.5);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    transition: all 0.3s ease;
+}
+
+.formations__item:hover .formations__dot {
+    background: rgba(124, 196, 237, 0.2);
+    border-color: #7cc4ed;
+    box-shadow: 0 0 15px rgba(124, 196, 237, 0.5);
+}
+
+/* === CARD === */
+.formations__card {
+    padding: 25px;
+    background: linear-gradient(
+        135deg,
+        rgba(124, 196, 237, 0.04) 0%,
+        rgba(10, 20, 35, 0.8) 50%,
+        rgba(124, 196, 237, 0.02) 100%
+    );
+    border: 1px solid rgba(124, 196, 237, 0.15);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    max-width: 450px;
+}
+
+.formations__item--left .formations__card {
+    margin-left: auto;
+}
+
+.formations__item--right .formations__card {
+    margin-right: auto;
+}
+
+.formations__card:hover {
+    border-color: rgba(124, 196, 237, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.formations__period {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(100, 237, 180, 0.08);
+    border: 1px solid rgba(100, 237, 180, 0.25);
+    border-radius: 4px;
+    color: rgba(100, 237, 180, 0.9);
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.formations__title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(124, 196, 237, 0.95);
+    margin: 0 0 6px;
+}
+
+.formations__subtitle {
+    font-size: 11px;
+    color: rgba(124, 196, 237, 0.6);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.formations__school {
+    font-size: 11px;
+    color: rgba(124, 196, 237, 0.5);
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.1);
+}
+
+.formations__desc {
+    font-size: 12px;
+    line-height: 1.7;
+    color: rgba(200, 220, 235, 0.7);
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    letter-spacing: 0.3px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+    .formations__line {
+        left: 20px;
+    }
+    
+    .formations__item--left,
+    .formations__item--right {
+        padding-left: 60px;
+        padding-right: 0;
+        text-align: left;
+        justify-content: flex-start;
+    }
+    
+    .formations__dot {
+        left: 20px;
+    }
+    
+    .formations__item--left .formations__card,
+    .formations__item--right .formations__card {
+        margin-left: 0;
+        margin-right: 0;
+        max-width: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .formations__line {
+        left: 15px;
+    }
+    
+    .formations__item--left,
+    .formations__item--right {
+        padding-left: 45px;
+    }
+    
+    .formations__dot {
+        left: 15px;
+        width: 12px;
+        height: 12px;
+    }
+    
+    .formations__card {
+        padding: 18px;
+    }
+    
+    .formations__title {
+        font-size: 13px;
+    }
+}

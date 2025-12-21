@@ -1,0 +1,75 @@
+/* ===========================
+   RESUME SECTION - BASE STYLES
+   =========================== */
+
+.resume-section {
+    padding: 80px 0;
+    position: relative;
+}
+
+.resume-section__inner {
+    will-change: transform, opacity;
+}
+
+/* === HEADER === */
+.resume-section__header {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 50px;
+    justify-content: center;
+}
+
+.resume-section__line {
+    flex: 1;
+    max-width: 150px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(124, 196, 237, 0.4), transparent);
+}
+
+.resume-section__title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.resume-section__icon {
+    color: rgba(124, 196, 237, 0.5);
+    font-size: 14px;
+}
+
+.resume-section__title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 8px;
+    color: rgba(124, 196, 237, 0.9);
+    margin: 0;
+    text-transform: uppercase;
+}
+
+/* === CONTENT === */
+.resume-section__content {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .resume-section {
+        padding: 60px 0;
+    }
+    
+    .resume-section__header {
+        gap: 15px;
+        margin-bottom: 35px;
+    }
+    
+    .resume-section__line {
+        max-width: 80px;
+    }
+    
+    .resume-section__title {
+        font-size: 14px;
+        letter-spacing: 5px;
+    }
+}
