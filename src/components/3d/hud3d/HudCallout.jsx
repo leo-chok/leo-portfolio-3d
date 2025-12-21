@@ -20,6 +20,7 @@ const HUD_COLOR_ACCENT = '#00ffff'
  * - Classification indicator
  * - Scanning effect
  * - Coordinate readout
+ * - Hidden on mobile (< 768px)
  */
 export const HudCallout = ({ name, sectionId, visible = false, offset = [4, 3, 0], classification = 'SECTOR' }) => {
     const groupRef = useRef()
@@ -28,6 +29,15 @@ export const HudCallout = ({ name, sectionId, visible = false, offset = [4, 3, 0
     const [drawProgress, setDrawProgress] = useState(0)
     const [showText, setShowText] = useState(false)
     const [scanPulse, setScanPulse] = useState(0)
+    const [isMobile, setIsMobile] = useState(false)
+    
+    // Detect mobile viewport
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
     
     // Get analysis state from store
     const analyzedSections = useWindowStore((state) => state.analyzedSections)
@@ -187,7 +197,8 @@ export const HudCallout = ({ name, sectionId, visible = false, offset = [4, 3, 0
         ]
     }, [panelWidth])
     
-    if (!visible && drawProgress === 0) return null
+    // Hide on mobile or when not visible
+    if (isMobile || (!visible && drawProgress === 0)) return null
     
     const statusText = isAnalyzed ? '● DECODED' : (isDecrypting ? '○ SCANNING' : '○ ENCRYPTED')
     const statusColor = isAnalyzed ? '#64edb4' : (isDecrypting ? '#ffaa00' : HUD_COLOR_DIM)

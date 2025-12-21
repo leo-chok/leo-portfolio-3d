@@ -1,0 +1,239 @@
+/* ===========================
+   COCKPIT HUD MOBILE
+   Simplified touch-optimized HUD
+   =========================== */
+
+.hud-mobile {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.hud-mobile--visible {
+    opacity: 1;
+}
+
+/* === CORNER BRACKETS === */
+.hud-mobile__bracket {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-color: rgba(124, 196, 237, 0.3);
+    border-style: solid;
+    border-width: 0;
+    pointer-events: none;
+}
+
+.hud-mobile__bracket--tl {
+    top: 15px;
+    left: 15px;
+    border-top-width: 2px;
+    border-left-width: 2px;
+}
+
+.hud-mobile__bracket--tr {
+    top: 15px;
+    right: 15px;
+    border-top-width: 2px;
+    border-right-width: 2px;
+}
+
+.hud-mobile__bracket--bl {
+    bottom: 15px;
+    left: 15px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+}
+
+.hud-mobile__bracket--br {
+    bottom: 15px;
+    right: 15px;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+}
+
+/* === TOP BAR === */
+.hud-mobile__top {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    pointer-events: auto;
+}
+
+.hud-mobile__nav-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 20, 35, 0.6);
+    border: 1px solid rgba(124, 196, 237, 0.3);
+    border-radius: 8px;
+    color: rgba(124, 196, 237, 0.8);
+    font-size: 24px;
+    font-family: 'Orbitron', monospace;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.hud-mobile__nav-btn:active {
+    background: rgba(124, 196, 237, 0.15);
+    border-color: rgba(124, 196, 237, 0.6);
+    transform: scale(0.95);
+}
+
+/* Counter */
+.hud-mobile__counter {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-family: 'Orbitron', monospace;
+    font-size: 16px;
+}
+
+.hud-mobile__counter-current {
+    color: rgba(100, 237, 180, 0.9);
+    font-weight: 600;
+}
+
+.hud-mobile__counter-separator {
+    color: rgba(124, 196, 237, 0.4);
+}
+
+.hud-mobile__counter-total {
+    color: rgba(124, 196, 237, 0.6);
+}
+
+/* === BOTTOM SECTION === */
+.hud-mobile__bottom {
+    position: absolute;
+    bottom: 30px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    pointer-events: auto;
+}
+
+/* System name */
+.hud-mobile__system-name {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.hud-mobile__system-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    color: rgba(124, 196, 237, 0.5);
+    letter-spacing: 3px;
+}
+
+.hud-mobile__system-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(124, 196, 237, 0.95);
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px rgba(124, 196, 237, 0.3);
+}
+
+/* Analyze button */
+.hud-mobile__analyze {
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-top: 1px solid rgba(100, 237, 180, 0.2);
+    border-bottom: 1px solid rgba(100, 237, 180, 0.4);
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: rgba(100, 237, 180, 0.9);
+    cursor: pointer;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.3s ease;
+}
+
+/* Corner brackets on button */
+.hud-mobile__analyze::before,
+.hud-mobile__analyze::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: rgba(100, 237, 180, 0.5);
+    border-style: solid;
+    transition: all 0.3s ease;
+}
+
+.hud-mobile__analyze::before {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+}
+
+.hud-mobile__analyze::after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+}
+
+.hud-mobile__analyze:active {
+    background: rgba(100, 237, 180, 0.1);
+}
+
+.hud-mobile__analyze:active::before,
+.hud-mobile__analyze:active::after {
+    border-color: rgba(100, 237, 180, 1);
+    width: 18px;
+    height: 18px;
+}
+
+.hud-mobile__analyze-text {
+    position: relative;
+    z-index: 2;
+}
+
+/* Loading state */
+.hud-mobile__analyze--loading {
+    color: rgba(124, 196, 237, 0.8);
+    border-color: rgba(124, 196, 237, 0.3);
+}
+
+.hud-mobile__analyze--loading::before,
+.hud-mobile__analyze--loading::after {
+    border-color: rgba(124, 196, 237, 0.5);
+}
+
+.hud-mobile__analyze-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        rgba(124, 196, 237, 0.1),
+        rgba(124, 196, 237, 0.2)
+    );
+    transition: width 0.1s linear;
+    z-index: 1;
+}

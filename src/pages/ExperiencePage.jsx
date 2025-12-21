@@ -3,12 +3,14 @@ import { Suspense, useState, useEffect } from 'react'
 import { Loader } from '@react-three/drei'
 import { Experience } from '../components/core/Experience'
 import { CockpitHUD } from '../components/hud/CockpitHUD'
+import { CockpitHUDMobile } from '../components/hud/CockpitHUDMobile'
 import { SpaceshipControls } from '../components/hud/SpaceshipControls'
 import { DebugPanel } from '../components/hud/DebugPanel'
 import { WindowManager } from '../components/hud/WindowManager'
 import { Taskbar } from '../components/hud/common/Taskbar'
 import { LoadingScreen } from '../components/hud/LoadingScreen'
 import { useSpaceshipStore } from '../stores/spaceshipStore'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 /**
  * ExperiencePage - Full 3D Interactive Experience
@@ -22,6 +24,9 @@ function ExperiencePage() {
   const isSpaceshipMode = useSpaceshipStore(state => state.isSpaceshipMode)
   const enterSpaceshipMode = useSpaceshipStore(state => state.enterSpaceshipMode)
   const exitSpaceshipMode = useSpaceshipStore(state => state.exitSpaceshipMode)
+  
+  // Detect mobile viewport
+  const isMobile = useIsMobile(768)
   
   // Global T key toggle for spaceship mode
   useEffect(() => {
@@ -69,11 +74,16 @@ function ExperiencePage() {
         </Suspense>
       </Canvas>
       <Loader />
-      <CockpitHUD />
+      
+      {/* HUD - Desktop vs Mobile */}
+      {isMobile ? <CockpitHUDMobile /> : <CockpitHUD />}
+      
       <SpaceshipControls />
       <WindowManager />
-      <Taskbar />
-      <DebugPanel />
+      
+      {/* Desktop only components */}
+      {!isMobile && <Taskbar />}
+      {!isMobile && <DebugPanel />}
     </>
   )
 }

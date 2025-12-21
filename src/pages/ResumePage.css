@@ -308,11 +308,10 @@ body:has(.resume) {
 
 /* === RESPONSIVE ADDITIONS === */
 @media (max-width: 768px) {
-    .resume__nav-back {
-        top: 20px;
-        left: 20px;
-        padding: 8px 14px;
-        font-size: 10px;
+    /* Hide nav buttons on mobile - users use back button */
+    .resume__nav-back,
+    .resume__nav-float {
+        display: none;
     }
     
     .resume__footer {

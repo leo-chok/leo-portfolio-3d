@@ -330,21 +330,81 @@
     background: rgba(10, 20, 35, 0.9);
 }
 
+/* ============================
+   MOBILE RESPONSIVE - Full screen windows
+   ============================ */
 @media (max-width: 768px) {
-    .holo-window {
-        width: 95%;
-        max-width: 95%;
+    /* Force windows to fill between HUD brackets */
+    .holo-window-wrapper {
+        position: fixed !important;
+        top: 80px !important;
+        left: 15px !important;
+        right: 15px !important;
+        bottom: 140px !important;
+        transform: none !important;
+        width: auto !important;
     }
     
+    .holo-window {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        max-height: none !important;
+        min-width: unset;
+        min-height: unset;
+        resize: none;
+        border-radius: 6px;
+    }
+    
+    /* Hide resize handle on mobile */
+    .holo-window::after {
+        display: none;
+    }
+    
+    .holo-window__content {
+        max-height: none;
+        flex: 1;
+        padding: 15px;
+    }
+    
+    .holo-window__header {
+        padding: 8px 12px;
+    }
+    
+    .holo-window__title {
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+    
+    .holo-window__subtitle {
+        font-size: 9px;
+    }
+    
+    /* Hide minimize, maximize buttons on mobile */
+    .holo-window__minimize,
+    .holo-window__maximize {
+        display: none;
+    }
+    
+    /* Make close button bigger for touch */
+    .holo-window__close {
+        font-size: 24px;
+        padding: 5px 8px;
+    }
+    
+    /* Maximized state on mobile = same as normal */
     .holo-window--maximized {
-        width: 100vw !important;
-        height: 100vh !important;
-        top: 0 !important;
-        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
     }
     
     .holo-window-wrapper--maximized {
-        top: 0 !important;
-        left: 0 !important;
+        top: 80px !important;
+        left: 15px !important;
+    }
+    
+    /* Minimized state hidden on mobile */
+    .holo-window--minimized {
+        display: none;
     }
 }
