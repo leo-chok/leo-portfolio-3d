@@ -28,17 +28,17 @@ export const ResumeContact = () => {
         
         gsap.set(items, { opacity: 0, y: 40 })
         
-        ScrollTrigger.create({
-            trigger: contactRef.current,
-            start: 'top 75%',
-            onEnter: () => {
-                gsap.to(items, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.6,
-                    stagger: 0.15,
-                    ease: 'power2.out'
-                })
+        // Use gsap.to with scrollTrigger for better refresh compatibility
+        gsap.to(items, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: contactRef.current,
+                start: 'top bottom',
+                toggleActions: 'play none none none'
             }
         })
         

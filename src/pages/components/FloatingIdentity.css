@@ -1,0 +1,322 @@
+/* ===========================
+   FLOATING IDENTITY CARD
+   Fixed glassmorphism panel with
+   holographic portrait and contact
+   =========================== */
+
+.floating-identity {
+    position: sticky;
+    top: 300px;
+    left: 0;
+    z-index: 50;
+    align-self: flex-start;
+    flex-shrink: 0;
+    margin-right: 20px;
+    
+    /* Glassmorphism HoloWindow style */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    background: linear-gradient(
+        135deg,
+        rgba(124, 196, 237, 0.06) 0%,
+        rgba(10, 20, 35, 0.85) 50%,
+        rgba(124, 196, 237, 0.03) 100%
+    );
+    border: 1px solid rgba(124, 196, 237, 0.25);
+    border-radius: 8px;
+    backdrop-filter: blur(12px);
+    box-shadow: 
+        0 15px 50px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(124, 196, 237, 0.08);
+    
+    /* Levitation animation */
+    animation: levitate 6s ease-in-out infinite;
+}
+
+@keyframes levitate {
+    0%, 100% { 
+        transform: translateY(0px);
+        box-shadow: 
+            0 15px 50px rgba(0, 0, 0, 0.4),
+            0 0 30px rgba(124, 196, 237, 0.08);
+    }
+    50% { 
+        transform: translateY(-8px);
+        box-shadow: 
+            0 25px 60px rgba(0, 0, 0, 0.5),
+            0 0 40px rgba(124, 196, 237, 0.12);
+    }
+}
+
+/* === CORNER BRACKETS === */
+.floating-identity__bracket {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: rgba(124, 196, 237, 0.5);
+    border-style: solid;
+    border-width: 0;
+    z-index: 2;
+    pointer-events: none;
+    transition: border-color 0.3s ease;
+}
+
+.floating-identity:hover .floating-identity__bracket {
+    border-color: rgba(124, 196, 237, 0.9);
+}
+
+.floating-identity__bracket--tl { top: 6px; left: 6px; border-top-width: 2px; border-left-width: 2px; }
+.floating-identity__bracket--tr { top: 6px; right: 6px; border-top-width: 2px; border-right-width: 2px; }
+.floating-identity__bracket--bl { bottom: 6px; left: 6px; border-bottom-width: 2px; border-left-width: 2px; }
+.floating-identity__bracket--br { bottom: 6px; right: 6px; border-bottom-width: 2px; border-right-width: 2px; }
+
+/* === SCANLINES === */
+.floating-identity__scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(124, 196, 237, 0.02) 2px,
+        rgba(124, 196, 237, 0.02) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 8px;
+}
+
+/* === PORTRAIT SECTION === */
+.floating-identity__portrait {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.3s ease;
+}
+
+/* .floating-identity__portrait:hover {
+    transform: scale(1.02);
+} */
+
+/* Holographic glow */
+.floating-identity__portrait-holo {
+    position: absolute;
+    inset: -15px;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(124, 196, 237, 0.2) 0%,
+        rgba(124, 196, 237, 0.05) 50%,
+        transparent 70%
+    );
+    filter: blur(12px);
+    animation: holoGlow 3s ease-in-out infinite alternate;
+    z-index: -1;
+}
+
+@keyframes holoGlow {
+    0% { opacity: 0.5; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.08); }
+}
+
+.floating-identity__portrait-frame {
+    width: 256px;
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+    opacity: .7;
+    border: 1px solid rgba(124, 196, 237, 0.4);
+    box-shadow: 
+        0 0 25px rgba(124, 196, 237, 0.25),
+        inset 0 0 40px rgba(124, 196, 237, 0.1);
+}
+
+/* Corner brackets on frame */
+.floating-identity__portrait-frame::before,
+.floating-identity__portrait-frame::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-color: rgba(124, 196, 237, 0.7);
+    border-style: solid;
+    animation: frameBracketPulse 2s ease-in-out infinite alternate;
+    z-index: 3;
+}
+
+.floating-identity__portrait-frame::before {
+    top: 4px;
+    left: 4px;
+    border-width: 2px 0 0 2px;
+}
+
+.floating-identity__portrait-frame::after {
+    bottom: 4px;
+    right: 4px;
+    border-width: 0 2px 2px 0;
+}
+
+@keyframes frameBracketPulse {
+    0% { border-color: rgba(124, 196, 237, 0.5); }
+    100% { border-color: rgba(124, 196, 237, 1); }
+}
+
+.floating-identity__portrait-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.85) brightness(1.05);
+    transition: filter 0.3s ease;
+}
+
+.floating-identity__portrait:hover .floating-identity__portrait-img {
+    filter: saturate(1.1) brightness(1.1);
+}
+
+/* Holographic scan line */
+.floating-identity__portrait-scan {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(124, 196, 237, 0.9) 50%,
+        transparent 100%
+    );
+    animation: scanDown 3s linear infinite;
+    box-shadow: 0 0 15px rgba(124, 196, 237, 0.6);
+    z-index: 2;
+}
+
+@keyframes scanDown {
+    0% { top: -3px; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+.floating-identity__portrait-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 8px;
+    color: rgba(124, 196, 237, 0.6);
+    letter-spacing: 2px;
+    animation: labelBlink 2s ease-in-out infinite;
+}
+
+@keyframes labelBlink {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; color: rgba(124, 196, 237, 0.9); }
+}
+
+/* === CONTACT BUTTON === */
+.floating-identity__contact {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    border-top: 1px solid rgba(100, 237, 180, 0.15);
+    border-bottom: 1px solid rgba(100, 237, 180, 0.25);
+    color: rgba(100, 237, 180, 0.85);
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+/* Corner brackets */
+.floating-identity__contact::before,
+.floating-identity__contact::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: rgba(100, 237, 180, 0.5);
+    border-style: solid;
+    transition: all 0.3s ease;
+}
+
+.floating-identity__contact::before {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+}
+
+.floating-identity__contact::after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+}
+
+.floating-identity__contact:hover {
+    color: rgba(100, 237, 180, 1);
+    text-shadow: 0 0 15px rgba(100, 237, 180, 0.5);
+}
+
+.floating-identity__contact:hover::before,
+.floating-identity__contact:hover::after {
+    border-color: rgba(100, 237, 180, 0.9);
+    width: 14px;
+    height: 14px;
+}
+
+.floating-identity__contact-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(100, 237, 180, 0.15), transparent);
+    animation: contactShimmer 2.5s infinite;
+    pointer-events: none;
+}
+
+@keyframes contactShimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.floating-identity__contact-icon {
+    font-size: 14px;
+}
+
+.floating-identity__contact-text {
+    position: relative;
+    z-index: 2;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1200px) {
+    .floating-identity {
+        left: 15px;
+        padding: 15px;
+    }
+    
+    .floating-identity__portrait-frame {
+        width: 100px;
+        height: 130px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Hide floating card on mobile */
+    .floating-identity {
+        display: none;
+    }
+}

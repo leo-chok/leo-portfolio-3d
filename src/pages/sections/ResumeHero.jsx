@@ -16,6 +16,7 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export const ResumeHero = () => {
     const heroRef = useRef(null)
+    const portraitRef = useRef(null)
     const nameRef = useRef(null)
     const titleRef = useRef(null)
     const statusRef = useRef(null)
@@ -24,6 +25,10 @@ export const ResumeHero = () => {
     useEffect(() => {
         const ctx = gsap.context(() => {
             // Initial states
+            gsap.set(portraitRef.current, {
+                opacity: 0,
+                scale: 0.8
+            })
             gsap.set([nameRef.current, titleRef.current, statusRef.current], {
                 opacity: 0,
                 y: 30
@@ -34,12 +39,17 @@ export const ResumeHero = () => {
                 defaults: { ease: 'power2.out' }
             })
             
-            tl.to(nameRef.current, {
+            tl.to(portraitRef.current, {
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                delay: 0.2
+            })
+            .to(nameRef.current, {
                 opacity: 1,
                 y: 0,
-                duration: 0.8,
-                delay: 0.3
-            })
+                duration: 0.8
+            }, '-=0.5')
             .to(titleRef.current, {
                 opacity: 1,
                 y: 0,
@@ -79,40 +89,63 @@ export const ResumeHero = () => {
     const createMarkup = (html) => ({ __html: html })
     
     return (
-        <section className="hero" ref={heroRef}>
-            <div className="hero__content">
-                {/* Name & Title */}
-                <div className="hero__identity">
-                    <h1 className="hero__name" ref={nameRef}>
-                        {presentation.name}
-                    </h1>
-                    <div className="hero__titles" ref={titleRef}>
-                        <span className="hero__title">{presentation.title}</span>
-                        <span className="hero__title-separator">•</span>
-                        <span className="hero__subtitle">{presentation.subtitle}</span>
-                    </div>
-                    <p className="hero__tagline">{presentation.tagline}</p>
-                </div>
+        <section className="hero" ref={heroRef} id="hero">
+            <div className="hero__panel">
+                {/* Corner brackets */}
+                <div className="hero__bracket hero__bracket--tl" />
+                <div className="hero__bracket hero__bracket--tr" />
+                <div className="hero__bracket hero__bracket--bl" />
+                <div className="hero__bracket hero__bracket--br" />
                 
-                {/* Status Badge */}
-                <div className="hero__status" ref={statusRef}>
-                    <div className="hero__status-badge">
-                        <span className="hero__status-dot" />
-                        <span className="hero__status-type">{presentation.status.type}</span>
-                    </div>
-                    <p className="hero__status-text">{presentation.status.text}</p>
-                    <p className="hero__status-school">{presentation.status.school}</p>
-                </div>
+                {/* Scanlines */}
+                <div className="hero__scanlines" />
                 
-                {/* About Section */}
-                <div className="hero__about" ref={aboutRef}>
-                    {presentation.about.map((item, index) => (
-                        <div 
-                            key={index} 
-                            className={`hero__about-item hero__about-item--${item.type}`}
-                            dangerouslySetInnerHTML={createMarkup(item.text)}
-                        />
-                    ))}
+                <div className="hero__content">
+                    {/* Name & Title */}
+                    <div className="hero__identity">
+                        <h1 className="hero__name" ref={nameRef}>
+                            {presentation.name}
+                        </h1>
+                        <div className="hero__titles" ref={titleRef}>
+                            <span className="hero__title">{presentation.title}</span>
+                            <span className="hero__title-separator">•</span>
+                            <span className="hero__subtitle">{presentation.subtitle}</span>
+                        </div>
+                        <p className="hero__tagline">{presentation.tagline}</p>
+                    </div>
+                    
+                    {/* Portrait - Mobile only (above status) */}
+                    <div className="hero__portrait hero__portrait--mobile" ref={portraitRef}>
+                        <div className="hero__portrait-frame">
+                            <img 
+                                src="/portrait.PNG" 
+                                alt="Léo Stalhberger" 
+                                className="hero__portrait-img"
+                            />
+                        </div>
+                        <div className="hero__portrait-label">IDENTITY SCAN</div>
+                    </div>
+                    
+                    {/* Status Badge */}
+                    <div className="hero__status" ref={statusRef}>
+                        <div className="hero__status-badge">
+                            <span className="hero__status-dot" />
+                            <span className="hero__status-type">{presentation.status.type}</span>
+                        </div>
+                        <p className="hero__status-text">{presentation.status.text}</p>
+                        <p className="hero__status-school">{presentation.status.school}</p>
+                    </div>
+                    
+                    {/* About Section */}
+                    <div className="hero__about" ref={aboutRef}>
+                        {presentation.about.map((item, index) => (
+                            <div 
+                                key={index} 
+                                className={`hero__about-item hero__about-item--${item.type}`}
+                                dangerouslySetInnerHTML={createMarkup(item.text)}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>

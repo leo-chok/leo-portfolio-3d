@@ -33,7 +33,7 @@
 /* Grid animation */
 .welcome__grid {
     position: absolute;
-    inset: 0;
+    inset: -60px;
     background-image: 
         linear-gradient(rgba(124, 196, 237, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(124, 196, 237, 0.03) 1px, transparent 1px);
@@ -69,15 +69,95 @@
         0deg,
         transparent,
         transparent 2px,
-        rgba(124, 196, 237, 0.01) 2px,
-        rgba(124, 196, 237, 0.01) 4px
+        rgba(124, 196, 237, 0.015) 2px,
+        rgba(124, 196, 237, 0.015) 4px
     );
     animation: scanlineFlicker 0.1s infinite;
 }
 
 @keyframes scanlineFlicker {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.98; }
+    50% { opacity: 0.97; }
+}
+
+
+
+/* Grain overlay */
+.welcome__grain {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    mix-blend-mode: overlay;
+    animation: grainShift 0.5s steps(5) infinite;
+}
+
+@keyframes grainShift {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(2px, -2px); }
+    60% { transform: translate(-1px, -1px); }
+    80% { transform: translate(1px, 1px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* CRT flicker effect */
+.welcome__flicker {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    animation: crtFlicker 4s ease-in-out infinite;
+}
+
+@keyframes crtFlicker {
+    0%, 100% { opacity: 1; }
+    92% { opacity: 1; }
+    93% { opacity: 0.97; }
+    94% { opacity: 1; }
+    95% { opacity: 0.98; }
+    96% { opacity: 1; }
+}
+
+/* Glowing particles */
+.welcome__particles {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(2px 2px at 10% 20%, rgba(124, 196, 237, 0.8), transparent),
+        radial-gradient(2px 2px at 30% 70%, rgba(100, 237, 180, 0.7), transparent),
+        radial-gradient(2px 2px at 50% 10%, rgba(124, 196, 237, 0.75), transparent),
+        radial-gradient(2px 2px at 70% 80%, rgba(124, 196, 237, 0.65), transparent),
+        radial-gradient(2px 2px at 90% 40%, rgba(100, 237, 180, 0.6), transparent),
+        radial-gradient(2px 2px at 20% 90%, rgba(124, 196, 237, 0.7), transparent),
+        radial-gradient(2px 2px at 80% 15%, rgba(124, 196, 237, 0.75), transparent),
+        radial-gradient(3px 3px at 45% 55%, rgba(100, 237, 180, 0.8), transparent),
+        radial-gradient(2px 2px at 65% 35%, rgba(124, 196, 237, 0.65), transparent),
+        radial-gradient(2px 2px at 15% 45%, rgba(124, 196, 237, 0.6), transparent),
+        radial-gradient(2px 2px at 85% 65%, rgba(124, 196, 237, 0.7), transparent),
+        radial-gradient(2px 2px at 5% 80%, rgba(100, 237, 180, 0.65), transparent),
+        radial-gradient(2px 2px at 55% 90%, rgba(124, 196, 237, 0.6), transparent),
+        radial-gradient(3px 3px at 25% 30%, rgba(100, 237, 180, 0.75), transparent),
+        radial-gradient(2px 2px at 75% 50%, rgba(124, 196, 237, 0.7), transparent),
+        radial-gradient(2px 2px at 40% 5%, rgba(124, 196, 237, 0.65), transparent),
+        radial-gradient(2px 2px at 95% 85%, rgba(100, 237, 180, 0.6), transparent),
+        radial-gradient(2px 2px at 60% 60%, rgba(124, 196, 237, 0.55), transparent);
+    animation: particleTwinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes particleTwinkle {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+/* Chromatic aberration on edges */
+.welcome__chromatic {
+    position: absolute;
+    inset: 0;
+    background: 
+        linear-gradient(90deg, rgba(255, 50, 50, 0.02) 0%, transparent 3%, transparent 97%, rgba(50, 50, 255, 0.02) 100%),
+        linear-gradient(180deg, rgba(50, 255, 50, 0.01) 0%, transparent 2%, transparent 98%, rgba(255, 50, 255, 0.01) 100%);
+    pointer-events: none;
 }
 
 /* Vignette */
@@ -194,77 +274,97 @@
     font-weight: 500;
 }
 
-/* === CTA BUTTONS === */
+/* === CTA BUTTONS (Analyser style) === */
 .welcome__ctas {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
     width: 100%;
-    max-width: 450px;
+    max-width: 400px;
 }
 
 .welcome__cta {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding: 20px 28px;
-    background: linear-gradient(
-        135deg,
-        rgba(124, 196, 237, 0.08) 0%,
-        rgba(10, 20, 35, 0.9) 50%,
-        rgba(124, 196, 237, 0.05) 100%
-    );
-    border: 1px solid rgba(124, 196, 237, 0.3);
-    border-radius: 8px;
+    gap: 15px;
+    padding: 16px 40px;
+    background: transparent;
+    border: none;
+    border-top: 1px solid rgba(124, 196, 237, 0.15);
+    border-bottom: 1px solid rgba(124, 196, 237, 0.25);
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: 'Orbitron', monospace;
     text-align: left;
-    position: relative;
     overflow: hidden;
 }
 
-.welcome__cta::before {
+/* Corner brackets */
+.welcome__cta::before,
+.welcome__cta::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(124, 196, 237, 0.1) 50%,
-        transparent 100%
-    );
-    transform: translateX(-100%);
-    transition: transform 0.5s ease;
+    width: 14px;
+    height: 14px;
+    border-color: rgba(124, 196, 237, 0.4);
+    border-style: solid;
+    transition: all 0.3s ease;
 }
 
-.welcome__cta:hover::before {
-    transform: translateX(100%);
+.welcome__cta::before {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+}
+
+.welcome__cta::after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+}
+
+.welcome__cta:hover::before,
+.welcome__cta:hover::after {
+    border-color: rgba(124, 196, 237, 0.9);
+    width: 18px;
+    height: 18px;
 }
 
 .welcome__cta:hover {
-    border-color: rgba(124, 196, 237, 0.6);
-    background: linear-gradient(
-        135deg,
-        rgba(124, 196, 237, 0.12) 0%,
-        rgba(10, 20, 35, 0.95) 50%,
-        rgba(124, 196, 237, 0.08) 100%
-    );
-    box-shadow: 
-        0 0 30px rgba(124, 196, 237, 0.15),
-        inset 0 1px 0 rgba(124, 196, 237, 0.1);
-    transform: translateX(5px);
+    text-shadow: 0 0 15px rgba(124, 196, 237, 0.5);
+}
+
+.welcome__cta:active {
+    transform: scale(0.98);
+}
+
+/* Shimmer animation */
+.welcome__cta-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(124, 196, 237, 0.12), transparent);
+    animation: ctaShimmer 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes ctaShimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
 }
 
 .welcome__cta-icon {
-    color: rgba(124, 196, 237, 0.6);
-    font-size: 20px;
-    transition: color 0.3s ease, transform 0.3s ease;
+    color: rgba(124, 196, 237, 0.7);
+    font-size: 16px;
+    transition: all 0.3s ease;
 }
 
 .welcome__cta:hover .welcome__cta-icon {
     color: #7cc4ed;
-    transform: scale(1.1);
+    transform: scale(1.15);
 }
 
 .welcome__cta-content {
@@ -276,10 +376,10 @@
 
 .welcome__cta-label {
     color: rgba(124, 196, 237, 0.9);
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 600;
-    letter-spacing: 2px;
-    transition: color 0.3s ease;
+    letter-spacing: 3px;
+    transition: all 0.3s ease;
 }
 
 .welcome__cta:hover .welcome__cta-label {
@@ -294,43 +394,34 @@
     font-weight: 400;
 }
 
-.welcome__cta-arrow {
-    color: rgba(124, 196, 237, 0.3);
-    font-size: 18px;
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.welcome__cta:hover .welcome__cta-arrow {
-    color: #7cc4ed;
-    transform: translateX(5px);
-}
-
-/* Experience button special style */
+/* Experience button - green variant */
 .welcome__cta--experience {
-    border-color: rgba(100, 237, 180, 0.25);
-    background: linear-gradient(
-        135deg,
-        rgba(100, 237, 180, 0.05) 0%,
-        rgba(10, 20, 35, 0.9) 50%,
-        rgba(100, 237, 180, 0.03) 100%
-    );
+    border-top-color: rgba(100, 237, 180, 0.15);
+    border-bottom-color: rgba(100, 237, 180, 0.25);
 }
 
-.welcome__cta--experience:hover {
-    border-color: rgba(100, 237, 180, 0.5);
-    box-shadow: 
-        0 0 30px rgba(100, 237, 180, 0.12),
-        inset 0 1px 0 rgba(100, 237, 180, 0.1);
+.welcome__cta--experience::before,
+.welcome__cta--experience::after {
+    border-color: rgba(100, 237, 180, 0.4);
+}
+
+.welcome__cta--experience:hover::before,
+.welcome__cta--experience:hover::after {
+    border-color: rgba(100, 237, 180, 0.9);
+}
+
+.welcome__cta--experience .welcome__cta-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(100, 237, 180, 0.12), transparent);
 }
 
 .welcome__cta--experience .welcome__cta-icon,
-.welcome__cta--experience:hover .welcome__cta-icon,
-.welcome__cta--experience:hover .welcome__cta-label,
-.welcome__cta--experience:hover .welcome__cta-arrow {
-    color: #64edb4;
+.welcome__cta--experience .welcome__cta-label {
+    color: rgba(100, 237, 180, 0.85);
 }
 
+.welcome__cta--experience:hover .welcome__cta-icon,
 .welcome__cta--experience:hover .welcome__cta-label {
+    color: #64edb4;
     text-shadow: 0 0 15px rgba(100, 237, 180, 0.5);
 }
 

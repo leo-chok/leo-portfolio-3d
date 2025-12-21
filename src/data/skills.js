@@ -77,6 +77,10 @@ export const skills = {
             subcategories: [
                 {
                     name: "",
+                    items: ["Français — Natif"]
+                },
+                {
+                    name: "",
                     items: ["Anglais — B2"]
                 }
             ]

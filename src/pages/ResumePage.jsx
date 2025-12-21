@@ -10,6 +10,9 @@ import { ResumeFormations } from './sections/ResumeFormations'
 import { ResumeProjects } from './sections/ResumeProjects'
 import { ResumeContact } from './sections/ResumeContact'
 
+// Components
+import { FloatingIdentity } from './components/FloatingIdentity'
+
 // Styles
 import './ResumePage.css'
 import './sections/ResumeSection.css'
@@ -23,6 +26,7 @@ gsap.registerPlugin(ScrollTrigger)
  * - All portfolio sections in a scrollable format
  * - GSAP ScrollTrigger animations
  * - Floating nav button to 3D experience
+ * - Floating identity card with portrait and contact
  */
 export const ResumePage = () => {
     const navigate = useNavigate()
@@ -45,6 +49,9 @@ export const ResumePage = () => {
                 <div className="resume__scanlines" />
             </div>
             
+            {/* Floating Identity Card - Desktop only */}
+            {/* Removed from here - now using sticky inside hero-section-wrapper */}
+            
             {/* Floating nav button */}
             <button 
                 className="resume__nav-float"
@@ -66,7 +73,11 @@ export const ResumePage = () => {
             
             {/* Content wrapper */}
             <div className="resume__wrapper">
-                <ResumeHero />
+                {/* Hero Section with Floating Identity */}
+                <div className="resume__hero-wrapper">
+                    <FloatingIdentity />
+                    <ResumeHero />
+                </div>
                 <ResumeSkills />
                 <ResumeFormations />
                 <ResumeProjects />

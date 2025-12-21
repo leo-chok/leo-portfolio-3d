@@ -1,13 +1,85 @@
 /* ===========================
-   RESUME SECTION - BASE STYLES
+   RESUME SECTION - GLASS PANEL STYLES
+   Inspired by HoloWindow design
    =========================== */
 
 .resume-section {
-    padding: 80px 0;
+    padding: 40px 0;
     position: relative;
 }
 
+/* === GLASS PANEL === */
+.resume-section__panel {
+    position: relative;
+    background: linear-gradient(
+        135deg,
+        rgba(124, 196, 237, 0.04) 0%,
+        rgba(10, 20, 35, 0.8) 50%,
+        rgba(124, 196, 237, 0.02) 100%
+    );
+    border: 1px solid rgba(124, 196, 237, 0.2);
+    border-radius: 8px;
+    padding: 40px;
+    backdrop-filter: blur(8px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(124, 196, 237, 0.1);
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.resume-section__panel:hover {
+    border-color: rgba(124, 196, 237, 0.35);
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.35),
+        0 0 20px rgba(124, 196, 237, 0.08),
+        inset 0 1px 0 rgba(124, 196, 237, 0.15);
+}
+
+/* Corner brackets */
+.resume-section__bracket {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-color: rgba(124, 196, 237, 0.5);
+    border-style: solid;
+    border-width: 0;
+    z-index: 2;
+    pointer-events: none;
+    transition: border-color 0.3s ease, opacity 0.3s ease;
+    opacity: 0.7;
+}
+
+.resume-section__panel:hover .resume-section__bracket {
+    border-color: rgba(124, 196, 237, 0.8);
+    opacity: 1;
+}
+
+.resume-section__bracket--tl { top: 6px; left: 6px; border-top-width: 2px; border-left-width: 2px; }
+.resume-section__bracket--tr { top: 6px; right: 6px; border-top-width: 2px; border-right-width: 2px; }
+.resume-section__bracket--bl { bottom: 6px; left: 6px; border-bottom-width: 2px; border-left-width: 2px; }
+.resume-section__bracket--br { bottom: 6px; right: 6px; border-bottom-width: 2px; border-right-width: 2px; }
+
+/* Scanlines overlay */
+.resume-section__scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(124, 196, 237, 0.015) 2px,
+        rgba(124, 196, 237, 0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 8px;
+}
+
+/* Inner content */
 .resume-section__inner {
+    position: relative;
+    z-index: 1;
     will-change: transform, opacity;
 }
 
@@ -15,33 +87,33 @@
 .resume-section__header {
     display: flex;
     align-items: center;
-    gap: 25px;
-    margin-bottom: 50px;
-    justify-content: center;
+    gap: 20px;
+    margin-bottom: 35px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.15);
 }
 
 .resume-section__line {
     flex: 1;
-    max-width: 150px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(124, 196, 237, 0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(124, 196, 237, 0.3), transparent);
 }
 
 .resume-section__title-wrapper {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .resume-section__icon {
-    color: rgba(124, 196, 237, 0.5);
+    color: rgba(124, 196, 237, 0.6);
     font-size: 14px;
 }
 
 .resume-section__title {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 700;
-    letter-spacing: 8px;
+    letter-spacing: 6px;
     color: rgba(124, 196, 237, 0.9);
     margin: 0;
     text-transform: uppercase;
@@ -49,27 +121,39 @@
 
 /* === CONTENT === */
 .resume-section__content {
-    max-width: 1000px;
-    margin: 0 auto;
+    max-width: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
     .resume-section {
-        padding: 60px 0;
+        padding: 25px 0;
+    }
+    
+    .resume-section__panel {
+        padding: 25px 20px;
+        border-radius: 6px;
+    }
+    
+    .resume-section__bracket {
+        width: 12px;
+        height: 12px;
     }
     
     .resume-section__header {
-        gap: 15px;
-        margin-bottom: 35px;
+        gap: 12px;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
     }
     
     .resume-section__line {
-        max-width: 80px;
+        display: none;
     }
     
     .resume-section__title {
-        font-size: 14px;
-        letter-spacing: 5px;
+        font-size: 12px;
+        letter-spacing: 4px;
     }
 }

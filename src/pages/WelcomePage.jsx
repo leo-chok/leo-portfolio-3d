@@ -37,6 +37,9 @@ export const WelcomePage = () => {
             <div className="welcome__bg">
                 <div className="welcome__grid" />
                 <div className="welcome__scanlines" />
+                <div className="welcome__grain" />
+                <div className="welcome__flicker" />
+                <div className="welcome__chromatic" />
                 <div className="welcome__vignette" />
             </div>
             
@@ -69,24 +72,24 @@ export const WelcomePage = () => {
                         className="welcome__cta welcome__cta--resume"
                         onClick={handleResumeClick}
                     >
-                        <span className="welcome__cta-icon">◈</span>
+                        <span className="welcome__cta-shimmer" />
+                        <span className="welcome__cta-icon">◇</span>
                         <span className="welcome__cta-content">
-                            <span className="welcome__cta-label">Voir le Résumé</span>
+                            <span className="welcome__cta-label">VOIR LE RÉSUMÉ</span>
                             <span className="welcome__cta-desc">CV interactif • Lecture ~3 min</span>
                         </span>
-                        <span className="welcome__cta-arrow">→</span>
                     </button>
                     
                     <button 
                         className="welcome__cta welcome__cta--experience"
                         onClick={handleExperienceClick}
                     >
-                        <span className="welcome__cta-icon">◇</span>
+                        <span className="welcome__cta-shimmer" />
+                        <span className="welcome__cta-icon">◈</span>
                         <span className="welcome__cta-content">
-                            <span className="welcome__cta-label">Expérience Originale</span>
-                            <span className="welcome__cta-desc">Exploration 3D immersive</span>
+                            <span className="welcome__cta-label">EXPÉRIENCE 3D</span>
+                            <span className="welcome__cta-desc">Exploration immersive</span>
                         </span>
-                        <span className="welcome__cta-arrow">→</span>
                     </button>
                 </div>
                 
