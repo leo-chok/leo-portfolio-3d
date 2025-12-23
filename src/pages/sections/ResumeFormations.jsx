@@ -29,9 +29,10 @@ export const ResumeFormations = () => {
         gsap.set(line, { scaleY: 0, transformOrigin: 'top' })
         
         // Timeline animation
-        ScrollTrigger.create({
+        const trigger = ScrollTrigger.create({
             trigger: timelineRef.current,
-            start: 'top 70%',
+            start: 'top 85%',
+            once: true, // Play only once, more reliable on mobile
             onEnter: () => {
                 // Animate line first
                 gsap.to(line, {
@@ -52,8 +53,14 @@ export const ResumeFormations = () => {
             }
         })
         
+        // Refresh after a short delay for mobile
+        const refreshTimeout = setTimeout(() => {
+            ScrollTrigger.refresh()
+        }, 100)
+        
         return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill())
+            clearTimeout(refreshTimeout)
+            trigger.kill()
         }
     }, [])
     

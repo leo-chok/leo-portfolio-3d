@@ -68,7 +68,8 @@ export const ResumeHero = () => {
                 
                 ScrollTrigger.create({
                     trigger: aboutRef.current,
-                    start: 'top 75%',
+                    start: 'top 85%',
+                    once: true, // Play only once, more reliable on mobile
                     onEnter: () => {
                         gsap.to(aboutItems, {
                             opacity: 1,

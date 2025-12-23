@@ -24,9 +24,10 @@ export const ResumeSkills = () => {
         
         gsap.set(cards, { opacity: 0, y: 40, scale: 0.95 })
         
-        ScrollTrigger.create({
+        const trigger = ScrollTrigger.create({
             trigger: gridRef.current,
-            start: 'top 75%',
+            start: 'top 85%',
+            once: true, // Play only once, more reliable on mobile
             onEnter: () => {
                 gsap.to(cards, {
                     opacity: 1,
@@ -39,8 +40,14 @@ export const ResumeSkills = () => {
             }
         })
         
+        // Refresh after a short delay for mobile
+        const refreshTimeout = setTimeout(() => {
+            ScrollTrigger.refresh()
+        }, 100)
+        
         return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill())
+            clearTimeout(refreshTimeout)
+            trigger.kill()
         }
     }, [])
     

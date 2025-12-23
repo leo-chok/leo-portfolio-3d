@@ -35,29 +35,29 @@ export const ResumeSection = ({
             y: 60 
         })
         
-        // Scroll-triggered animation
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: section,
-                start: 'top 80%',
-                end: 'top 50%',
-                toggleActions: 'play none none reverse'
+        // Scroll-triggered animation - use once: true for mobile reliability
+        const trigger = ScrollTrigger.create({
+            trigger: section,
+            start: 'top 85%',
+            once: true, // Play only once, more reliable on mobile
+            onEnter: () => {
+                gsap.to(content, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: 'power2.out'
+                })
             }
         })
         
-        tl.to(content, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power2.out'
-        })
+        // Refresh after a short delay to ensure correct position calculation on mobile
+        const refreshTimeout = setTimeout(() => {
+            ScrollTrigger.refresh()
+        }, 100)
         
         return () => {
-            ScrollTrigger.getAll().forEach(trigger => {
-                if (trigger.trigger === section) {
-                    trigger.kill()
-                }
-            })
+            clearTimeout(refreshTimeout)
+            trigger.kill()
         }
     }, [])
     

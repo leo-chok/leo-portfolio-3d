@@ -29,7 +29,7 @@ export const ResumeContact = () => {
         gsap.set(items, { opacity: 0, y: 40 })
         
         // Use gsap.to with scrollTrigger for better refresh compatibility
-        gsap.to(items, {
+        const anim = gsap.to(items, {
             opacity: 1,
             y: 0,
             duration: 0.6,
@@ -37,13 +37,20 @@ export const ResumeContact = () => {
             ease: 'power2.out',
             scrollTrigger: {
                 trigger: contactRef.current,
-                start: 'top bottom',
-                toggleActions: 'play none none none'
+                start: 'top 90%',
+                once: true // Play only once, more reliable on mobile
             }
         })
         
+        // Refresh after a short delay for mobile
+        const refreshTimeout = setTimeout(() => {
+            ScrollTrigger.refresh()
+        }, 100)
+        
         return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill())
+            clearTimeout(refreshTimeout)
+            if (anim.scrollTrigger) anim.scrollTrigger.kill()
+            anim.kill()
         }
     }, [])
     
