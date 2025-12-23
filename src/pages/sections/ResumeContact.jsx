@@ -42,13 +42,7 @@ export const ResumeContact = () => {
             }
         })
         
-        // Refresh after a short delay for mobile
-        const refreshTimeout = setTimeout(() => {
-            ScrollTrigger.refresh()
-        }, 100)
-        
         return () => {
-            clearTimeout(refreshTimeout)
             if (anim.scrollTrigger) anim.scrollTrigger.kill()
             anim.kill()
         }

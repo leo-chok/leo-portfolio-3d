@@ -50,13 +50,7 @@ export const ResumeSection = ({
             }
         })
         
-        // Refresh after a short delay to ensure correct position calculation on mobile
-        const refreshTimeout = setTimeout(() => {
-            ScrollTrigger.refresh()
-        }, 100)
-        
         return () => {
-            clearTimeout(refreshTimeout)
             trigger.kill()
         }
     }, [])

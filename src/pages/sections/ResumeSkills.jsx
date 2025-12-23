@@ -40,13 +40,7 @@ export const ResumeSkills = () => {
             }
         })
         
-        // Refresh after a short delay for mobile
-        const refreshTimeout = setTimeout(() => {
-            ScrollTrigger.refresh()
-        }, 100)
-        
         return () => {
-            clearTimeout(refreshTimeout)
             trigger.kill()
         }
     }, [])

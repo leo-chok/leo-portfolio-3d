@@ -31,9 +31,24 @@ gsap.registerPlugin(ScrollTrigger)
 export const ResumePage = () => {
     const navigate = useNavigate()
     
-    // Cleanup ScrollTrigger on unmount
+    // Initialize and cleanup ScrollTrigger
     useEffect(() => {
+        // Multiple refresh passes to ensure correct position calculation on mobile
+        // This handles async font loading, images, and layout shifts
+        const refreshDelays = [300, 800, 1500]
+        const timeouts = refreshDelays.map(delay => 
+            setTimeout(() => {
+                ScrollTrigger.refresh(true) // true = force recalculation
+            }, delay)
+        )
+        
+        // Also refresh on window load for images/fonts
+        const handleLoad = () => ScrollTrigger.refresh(true)
+        window.addEventListener('load', handleLoad)
+        
         return () => {
+            timeouts.forEach(clearTimeout)
+            window.removeEventListener('load', handleLoad)
             ScrollTrigger.getAll().forEach(t => t.kill())
         }
     }, [])
