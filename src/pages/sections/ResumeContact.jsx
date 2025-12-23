@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useInView } from '../../hooks/useInView'
 import { ResumeSection } from './ResumeSection'
 import { contact } from '../../data/contact'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,45 +8,35 @@ import { faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faEnvelope, faLocationDot, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import './ResumeContact.css'
 
-gsap.registerPlugin(ScrollTrigger)
-
 /**
  * ResumeContact - Contact section with social links and form
  * 
  * Features:
  * - Social links with icons
  * - Contact form (Formspree)
- * - CTA for 3D experience
+ * - Uses Intersection Observer for reliable mobile detection
  */
 export const ResumeContact = () => {
     const contactRef = useRef(null)
+    const [observerRef, isInView] = useInView({ threshold: 0.1 })
+    const hasAnimated = useRef(false)
     const [formStatus, setFormStatus] = useState('idle') // idle, sending, success, error
     
     useEffect(() => {
         const items = contactRef.current?.querySelectorAll('.contact__card, .contact__form-wrapper')
         if (!items?.length) return
         
-        gsap.set(items, { opacity: 0, y: 40 })
-        
-        // Use gsap.to with scrollTrigger for better refresh compatibility
-        const anim = gsap.to(items, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            stagger: 0.15,
-            ease: 'power2.out',
-            scrollTrigger: {
-                trigger: contactRef.current,
-                start: 'top 90%',
-                once: true // Play only once, more reliable on mobile
-            }
-        })
-        
-        return () => {
-            if (anim.scrollTrigger) anim.scrollTrigger.kill()
-            anim.kill()
+        if (isInView && !hasAnimated.current) {
+            hasAnimated.current = true
+            gsap.to(items, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                stagger: 0.15,
+                ease: 'power2.out'
+            })
         }
-    }, [])
+    }, [isInView])
     
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -75,9 +65,15 @@ export const ResumeContact = () => {
     
     return (
         <ResumeSection id="contact" title="Contact" icon="◈">
-            <div className="contact" ref={contactRef}>
+            <div 
+                className="contact" 
+                ref={(el) => { contactRef.current = el; observerRef.current = el }}
+            >
                 {/* Info card */}
-                <div className="contact__card">
+                <div 
+                    className="contact__card"
+                    style={{ opacity: 0, transform: 'translateY(40px)' }}
+                >
                     <p className="contact__cta">{contact.cta}</p>
                     
                     <div className="contact__info">
@@ -114,7 +110,10 @@ export const ResumeContact = () => {
                 </div>
                 
                 {/* Contact form */}
-                <div className="contact__form-wrapper">
+                <div 
+                    className="contact__form-wrapper"
+                    style={{ opacity: 0, transform: 'translateY(40px)' }}
+                >
                     <form className="contact__form" onSubmit={handleSubmit}>
                         <div className="contact__form-group">
                             <label htmlFor="name" className="contact__label">Nom</label>

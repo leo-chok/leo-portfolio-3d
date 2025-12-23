@@ -1,9 +1,5 @@
-import { useEffect, useRef } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useRef } from 'react'
 import './FloatingIdentity.css'
-
-gsap.registerPlugin(ScrollTrigger)
 
 /**
  * FloatingIdentity - Floating Identity Card Component
@@ -14,25 +10,15 @@ gsap.registerPlugin(ScrollTrigger)
  * - Holographic portrait with scan effect
  * - Contact button
  * - Levitation animation
- * - Parallax scroll effect
  */
 export const FloatingIdentity = () => {
     const cardRef = useRef(null)
-    
-    useEffect(() => {
-        // Cleanup only - sticky CSS handles the behavior
-        return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill())
-        }
-    }, [])
     
     const scrollToHero = () => {
         document.querySelector('.hero')?.scrollIntoView({ 
             behavior: 'smooth',
             block: 'start'
         })
-        // Refresh ScrollTrigger after smooth scroll completes
-        setTimeout(() => ScrollTrigger.refresh(), 800)
     }
     
     const scrollToContact = () => {
@@ -41,8 +27,6 @@ export const FloatingIdentity = () => {
             behavior: 'smooth',
             block: 'start'
         })
-        // Refresh ScrollTrigger after smooth scroll to trigger animations
-        setTimeout(() => ScrollTrigger.refresh(), 800)
     }
     
     return (

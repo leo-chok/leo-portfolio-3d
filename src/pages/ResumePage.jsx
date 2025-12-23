@@ -1,7 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 // Sections
 import { ResumeHero } from './sections/ResumeHero'
@@ -17,41 +14,17 @@ import { FloatingIdentity } from './components/FloatingIdentity'
 import './ResumePage.css'
 import './sections/ResumeSection.css'
 
-gsap.registerPlugin(ScrollTrigger)
-
 /**
  * ResumePage - Scrollable CV page with all sections
  * 
  * Features:
  * - All portfolio sections in a scrollable format
- * - GSAP ScrollTrigger animations
+ * - Scroll animations using native Intersection Observer
  * - Floating nav button to 3D experience
  * - Floating identity card with portrait and contact
  */
 export const ResumePage = () => {
     const navigate = useNavigate()
-    
-    // Initialize and cleanup ScrollTrigger
-    useEffect(() => {
-        // Multiple refresh passes to ensure correct position calculation on mobile
-        // This handles async font loading, images, and layout shifts
-        const refreshDelays = [300, 800, 1500]
-        const timeouts = refreshDelays.map(delay => 
-            setTimeout(() => {
-                ScrollTrigger.refresh(true) // true = force recalculation
-            }, delay)
-        )
-        
-        // Also refresh on window load for images/fonts
-        const handleLoad = () => ScrollTrigger.refresh(true)
-        window.addEventListener('load', handleLoad)
-        
-        return () => {
-            timeouts.forEach(clearTimeout)
-            window.removeEventListener('load', handleLoad)
-            ScrollTrigger.getAll().forEach(t => t.kill())
-        }
-    }, [])
     
     const handleExperienceClick = () => {
         navigate('/experience')

@@ -1,18 +1,16 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useInView } from '../../hooks/useInView'
 import { presentation } from '../../data/presentation'
 import './ResumeHero.css'
-
-gsap.registerPlugin(ScrollTrigger)
 
 /**
  * ResumeHero - Hero section with presentation data
  * 
  * Features:
- * - Name and title with typing effect
+ * - Name and title with entrance animation
  * - Status badge
- * - About text with staggered reveal
+ * - About text with staggered reveal using Intersection Observer
  */
 export const ResumeHero = () => {
     const heroRef = useRef(null)
@@ -21,70 +19,56 @@ export const ResumeHero = () => {
     const titleRef = useRef(null)
     const statusRef = useRef(null)
     const aboutRef = useRef(null)
+    const [aboutObserverRef, isAboutInView] = useInView({ threshold: 0.1 })
+    const hasAboutAnimated = useRef(false)
     
+    // Hero entrance animation (plays immediately on mount)
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            // Initial states
-            gsap.set(portraitRef.current, {
-                opacity: 0,
-                scale: 0.8
-            })
-            gsap.set([nameRef.current, titleRef.current, statusRef.current], {
-                opacity: 0,
-                y: 30
-            })
-            
-            // Hero entrance animation timeline
-            const tl = gsap.timeline({
-                defaults: { ease: 'power2.out' }
-            })
-            
-            tl.to(portraitRef.current, {
-                opacity: 1,
-                scale: 1,
-                duration: 0.8,
-                delay: 0.2
-            })
-            .to(nameRef.current, {
-                opacity: 1,
-                y: 0,
-                duration: 0.8
-            }, '-=0.5')
-            .to(titleRef.current, {
-                opacity: 1,
-                y: 0,
-                duration: 0.6
-            }, '-=0.4')
-            .to(statusRef.current, {
-                opacity: 1,
-                y: 0,
-                duration: 0.6
-            }, '-=0.3')
-            
-            // About paragraphs staggered animation
-            const aboutItems = aboutRef.current?.querySelectorAll('.hero__about-item')
-            if (aboutItems?.length) {
-                gsap.set(aboutItems, { opacity: 0, y: 20 })
-                
-                ScrollTrigger.create({
-                    trigger: aboutRef.current,
-                    start: 'top 85%',
-                    once: true, // Play only once, more reliable on mobile
-                    onEnter: () => {
-                        gsap.to(aboutItems, {
-                            opacity: 1,
-                            y: 0,
-                            duration: 0.5,
-                            stagger: 0.15,
-                            ease: 'power2.out'
-                        })
-                    }
-                })
-            }
-        }, heroRef)
+        const tl = gsap.timeline({
+            defaults: { ease: 'power2.out' }
+        })
         
-        return () => ctx.revert()
+        tl.to(portraitRef.current, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            delay: 0.2
+        })
+        .to(nameRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8
+        }, '-=0.5')
+        .to(titleRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6
+        }, '-=0.4')
+        .to(statusRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6
+        }, '-=0.3')
+        
+        return () => tl.kill()
     }, [])
+    
+    // About section animation with Intersection Observer
+    useEffect(() => {
+        const aboutItems = aboutRef.current?.querySelectorAll('.hero__about-item')
+        if (!aboutItems?.length) return
+        
+        if (isAboutInView && !hasAboutAnimated.current) {
+            hasAboutAnimated.current = true
+            gsap.to(aboutItems, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                stagger: 0.15,
+                ease: 'power2.out'
+            })
+        }
+    }, [isAboutInView])
     
     // Parse HTML content safely
     const createMarkup = (html) => ({ __html: html })
@@ -104,10 +88,18 @@ export const ResumeHero = () => {
                 <div className="hero__content">
                     {/* Name & Title */}
                     <div className="hero__identity">
-                        <h1 className="hero__name" ref={nameRef}>
+                        <h1 
+                            className="hero__name" 
+                            ref={nameRef}
+                            style={{ opacity: 0, transform: 'translateY(30px)' }}
+                        >
                             {presentation.name}
                         </h1>
-                        <div className="hero__titles" ref={titleRef}>
+                        <div 
+                            className="hero__titles" 
+                            ref={titleRef}
+                            style={{ opacity: 0, transform: 'translateY(30px)' }}
+                        >
                             <span className="hero__title">{presentation.title}</span>
                             <span className="hero__title-separator">•</span>
                             <span className="hero__subtitle">{presentation.subtitle}</span>
@@ -116,7 +108,11 @@ export const ResumeHero = () => {
                     </div>
                     
                     {/* Portrait - Mobile only (above status) */}
-                    <div className="hero__portrait hero__portrait--mobile" ref={portraitRef}>
+                    <div 
+                        className="hero__portrait hero__portrait--mobile" 
+                        ref={portraitRef}
+                        style={{ opacity: 0, transform: 'scale(0.8)' }}
+                    >
                         <div className="hero__portrait-frame">
                             <img 
                                 src="/portrait.PNG" 
@@ -128,7 +124,11 @@ export const ResumeHero = () => {
                     </div>
                     
                     {/* Status Badge */}
-                    <div className="hero__status" ref={statusRef}>
+                    <div 
+                        className="hero__status" 
+                        ref={statusRef}
+                        style={{ opacity: 0, transform: 'translateY(30px)' }}
+                    >
                         <div className="hero__status-badge">
                             <span className="hero__status-dot" />
                             <span className="hero__status-type">{presentation.status.type}</span>
@@ -138,12 +138,16 @@ export const ResumeHero = () => {
                     </div>
                     
                     {/* About Section */}
-                    <div className="hero__about" ref={aboutRef}>
+                    <div 
+                        className="hero__about" 
+                        ref={(el) => { aboutRef.current = el; aboutObserverRef.current = el }}
+                    >
                         {presentation.about.map((item, index) => (
                             <div 
                                 key={index} 
                                 className={`hero__about-item hero__about-item--${item.type}`}
                                 dangerouslySetInnerHTML={createMarkup(item.text)}
+                                style={{ opacity: 0, transform: 'translateY(20px)' }}
                             />
                         ))}
                     </div>

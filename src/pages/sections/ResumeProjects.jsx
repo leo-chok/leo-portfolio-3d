@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useInView } from '../../hooks/useInView'
 import { ResumeSection } from './ResumeSection'
 import { projects } from '../../data/projects'
 import './ResumeProjects.css'
-
-gsap.registerPlugin(ScrollTrigger)
 
 /**
  * ResumeProjects - Projects grid with expandable cards
@@ -13,37 +11,29 @@ gsap.registerPlugin(ScrollTrigger)
  * Features:
  * - Grid of project cards with images
  * - Click to expand with full details
- * - Smooth expand/collapse animation
+ * - Uses Intersection Observer for reliable mobile detection
  */
 export const ResumeProjects = () => {
     const [expandedId, setExpandedId] = useState(null)
     const gridRef = useRef(null)
+    const [observerRef, isInView] = useInView({ threshold: 0.1 })
+    const hasAnimated = useRef(false)
     
     useEffect(() => {
         const cards = gridRef.current?.querySelectorAll('.projects__card')
         if (!cards?.length) return
         
-        gsap.set(cards, { opacity: 0, y: 50 })
-        
-        const trigger = ScrollTrigger.create({
-            trigger: gridRef.current,
-            start: 'top 85%',
-            once: true, // Play only once, more reliable on mobile
-            onEnter: () => {
-                gsap.to(cards, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.6,
-                    stagger: 0.1,
-                    ease: 'power2.out'
-                })
-            }
-        })
-        
-        return () => {
-            trigger.kill()
+        if (isInView && !hasAnimated.current) {
+            hasAnimated.current = true
+            gsap.to(cards, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: 'power2.out'
+            })
         }
-    }, [])
+    }, [isInView])
     
     const handleCardClick = (projectId) => {
         setExpandedId(expandedId === projectId ? null : projectId)
@@ -51,13 +41,17 @@ export const ResumeProjects = () => {
     
     return (
         <ResumeSection id="projects" title="Projets" icon="◈">
-            <div className="projects" ref={gridRef}>
+            <div 
+                className="projects" 
+                ref={(el) => { gridRef.current = el; observerRef.current = el }}
+            >
                 <div className="projects__grid">
-                    {projects.map((project) => (
+                    {projects.map((project, idx) => (
                         <article 
                             key={project.id}
                             className={`projects__card ${expandedId === project.id ? 'projects__card--expanded' : ''}`}
                             onClick={() => handleCardClick(project.id)}
+                            style={{ opacity: 0, transform: 'translateY(50px)' }}
                         >
                             {/* Preview */}
                             <div className="projects__preview">

@@ -1,17 +1,14 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger)
+import { useInView } from '../../hooks/useInView'
 
 /**
  * ResumeSection - Base component for resume sections with scroll animations
  * 
  * Features:
  * - Fade in + slide up animation on scroll
+ * - Uses native Intersection Observer for reliable mobile detection
  * - Section title with decorative elements
- * - Configurable animation settings
  */
 export const ResumeSection = ({ 
     id, 
@@ -20,40 +17,25 @@ export const ResumeSection = ({
     children,
     className = '' 
 }) => {
-    const sectionRef = useRef(null)
     const contentRef = useRef(null)
+    const [sectionRef, isInView] = useInView({ threshold: 0.1 })
+    const hasAnimated = useRef(false)
     
+    // Animate when section comes into view
     useEffect(() => {
-        const section = sectionRef.current
         const content = contentRef.current
+        if (!content) return
         
-        if (!section || !content) return
-        
-        // Initial state
-        gsap.set(content, { 
-            opacity: 0, 
-            y: 60 
-        })
-        
-        // Scroll-triggered animation - use once: true for mobile reliability
-        const trigger = ScrollTrigger.create({
-            trigger: section,
-            start: 'top 85%',
-            once: true, // Play only once, more reliable on mobile
-            onEnter: () => {
-                gsap.to(content, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: 'power2.out'
-                })
-            }
-        })
-        
-        return () => {
-            trigger.kill()
+        if (isInView && !hasAnimated.current) {
+            hasAnimated.current = true
+            gsap.to(content, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power2.out'
+            })
         }
-    }, [])
+    }, [isInView])
     
     return (
         <section 
@@ -71,8 +53,12 @@ export const ResumeSection = ({
                 {/* Scanlines overlay */}
                 <div className="resume-section__scanlines" />
                 
-                {/* Content */}
-                <div ref={contentRef} className="resume-section__inner">
+                {/* Content - starts invisible, animates in */}
+                <div 
+                    ref={contentRef} 
+                    className="resume-section__inner"
+                    style={{ opacity: 0, transform: 'translateY(60px)' }}
+                >
                     {title && (
                         <header className="resume-section__header">
                             <div className="resume-section__title-wrapper">
