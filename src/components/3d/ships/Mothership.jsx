@@ -19,7 +19,7 @@ import * as THREE from 'three'
 export const Mothership = () => {
     const groupRef = useRef()
     const modelRef = useRef()
-    const { scene } = useGLTF('/mothership.glb')
+    const { scene } = useGLTF('/mothership-draco.glb')
     const [hovered, setHovered] = useState(false)
     
     // Camera store for tracking
@@ -224,4 +224,4 @@ export const Mothership = () => {
 }
 
 // Preload model
-useGLTF.preload('/mothership.glb')
+useGLTF.preload('/mothership-draco.glb')

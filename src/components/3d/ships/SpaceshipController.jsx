@@ -50,7 +50,7 @@ export const SpaceshipController = forwardRef((props, ref) => {
     })
     
     // Load spaceship model
-    const { scene } = useGLTF('/spaceship.glb')
+    const { scene } = useGLTF('/spaceship-draco.glb')
     
     // Store state - get functions only once, not values that change
     // Store actions only - no reactive state to avoid re-renders!
@@ -300,4 +300,4 @@ export const SpaceshipController = forwardRef((props, ref) => {
 })
 
 // Preload the model
-useGLTF.preload('/spaceship.glb')
+useGLTF.preload('/spaceship-draco.glb')
