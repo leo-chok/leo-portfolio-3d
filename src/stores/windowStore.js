@@ -104,6 +104,13 @@ export const useWindowStore = create((set, get) => ({
     },
     
     /**
+     * Close all open windows (used for mobile navigation)
+     */
+    closeAllWindows: () => {
+        set({ windows: [] })
+    },
+    
+    /**
      * Minimize a window (show only header)
      * Also resets maximized state to avoid conflicts
      */

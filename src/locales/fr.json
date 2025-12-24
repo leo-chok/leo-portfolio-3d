@@ -1,0 +1,281 @@
+{
+  "presentation": {
+    "name": "Léo Stalhberger",
+    "title": "Développeur Full-Stack",
+    "subtitle": "Web et Applications",
+    "tagline": "Créateur visuel devenu développeur - Entre code et 3D",
+    "status": {
+      "type": "alternance",
+      "text": "Développeur-Concepteur ServiceNow chez Swiss Life",
+      "school": "Master Architecte des Systèmes d'Information - Epitech"
+    },
+    "about": [
+      {
+        "type": "intro",
+        "text": "Depuis toujours, <strong>j'aime créer</strong>. D'abord avec des formes, des volumes et de la lumière. Puis avec des lignes de code."
+      },
+      {
+        "type": "parcours",
+        "text": "Après un <strong>BTS en communication visuelle</strong> et plusieurs années comme dessinateur-projeteur et infographiste 3D, j'ai choisi de suivre une autre passion : la technologie. En 2025, j'intègre un bootcamp intensif à <strong>La Capsule</strong> pour devenir développeur Full-Stack, avant de poursuivre en <strong>Master Architecte des Systèmes d'Information à Epitech</strong>."
+      },
+      {
+        "type": "actuel",
+        "text": "Aujourd'hui, en parallèle de mon master, je suis en alternance chez <strong>Swiss Life</strong> en tant que <strong>Développeur-Concepteur ServiceNow</strong>. J'y conçois et optimise des outils internes pour fluidifier les processus."
+      },
+      {
+        "type": "actuel2",
+        "text": "En parallèle, je dirige <strong>LEO Design 3D</strong>, une activité de modélisation 3D dédiée aux architectes : rendus photoréalistes, visualisations immersives, et projection fidèle des projets."
+      },
+      {
+        "type": "vision",
+        "text": "Ce <strong>double regard</strong> développeur et créateur visuel me permet d'aborder chaque projet avec la même exigence : concevoir des solutions <strong>précises, esthétiques et durables</strong>."
+      },
+      {
+        "type": "passion",
+        "text": "Curieux des nouvelles technologies (<strong>VR, AR</strong>), j'explore en continu les ponts entre ces deux mondes. Parce qu'au fond, coder ou modéliser, c'est toujours la même chose : <strong>donner vie à une idée</strong>."
+      },
+      {
+        "type": "fun",
+        "text": "Ps : j'ai même commencé à coder <strong>mon propre jeu en VR</strong> ! 🎮"
+      }
+    ],
+    "stats": {
+      "experience": "2 ANS",
+      "specialty": "FULL-STACK",
+      "status": "EN POSTE"
+    },
+    "labels": {
+      "identityScan": "IDENTITY SCAN",
+      "experience": "EXPERIENCE",
+      "specialty": "SPECIALTY",
+      "status": "STATUS"
+    }
+  },
+  "skills": {
+    "title": "COMPÉTENCES",
+    "categories": [
+      {
+        "name": "Développement",
+        "subcategories": [
+          { "name": "Front-End", "items": ["HTML5", "CSS3", "JavaScript", "React", "Redux", "Next.js", "React Native"] },
+          { "name": "Back-End & Base de données", "items": ["Node.js", "Express", "Python", "MongoDB", "Mongoose", "API REST", "Bases de données"] },
+          { "name": "Outils & DevOps", "items": ["Git", "GitHub", "Docker", "CI/CD", "Vercel", "TDD", "VS Code"] },
+          { "name": "Plateformes & Solutions", "items": ["ServiceNow", "Jira"] }
+        ]
+      },
+      {
+        "name": "Design & 3D",
+        "subcategories": [
+          { "name": "Modélisation & Rendu", "items": ["Blender", "SketchUp", "AutoCAD", "Revit", "D5 Render", "Unreal Engine"] },
+          { "name": "Graphisme & UI", "items": ["Suite Adobe (Photoshop, Illustrator, InDesign, XD…)", "Figma"] }
+        ]
+      },
+      {
+        "name": "IA & Prompting",
+        "subcategories": [
+          { "name": "", "items": ["Utilisation d'outils IA", "Prompt engineering"] }
+        ]
+      },
+      {
+        "name": "Méthodologies & Gestion",
+        "subcategories": [
+          { "name": "", "items": ["Agile (Scrum)", "Clean Code", "Gestion de projet", "Notion", "Trello"] }
+        ]
+      },
+      {
+        "name": "Soft Skills",
+        "subcategories": [
+          { 
+            "name": "", 
+            "items": ["Créativité", "Rigueur", "Adaptabilité", "Travail en équipe", "Communication", "Curiosité", "Résolution de problèmes", "Esprit analytique", "Autonomie", "Gestion des priorités", "Sens du détail", "Écoute active"]
+          }
+        ]
+      },
+      {
+        "name": "Langues",
+        "subcategories": [
+          { "name": "", "items": ["Français — Natif"] },
+          { "name": "", "items": ["Anglais — B2"] }
+        ]
+      }
+    ]
+  },
+  "formations": {
+    "title": "FORMATIONS",
+    "items": [
+      {
+        "title": "Master Architecte des Systèmes d'Information",
+        "subtitle": "Option Cloud, Cybersécurité, IA",
+        "school": "Epitech — Lille",
+        "period": "Sept. 2025 - Sept. 2027",
+        "description": "Architecte des systèmes d'information. Formation en alternance orientée ingénierie logicielle, gestion de projet et vision globale des architectures applicatives."
+      },
+      {
+        "title": "Développeur Web & Mobile Full-Stack",
+        "subtitle": "",
+        "school": "La Capsule — Lille",
+        "period": "Janv. 2025 - Avril 2025",
+        "description": "Bootcamp intensif de 10 semaines. Stack JavaScript : React, React Native, Node.js, Express, MongoDB. Méthodologies Agile (Scrum), Clean Code, TDD et gestion de version avec Git/GitHub."
+      },
+      {
+        "title": "BTS Conception de Produits Industriels",
+        "subtitle": "",
+        "school": "CFA Boulogne-sur-Mer — Alternance",
+        "period": "Sept. 2012 - Août 2014",
+        "description": "Formation en alternance axée sur la conception mécanique et industrielle. Maîtrise des logiciels CAO (SolidWorks, AutoCAD, SketchUp) et gestion de projet de l'appel d'offres jusqu'au chantier."
+      },
+      {
+        "title": "BTS Communication Visuelle",
+        "subtitle": "Option Multimédia",
+        "school": "Lycée Saint Vincent de Paul — Loos",
+        "period": "Sept. 2010 - Août 2012",
+        "description": "Design graphique et création digitale. Maîtrise de la suite Adobe (Photoshop, Illustrator, Flash). Initiation au code via ActionScript et conception d'interfaces web."
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "hexavax",
+      "title": "Hexavax",
+      "subtitle": "Plateforme de prédiction des besoins vaccinaux",
+      "short_description": "Projet étudiant présenté à la Présidence de la République. Plateforme d'aide à la décision pour anticiper les besoins en vaccins grâce à la data et au machine learning.",
+      "description": "Projet étudiant présenté à la Présidence de la République. J'ai participé au développement d'Hexavax, une plateforme d'aide à la décision destinée à l'État et aux pharmaciens, permettant d'anticiper les besoins en vaccins grâce à la data et au machine learning. L'outil propose un dashboard de campagnes vaccinales, une carte interactive multi-niveaux (régions, départements, DOM-TOM), un slider temporel pour visualiser l'évolution passée et les prédictions futures, ainsi que 6 calques d'analyse (propagation virale, saturation hospitalière, centres de vaccination, populations vulnérables, zones de stockage, dépenses)."
+    },
+    {
+      "id": "jambonbeurre",
+      "title": "JambonBeurre",
+      "subtitle": "Application mobile de mise en relation pour partager ses repas",
+      "short_description": "Projet de fin de formation développé en équipe de 5. Application pour trouver des compagnons de repas et éviter de manger seul.",
+      "description": "Projet de fin de formation à La Capsule, développé en équipe de 5. J'ai contribué à la création de JambonBeurre, une application qui aide à trouver des compagnons de repas pour éviter de manger seul. Pensée pour les étudiants, salariés ou voyageurs, l'application mise sur la simplicité, l'expérience utilisateur et l'interaction en temps réel."
+    },
+    {
+      "id": "keepgoals",
+      "title": "KeepGoals",
+      "subtitle": "Application web de suivi d'objectifs financiers",
+      "short_description": "Application fullstack pour suivre ses objectifs financiers personnels et visualiser sa progression en temps réel.",
+      "description": "J'ai développé cette application fullstack pour suivre ses objectifs financiers personnels et concrétiser ses projets de vie. Achat immobilier, voyage, ou tout autre projet : KeepGoals permet de définir ses objectifs, enregistrer ses contributions et visualiser sa progression en temps réel via un tableau de bord intuitif."
+    },
+    {
+      "id": "toothy",
+      "title": "Toothy",
+      "subtitle": "Application mobile ludique de suivi du brossage de dents",
+      "short_description": "Application mobile gamifiée pour encourager une bonne hygiène dentaire avec un système de points et statistiques.",
+      "description": "J'ai conçu cette application mobile gamifiée pour encourager une bonne hygiène dentaire, avec une cible jeune en tête. J'ai intégré un système de points, un tableau de bord avec statistiques personnalisées, et une interface ludique pour transformer le brossage en habitude positive."
+    },
+    {
+      "id": "pokedex",
+      "title": "Pokedex",
+      "subtitle": "Mini-site de collection Pokémon",
+      "short_description": "Projet d'entraînement sur React et la consommation d'API pour afficher dynamiquement des cartes Pokémon.",
+      "description": "Projet d'entraînement sur React et la consommation d'API. J'ai créé ce site qui affiche dynamiquement des cartes Pokémon avec leurs informations, récupérées via une API Web Service."
+    },
+    {
+      "id": "clickit",
+      "title": "ClickIt!",
+      "subtitle": "Minijeu web de clic avec classement",
+      "short_description": "Jeu simple de clic avec système de pseudo et tableau des scores. Projet d'entraînement backend.",
+      "description": "J'ai développé ce jeu simple où l'objectif est de cliquer le plus possible sur un bouton. Système de pseudo et tableau des scores pour se mesurer aux autres joueurs. Ce projet m'a permis de m'entraîner sur le backend, MongoDB et la manipulation du DOM."
+    },
+    {
+      "id": "leodesign3d",
+      "title": "LEO Design 3D",
+      "subtitle": "Rendus architecturaux photoréalistes",
+      "short_description": "Visualisations 3D pour architectes et professionnels de l'immobilier. Rendus photoréalistes et projections fidèles.",
+      "description": "En parallèle du développement, je réalise des visualisations 3D pour les architectes et professionnels de l'immobilier. Ces rendus permettent de préfigurer les espaces, d'accompagner la prise de décision et d'offrir une projection fidèle des projets avant leur construction."
+    }
+  ],
+  "contact": {
+    "cta": "Prêt à discuter de projets innovants ? Contactez-moi !",
+    "location": {
+      "city": "Région Lilloise",
+      "country": "France"
+    }
+  },
+  "ui": {
+    "channelOpen": "CHANNEL OPEN",
+    "transmitMessage": "// TRANSMIT MESSAGE",
+    "ready": "READY",
+    "identifier": "IDENTIFIER",
+    "frequency": "FREQUENCY",
+    "payload": "PAYLOAD",
+    "transmit": "TRANSMIT",
+    "transmitting": "TRANSMITTING...",
+    "placeholderName": "Votre nom...",
+    "placeholderEmail": "votre@email.com",
+    "placeholderMessage": "Votre message...",
+    "analyze": "ANALYSER",
+    "openData": "OUVRIR",
+    "decrypting": "DÉCRYPTAGE...",
+    "alreadyOpened": "DÉJÀ OUVERT",
+    "loading": "LOADING",
+    "viewProject": "VIEW PROJECT",
+    "github": "GitHub",
+    "demo": "Demo",
+    "stack": "Stack",
+    "close": "CLOSE",
+    "back": "BACK",
+    "discoveries": "DÉCOUVERTES",
+    "launchSpaceship": "Lancer le vaisseau",
+    "sysOnline": "SYS",
+    "online": "ONLINE",
+    "nav": "NAV",
+    "lang": "LANGUE",
+    "backToHome": "RETOUR ACCUEIL",
+    "previousSection": "Section précédente",
+    "nextSection": "Section suivante",
+    "status": {
+      "shield": "SHIELD",
+      "engine": "ENGINE",
+      "scanner": "SCANNER"
+    },
+    "navigation": {
+      "presentation": "Présentation",
+      "skills": "Compétences",
+      "formations": "Formations",
+      "portfolio": "Portfolio",
+      "contact": "Contact"
+    },
+    "windows": {
+      "presentation": { "title": "PRÉSENTATION", "subtitle": "PERSONAL PROFILE" },
+      "skills": { "title": "COMPÉTENCES", "subtitle": "SKILL MATRIX" },
+      "formations": { "title": "FORMATIONS", "subtitle": "TRAINING RECORDS" },
+      "portfolio": { "title": "PORTFOLIO", "subtitle": "MISSION LOGS" },
+      "contact": { "title": "CONTACT", "subtitle": "COMMUNICATION LINK" },
+      "hardskills": { "title": "HARD SKILLS", "subtitle": "TECHNICAL SYSTEMS" },
+      "softskills": { "title": "SOFT SKILLS", "subtitle": "HUMAN INTERFACE" }
+    },
+    "loadingScreen": {
+      "title": "INITIALIZING",
+      "systemBootstrap": "DÉMARRAGE SYSTÈME",
+      "ready": "● PRÊT",
+      "loading": "○ CHARGEMENT",
+      "systemReady": "SYSTÈME PRÊT",
+      "loadingDots": "CHARGEMENT...",
+      "stellarNav": "SYSTÈME DE NAVIGATION STELLAIRE",
+      "bootLabel": "INITIALISATION SYSTÈME",
+      "bootSub": "Systèmes principaux en ligne",
+      "dataLabel": "CHARGEMENT DES DONNÉES",
+      "dataSub": "Base de données céleste chargée",
+      "hudLabel": "AFFICHAGE DU HUD",
+      "hudSub": "Interface holographique prête",
+      "scanLabel": "OUVERTURE ANALYSE",
+      "scanSub": "Calibration du scanner terminée",
+      "readyLabel": "SYSTÈME OPÉRATIONNEL",
+      "readySub": "Tous les systèmes nominaux",
+      "enterPortfolio": "EXPÉRIENCE 3D",
+      "skipIntro": "PASSER L'INTRO"
+    },
+    "welcomePage": {
+      "shipPrefix": "VAISSEAU",
+      "shipName": "STAL-117",
+      "welcomeLine1": "BIENVENUE",
+      "welcomeLine2": "À BORD",
+      "subtitle": "Portfolio de <strong>Léo Stalhberger</strong> — Développeur Full-Stack & Créateur 3D",
+      "resumeLabel": "VOIR LE RÉSUMÉ",
+      "resumeDesc": "CV interactif • Lecture ~3 min",
+      "experienceLabel": "EXPÉRIENCE 3D",
+      "experienceDesc": "Exploration immersive",
+      "footer": "STELLAR NAVIGATION SYSTEM v3.0"
+    }
+  }
+}

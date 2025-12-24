@@ -1,6 +1,6 @@
 /* ===========================
-   COCKPIT HUD MOBILE
-   Simplified touch-optimized HUD
+   COCKPIT HUD MOBILE - 2025 UX
+   Bottom nav + Burger menu
    =========================== */
 
 .hud-mobile {
@@ -19,193 +19,237 @@
 /* === CORNER BRACKETS === */
 .hud-mobile__bracket {
     position: absolute;
-    width: 30px;
-    height: 30px;
-    border-color: rgba(124, 196, 237, 0.3);
+    width: 25px;
+    height: 25px;
+    border-color: rgba(124, 196, 237, 0.25);
     border-style: solid;
     border-width: 0;
     pointer-events: none;
 }
 
 .hud-mobile__bracket--tl {
-    top: 15px;
-    left: 15px;
-    border-top-width: 2px;
-    border-left-width: 2px;
+    top: 12px;
+    left: 12px;
+    border-top-width: 1px;
+    border-left-width: 1px;
 }
 
 .hud-mobile__bracket--tr {
-    top: 15px;
-    right: 15px;
-    border-top-width: 2px;
-    border-right-width: 2px;
+    top: 12px;
+    right: 12px;
+    border-top-width: 1px;
+    border-right-width: 1px;
 }
 
 .hud-mobile__bracket--bl {
-    bottom: 15px;
-    left: 15px;
-    border-bottom-width: 2px;
-    border-left-width: 2px;
+    bottom: 12px;
+    left: 12px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
 }
 
 .hud-mobile__bracket--br {
-    bottom: 15px;
-    right: 15px;
-    border-bottom-width: 2px;
-    border-right-width: 2px;
+    bottom: 12px;
+    right: 12px;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
 }
 
-/* === TOP BAR === */
+/* === TOP BAR (Desktop style) === */
 .hud-mobile__top {
     position: absolute;
-    top: 20px;
+    top: max(25px, calc(env(safe-area-inset-top) + 10px));
     left: 50%;
     transform: translateX(-50%);
+    width: calc(100% - 80px);
+    max-width: 360px;
     display: flex;
     align-items: center;
-    gap: 20px;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(124, 196, 237, 0.05) 20%,
+        rgba(124, 196, 237, 0.05) 80%,
+        transparent
+    );
+    border-top: 1px solid rgba(124, 196, 237, 0.2);
+    border-bottom: 1px solid rgba(124, 196, 237, 0.1);
     pointer-events: auto;
 }
 
-.hud-mobile__nav-btn {
-    width: 44px;
-    height: 44px;
+/* Burger Button */
+.hud-mobile__burger {
+    width: 40px;
+    height: 40px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(10, 20, 35, 0.6);
-    border: 1px solid rgba(124, 196, 237, 0.3);
-    border-radius: 8px;
-    color: rgba(124, 196, 237, 0.8);
-    font-size: 24px;
-    font-family: 'Orbitron', monospace;
+    gap: 5px;
+    background: transparent;
+    border: none;
     cursor: pointer;
-    transition: all 0.2s ease;
     -webkit-tap-highlight-color: transparent;
+    transition: all 0.3s ease;
 }
 
-.hud-mobile__nav-btn:active {
-    background: rgba(124, 196, 237, 0.15);
-    border-color: rgba(124, 196, 237, 0.6);
+.hud-mobile__burger:active {
     transform: scale(0.95);
 }
 
-/* Counter */
-.hud-mobile__counter {
+.hud-mobile__burger-line {
+    width: 18px;
+    height: 2px;
+    background: rgba(124, 196, 237, 0.7);
+    transition: all 0.3s ease;
+}
+
+.hud-mobile__burger--open .hud-mobile__burger-line:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hud-mobile__burger--open .hud-mobile__burger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.hud-mobile__burger--open .hud-mobile__burger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Progress/Discovery Counter */
+.hud-mobile__progress {
     display: flex;
-    align-items: baseline;
-    gap: 4px;
+    align-items: center;
+    gap: 8px;
     font-family: 'Orbitron', monospace;
-    font-size: 16px;
 }
 
-.hud-mobile__counter-current {
-    color: rgba(100, 237, 180, 0.9);
+.hud-mobile__progress-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(124, 196, 237, 0.5);
+}
+
+.hud-mobile__progress-current {
+    font-size: 12px;
     font-weight: 600;
+    color: rgba(100, 237, 180, 0.9);
 }
 
-.hud-mobile__counter-separator {
+.hud-mobile__progress-sep {
+    font-size: 12px;
     color: rgba(124, 196, 237, 0.4);
 }
 
-.hud-mobile__counter-total {
+.hud-mobile__progress-total {
+    font-size: 12px;
     color: rgba(124, 196, 237, 0.6);
 }
 
-/* === BOTTOM SECTION === */
+/* === BOTTOM BAR === */
 .hud-mobile__bottom {
     position: absolute;
-    bottom: 30px;
-    left: 20px;
-    right: 20px;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    pointer-events: auto;
+    background: linear-gradient(
+        to top,
+        rgba(5, 15, 25, 0.9) 0%,
+        rgba(5, 15, 25, 0.6) 60%,
+        transparent 100%
+    );
+}
+
+/* Navigation Row */
+.hud-mobile__nav-row {
+    display: flex;
     align-items: center;
     gap: 15px;
-    pointer-events: auto;
-}
-
-/* System name */
-.hud-mobile__system-name {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-
-.hud-mobile__system-label {
-    font-family: 'Orbitron', monospace;
-    font-size: 9px;
-    color: rgba(124, 196, 237, 0.5);
-    letter-spacing: 3px;
-}
-
-.hud-mobile__system-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 18px;
-    font-weight: 600;
-    color: rgba(124, 196, 237, 0.95);
-    letter-spacing: 4px;
-    text-shadow: 0 0 20px rgba(124, 196, 237, 0.3);
-}
-
-/* Analyze button */
-.hud-mobile__analyze {
-    position: relative;
     width: 100%;
-    max-width: 280px;
-    height: 50px;
+    max-width: 350px;
+}
+
+.hud-mobile__nav-btn {
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: transparent;
     border: none;
-    border-top: 1px solid rgba(100, 237, 180, 0.2);
-    border-bottom: 1px solid rgba(100, 237, 180, 0.4);
+    border-top: 1px solid rgba(124, 196, 237, 0.2);
+    border-bottom: 1px solid rgba(124, 196, 237, 0.3);
+    color: rgba(124, 196, 237, 0.8);
+    font-size: 18px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s ease;
+}
+
+.hud-mobile__nav-btn:active {
+    color: rgba(124, 196, 237, 1);
+    border-color: rgba(124, 196, 237, 0.6);
+    text-shadow: 0 0 10px rgba(124, 196, 237, 0.5);
+}
+
+/* System Info */
+.hud-mobile__system-info {
+    flex: 1;
+    text-align: center;
+}
+
+.hud-mobile__system-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(124, 196, 237, 0.95);
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px rgba(124, 196, 237, 0.3);
+}
+
+/* Analyze Button */
+.hud-mobile__analyze {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+        180deg,
+        rgba(100, 237, 180, 0.05) 0%,
+        transparent 50%,
+        rgba(100, 237, 180, 0.05) 100%
+    );
+    border: none;
+    border-top: 1px solid rgba(100, 237, 180, 0.3);
+    border-bottom: 1px solid rgba(100, 237, 180, 0.5);
     font-family: 'Orbitron', monospace;
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 4px;
-    color: rgba(100, 237, 180, 0.9);
+    color: rgba(100, 237, 180, 0.95);
     cursor: pointer;
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
     transition: all 0.3s ease;
 }
 
-/* Corner brackets on button */
-.hud-mobile__analyze::before,
-.hud-mobile__analyze::after {
-    content: '';
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border-color: rgba(100, 237, 180, 0.5);
-    border-style: solid;
-    transition: all 0.3s ease;
-}
-
-.hud-mobile__analyze::before {
-    top: 0;
-    left: 0;
-    border-width: 2px 0 0 2px;
-}
-
-.hud-mobile__analyze::after {
-    bottom: 0;
-    right: 0;
-    border-width: 0 2px 2px 0;
-}
-
 .hud-mobile__analyze:active {
-    background: rgba(100, 237, 180, 0.1);
-}
-
-.hud-mobile__analyze:active::before,
-.hud-mobile__analyze:active::after {
-    border-color: rgba(100, 237, 180, 1);
-    width: 18px;
-    height: 18px;
+    background: rgba(100, 237, 180, 0.15);
+    text-shadow: 0 0 15px rgba(100, 237, 180, 0.6);
 }
 
 .hud-mobile__analyze-text {
@@ -217,11 +261,6 @@
 .hud-mobile__analyze--loading {
     color: rgba(124, 196, 237, 0.8);
     border-color: rgba(124, 196, 237, 0.3);
-}
-
-.hud-mobile__analyze--loading::before,
-.hud-mobile__analyze--loading::after {
-    border-color: rgba(124, 196, 237, 0.5);
 }
 
 .hud-mobile__analyze-progress {
@@ -236,4 +275,282 @@
     );
     transition: width 0.1s linear;
     z-index: 1;
+}
+
+/* === SLIDE-IN MENU - Glassmorphism Sci-Fi === */
+.hud-mobile__menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 85%;
+    max-width: 320px;
+    background: linear-gradient(
+        135deg,
+        rgba(10, 25, 40, 0.85) 0%,
+        rgba(5, 15, 25, 0.92) 50%,
+        rgba(10, 20, 35, 0.88) 100%
+    );
+    border-right: 1px solid rgba(124, 196, 237, 0.25);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    z-index: 200;
+    backdrop-filter: blur(25px) saturate(1.2);
+    -webkit-backdrop-filter: blur(25px) saturate(1.2);
+    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Scanlines overlay */
+.hud-mobile__menu::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(124, 196, 237, 0.015) 2px,
+        rgba(124, 196, 237, 0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Right edge glow */
+.hud-mobile__menu::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(124, 196, 237, 0.5) 20%,
+        rgba(124, 196, 237, 0.6) 50%,
+        rgba(124, 196, 237, 0.5) 80%,
+        transparent 100%
+    );
+    box-shadow: 0 0 15px rgba(124, 196, 237, 0.3);
+    pointer-events: none;
+}
+
+.hud-mobile__menu--open {
+    transform: translateX(0);
+}
+
+/* Menu Header */
+.hud-mobile__menu-header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    padding-top: max(20px, calc(env(safe-area-inset-top) + 10px));
+    border-bottom: 1px solid rgba(124, 196, 237, 0.15);
+    background: linear-gradient(
+        180deg,
+        rgba(124, 196, 237, 0.05) 0%,
+        transparent 100%
+    );
+}
+
+.hud-mobile__menu-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: rgba(124, 196, 237, 0.7);
+    text-shadow: 0 0 10px rgba(124, 196, 237, 0.3);
+}
+
+.hud-mobile__menu-close {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(124, 196, 237, 0.05);
+    border: 1px solid rgba(124, 196, 237, 0.25);
+    border-radius: 0;
+    color: rgba(124, 196, 237, 0.8);
+    font-size: 14px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s ease;
+    clip-path: polygon(
+        0 4px, 4px 0, 
+        calc(100% - 4px) 0, 100% 4px,
+        100% calc(100% - 4px), calc(100% - 4px) 100%,
+        4px 100%, 0 calc(100% - 4px)
+    );
+}
+
+.hud-mobile__menu-close:active {
+    background: rgba(124, 196, 237, 0.15);
+    border-color: rgba(124, 196, 237, 0.6);
+    color: #7cc4ed;
+}
+
+/* Systems List */
+.hud-mobile__menu-systems {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 0;
+}
+
+.hud-mobile__menu-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    border-left: 2px solid transparent;
+    color: rgba(124, 196, 237, 0.7);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s ease;
+}
+
+.hud-mobile__menu-item:active {
+    background: rgba(124, 196, 237, 0.1);
+}
+
+.hud-mobile__menu-item--active {
+    background: linear-gradient(90deg, rgba(100, 237, 180, 0.1), transparent);
+    border-left-color: rgba(100, 237, 180, 0.8);
+    color: rgba(100, 237, 180, 0.95);
+}
+
+.hud-mobile__menu-index {
+    color: rgba(124, 196, 237, 0.4);
+    font-size: 10px;
+    min-width: 20px;
+}
+
+.hud-mobile__menu-item--active .hud-mobile__menu-index {
+    color: rgba(100, 237, 180, 0.5);
+}
+
+.hud-mobile__menu-name {
+    flex: 1;
+    text-transform: uppercase;
+}
+
+.hud-mobile__menu-name--encrypted {
+    color: rgba(255, 180, 80, 0.6);
+    font-style: italic;
+}
+
+.hud-mobile__menu-indicator {
+    color: rgba(100, 237, 180, 0.8);
+    font-size: 8px;
+}
+
+/* Divider */
+.hud-mobile__menu-divider {
+    height: 1px;
+    margin: 10px 20px;
+    background: linear-gradient(
+        90deg,
+        rgba(124, 196, 237, 0.2),
+        rgba(124, 196, 237, 0.1)
+    );
+}
+
+/* Language Toggle */
+.hud-mobile__menu-lang {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    font-family: 'Orbitron', monospace;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.hud-mobile__menu-lang:active {
+    background: rgba(124, 196, 237, 0.1);
+}
+
+.hud-mobile__menu-lang-label {
+    color: rgba(124, 196, 237, 0.6);
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.hud-mobile__menu-lang-options {
+    display: flex;
+    gap: 5px;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.hud-mobile__menu-lang-options span {
+    color: rgba(124, 196, 237, 0.4);
+    transition: all 0.2s ease;
+}
+
+.hud-mobile__menu-lang-options span.active {
+    color: rgba(100, 237, 180, 0.95);
+    text-shadow: 0 0 8px rgba(100, 237, 180, 0.5);
+}
+
+/* Back to Home */
+.hud-mobile__menu-home {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 20px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    background: transparent;
+    border: none;
+    border-top: 1px solid rgba(124, 196, 237, 0.1);
+    font-family: 'Orbitron', monospace;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.hud-mobile__menu-home:active {
+    background: rgba(124, 196, 237, 0.1);
+}
+
+.hud-mobile__menu-home-icon {
+    font-size: 16px;
+    color: rgba(124, 196, 237, 0.6);
+}
+
+.hud-mobile__menu-home-text {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(124, 196, 237, 0.7);
+}
+
+/* Overlay */
+.hud-mobile__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    pointer-events: auto;
+    z-index: 150;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }

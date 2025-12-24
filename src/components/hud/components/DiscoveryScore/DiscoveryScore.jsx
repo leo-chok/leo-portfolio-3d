@@ -1,3 +1,4 @@
+import { useTranslation } from '../../../../hooks/useTranslation'
 import './DiscoveryScore.css'
 
 /**
@@ -15,9 +16,12 @@ export const DiscoveryScore = ({
     allDiscovered, 
     onLaunchSpaceship 
 }) => {
+    const { t } = useTranslation()
+    const ui = t('ui')
+    
     return (
         <div className="cockpit-score">
-            <div className="cockpit-score__label">DÉCOUVERTES</div>
+            <div className="cockpit-score__label">{ui.discoveries}</div>
             <div className="cockpit-score__equalizer">
                 {[...Array(5)].map((_, i) => {
                     // 1 bar per discovery, from bottom to top
@@ -40,11 +44,11 @@ export const DiscoveryScore = ({
                 <button 
                     className="cockpit-spaceship-btn"
                     onClick={onLaunchSpaceship}
-                    title="Launch Spaceship"
+                    title={ui.launchSpaceship}
                 >
                     <img 
                         src="/Spaceship.svg" 
-                        alt="Launch Spaceship" 
+                        alt={ui.launchSpaceship} 
                         className="cockpit-spaceship-btn__icon"
                     />
                 </button>
@@ -52,3 +56,4 @@ export const DiscoveryScore = ({
         </div>
     )
 }
+

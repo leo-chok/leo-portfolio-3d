@@ -1,3 +1,4 @@
+import { useTranslation } from '../../../../hooks/useTranslation'
 import './AnalyzeButton.css'
 
 /**
@@ -12,6 +13,9 @@ export const AnalyzeButton = ({
     isAnalyzed,
     onAnalyze
 }) => {
+    const { t } = useTranslation()
+    const ui = t('ui')
+    
     if (!isVisible) return null
 
     return (
@@ -25,17 +29,17 @@ export const AnalyzeButton = ({
                                 style={{ width: `${loadingProgress * 100}%` }}
                             />
                         </div>
-                        <span className="cockpit-analyze__loading-text">DECRYPTING...</span>
+                        <span className="cockpit-analyze__loading-text">{ui.decrypting}</span>
                     </div>
                 ) : isAlreadyOpened ? (
-                    <span className="cockpit-analyze__done">ALREADY OPENED</span>
+                    <span className="cockpit-analyze__done">{ui.alreadyOpened}</span>
                 ) : isAnalyzed ? (
                     <button 
                         className="cockpit-analyze__button cockpit-analyze__button--open"
                         onClick={onAnalyze}
                     >
                         <span className="cockpit-analyze__shimmer" />
-                        <span className="cockpit-analyze__text">OPEN DATA</span>
+                        <span className="cockpit-analyze__text">{ui.openData}</span>
                     </button>
                 ) : (
                     <button 
@@ -43,10 +47,11 @@ export const AnalyzeButton = ({
                         onClick={onAnalyze}
                     >
                         <span className="cockpit-analyze__shimmer" />
-                        <span className="cockpit-analyze__text">ANALYSER</span>
+                        <span className="cockpit-analyze__text">{ui.analyze}</span>
                     </button>
                 )}
             </div>
         </div>
     )
 }
+

@@ -1,10 +1,26 @@
-import { projects } from '../../../data/projects'
+import { projects as projectsData } from '../../../data/projects'
+import { useTranslation } from '../../../hooks/useTranslation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGithub } from '@fortawesome/free-brands-svg-icons' // Need to check if installed, usually is
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faExternalLinkAlt, faPlay } from '@fortawesome/free-solid-svg-icons'
 import './PortfolioView.css'
 
 export const PortfolioView = ({ onProjectSelect }) => {
+    const { t } = useTranslation()
+    const translatedProjects = t('projects')
+    
+    // Merge static data (image, links, stack) with translated data
+    const projects = projectsData.map(staticProject => {
+        const translated = translatedProjects?.find(p => p.id === staticProject.id) || {}
+        return {
+            ...staticProject,
+            title: translated.title || staticProject.title,
+            subtitle: translated.subtitle || staticProject.subtitle,
+            short_description: translated.short_description || staticProject.short_description,
+            description: translated.description || staticProject.description
+        }
+    })
+    
     return (
         <div className="portfolio-view">
             <div className="portfolio-grid">
@@ -54,3 +70,4 @@ export const PortfolioView = ({ onProjectSelect }) => {
         </div>
     )
 }
+

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useTranslation } from '../../hooks/useTranslation'
 import './LoadingScreen.css'
 
 /**
@@ -6,6 +7,9 @@ import './LoadingScreen.css'
  * Simple fade out transition when complete
  */
 export const LoadingScreen = ({ onComplete, onReadyToAnimate }) => {
+    const { t } = useTranslation()
+    const ui = t('ui.loadingScreen')
+    
     const [progress, setProgress] = useState(0)
     const [currentStep, setCurrentStep] = useState(0)
     const [isFadingOut, setIsFadingOut] = useState(false)
@@ -15,13 +19,13 @@ export const LoadingScreen = ({ onComplete, onReadyToAnimate }) => {
     // Loading duration in ms
     const LOADING_DURATION = 3500
     
-    // System initialization steps
+    // System initialization steps (translated)
     const STEPS = [
-        { id: 'boot', label: 'INITIALISATION SYSTÈME', sublabel: 'Core systems online' },
-        { id: 'data', label: 'CHARGEMENT DES DONNÉES', sublabel: 'Loading celestial database' },
-        { id: 'hud', label: 'AFFICHAGE DU HUD', sublabel: 'Holographic interface ready' },
-        { id: 'scan', label: 'OUVERTURE ANALYSE', sublabel: 'Scanner calibration complete' },
-        { id: 'ready', label: 'SYSTÈME OPÉRATIONNEL', sublabel: 'All systems nominal' },
+        { id: 'boot', label: ui?.bootLabel || 'SYSTEM INITIALIZATION', sublabel: ui?.bootSub || 'Core systems online' },
+        { id: 'data', label: ui?.dataLabel || 'DATA LOADING', sublabel: ui?.dataSub || 'Loading celestial database' },
+        { id: 'hud', label: ui?.hudLabel || 'HUD DISPLAY', sublabel: ui?.hudSub || 'Holographic interface ready' },
+        { id: 'scan', label: ui?.scanLabel || 'SCAN OPENING', sublabel: ui?.scanSub || 'Scanner calibration complete' },
+        { id: 'ready', label: ui?.readyLabel || 'SYSTEM OPERATIONAL', sublabel: ui?.readySub || 'All systems nominal' },
     ]
     
     useEffect(() => {
@@ -82,9 +86,9 @@ export const LoadingScreen = ({ onComplete, onReadyToAnimate }) => {
                 <div className="loading-terminal">
                     <div className="loading-terminal__header">
                         <span className="loading-terminal__grip">⠿</span>
-                        <span className="loading-terminal__title">SYSTEM BOOTSTRAP</span>
+                        <span className="loading-terminal__title">{ui?.systemBootstrap || 'SYSTEM BOOTSTRAP'}</span>
                         <span className="loading-terminal__status">
-                            {progress >= 100 ? '● READY' : '○ LOADING'}
+                            {progress >= 100 ? (ui?.ready || '● READY') : (ui?.loading || '○ LOADING')}
                         </span>
                     </div>
                     
@@ -118,7 +122,7 @@ export const LoadingScreen = ({ onComplete, onReadyToAnimate }) => {
                     <div className="loading-progress__info">
                         <span className="loading-progress__percent">{Math.round(progress)}%</span>
                         <span className="loading-progress__status">
-                            {progress >= 100 ? 'SYSTEM READY' : 'LOADING...'}
+                            {progress >= 100 ? (ui?.systemReady || 'SYSTEM READY') : (ui?.loadingDots || 'LOADING...')}
                         </span>
                     </div>
                 </div>
@@ -126,7 +130,7 @@ export const LoadingScreen = ({ onComplete, onReadyToAnimate }) => {
                 {/* Footer */}
                 <div className="loading-screen__footer">
                     <div className="loading-footer__line" />
-                    <span className="loading-footer__text">STELLAR NAVIGATION SYSTEM</span>
+                    <span className="loading-footer__text">{ui?.stellarNav || 'STELLAR NAVIGATION SYSTEM'}</span>
                     <div className="loading-footer__line" />
                 </div>
             </div>
@@ -139,3 +143,4 @@ export const LoadingScreen = ({ onComplete, onReadyToAnimate }) => {
         </div>
     )
 }
+

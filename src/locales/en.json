@@ -1,0 +1,281 @@
+{
+  "presentation": {
+    "name": "Léo Stalhberger",
+    "title": "Full-Stack Developer",
+    "subtitle": "Web & Applications",
+    "tagline": "Visual creator turned developer - Between code and 3D",
+    "status": {
+      "type": "apprenticeship",
+      "text": "ServiceNow Developer at Swiss Life",
+      "school": "Master's in Information Systems Architecture - Epitech"
+    },
+    "about": [
+      {
+        "type": "intro",
+        "text": "I've always <strong>loved creating</strong>. First with shapes, volumes, and light. Then with lines of code."
+      },
+      {
+        "type": "parcours",
+        "text": "After a <strong>degree in visual communication</strong> and several years as a CAD designer and 3D artist, I chose to follow another passion: technology. In 2025, I joined an intensive bootcamp at <strong>La Capsule</strong> to become a Full-Stack developer, before pursuing a <strong>Master's in Information Systems Architecture at Epitech</strong>."
+      },
+      {
+        "type": "actuel",
+        "text": "Today, alongside my master's degree, I work as an apprentice at <strong>Swiss Life</strong> as a <strong>ServiceNow Developer</strong>. I design and optimize internal tools to streamline processes."
+      },
+      {
+        "type": "actuel2",
+        "text": "In parallel, I run <strong>LEO Design 3D</strong>, a 3D modeling business dedicated to architects: photorealistic renders, immersive visualizations, and accurate project projections."
+      },
+      {
+        "type": "vision",
+        "text": "This <strong>dual perspective</strong> as both developer and visual creator allows me to approach each project with the same standards: designing solutions that are <strong>precise, aesthetic, and sustainable</strong>."
+      },
+      {
+        "type": "passion",
+        "text": "Curious about new technologies (<strong>VR, AR</strong>), I continuously explore the bridges between these two worlds. Because ultimately, coding or modeling is always the same thing: <strong>bringing an idea to life</strong>."
+      },
+      {
+        "type": "fun",
+        "text": "PS: I've even started coding <strong>my own VR game</strong>! 🎮"
+      }
+    ],
+    "stats": {
+      "experience": "2 YEARS",
+      "specialty": "FULL-STACK",
+      "status": "EMPLOYED"
+    },
+    "labels": {
+      "identityScan": "IDENTITY SCAN",
+      "experience": "EXPERIENCE",
+      "specialty": "SPECIALTY",
+      "status": "STATUS"
+    }
+  },
+  "skills": {
+    "title": "SKILLS",
+    "categories": [
+      {
+        "name": "Development",
+        "subcategories": [
+          { "name": "Front-End", "items": ["HTML5", "CSS3", "JavaScript", "React", "Redux", "Next.js", "React Native"] },
+          { "name": "Back-End & Databases", "items": ["Node.js", "Express", "Python", "MongoDB", "Mongoose", "REST API", "Databases"] },
+          { "name": "Tools & DevOps", "items": ["Git", "GitHub", "Docker", "CI/CD", "Vercel", "TDD", "VS Code"] },
+          { "name": "Platforms & Solutions", "items": ["ServiceNow", "Jira"] }
+        ]
+      },
+      {
+        "name": "Design & 3D",
+        "subcategories": [
+          { "name": "Modeling & Rendering", "items": ["Blender", "SketchUp", "AutoCAD", "Revit", "D5 Render", "Unreal Engine"] },
+          { "name": "Graphics & UI", "items": ["Adobe Suite (Photoshop, Illustrator, InDesign, XD…)", "Figma"] }
+        ]
+      },
+      {
+        "name": "AI & Prompting",
+        "subcategories": [
+          { "name": "", "items": ["AI tools usage", "Prompt engineering"] }
+        ]
+      },
+      {
+        "name": "Methodologies & Management",
+        "subcategories": [
+          { "name": "", "items": ["Agile (Scrum)", "Clean Code", "Project Management", "Notion", "Trello"] }
+        ]
+      },
+      {
+        "name": "Soft Skills",
+        "subcategories": [
+          { 
+            "name": "", 
+            "items": ["Creativity", "Rigor", "Adaptability", "Teamwork", "Communication", "Curiosity", "Problem Solving", "Analytical Thinking", "Autonomy", "Priority Management", "Attention to Detail", "Active Listening"]
+          }
+        ]
+      },
+      {
+        "name": "Languages",
+        "subcategories": [
+          { "name": "", "items": ["French — Native"] },
+          { "name": "", "items": ["English — B2"] }
+        ]
+      }
+    ]
+  },
+  "formations": {
+    "title": "EDUCATION",
+    "items": [
+      {
+        "title": "Master's in Information Systems Architecture",
+        "subtitle": "Cloud, Cybersecurity, AI Track",
+        "school": "Epitech — Lille",
+        "period": "Sept. 2025 - Sept. 2027",
+        "description": "Information systems architect program. Apprenticeship-based training focused on software engineering, project management, and holistic understanding of application architectures."
+      },
+      {
+        "title": "Full-Stack Web & Mobile Developer",
+        "subtitle": "",
+        "school": "La Capsule — Lille",
+        "period": "Jan. 2025 - April 2025",
+        "description": "10-week intensive bootcamp. JavaScript stack: React, React Native, Node.js, Express, MongoDB. Agile methodologies (Scrum), Clean Code, TDD, and version control with Git/GitHub."
+      },
+      {
+        "title": "Technical Degree in Industrial Product Design",
+        "subtitle": "",
+        "school": "CFA Boulogne-sur-Mer — Apprenticeship",
+        "period": "Sept. 2012 - Aug. 2014",
+        "description": "Apprenticeship-based training focused on mechanical and industrial design. Proficiency in CAD software (SolidWorks, AutoCAD, SketchUp) and project management from bid to construction site."
+      },
+      {
+        "title": "Technical Degree in Visual Communication",
+        "subtitle": "Multimedia Track",
+        "school": "Lycée Saint Vincent de Paul — Loos",
+        "period": "Sept. 2010 - Aug. 2012",
+        "description": "Graphic design and digital creation. Proficiency in Adobe Suite (Photoshop, Illustrator, Flash). Introduction to coding via ActionScript and web interface design."
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "hexavax",
+      "title": "Hexavax",
+      "subtitle": "Vaccine demand prediction platform",
+      "short_description": "Student project presented at the French Presidential Office. Decision-support platform to anticipate vaccine needs using data and machine learning.",
+      "description": "Student project presented at the French Presidential Office. I contributed to the development of Hexavax, a decision-support platform for the government and pharmacists to anticipate vaccine needs using data and machine learning. The tool features a vaccination campaign dashboard, a multi-level interactive map (regions, departments, overseas territories), a time slider to visualize past trends and future predictions, and 6 analysis layers (viral spread, hospital saturation, vaccination centers, vulnerable populations, storage areas, expenses)."
+    },
+    {
+      "id": "jambonbeurre",
+      "title": "JambonBeurre",
+      "subtitle": "Mobile app to share meals with others",
+      "short_description": "Final bootcamp project developed with a team of 5. App to find meal companions and avoid eating alone.",
+      "description": "Final project at La Capsule bootcamp, developed with a team of 5. I contributed to creating JambonBeurre, an app that helps find meal companions to avoid eating alone. Designed for students, employees, or travelers, the app focuses on simplicity, user experience, and real-time interaction."
+    },
+    {
+      "id": "keepgoals",
+      "title": "KeepGoals",
+      "subtitle": "Financial goals tracking web app",
+      "short_description": "Fullstack application to track personal financial goals and visualize progress in real-time.",
+      "description": "I developed this fullstack application to track personal financial goals and make life projects a reality. Home purchase, travel, or any other project: KeepGoals lets you define goals, log contributions, and visualize progress in real-time through an intuitive dashboard."
+    },
+    {
+      "id": "toothy",
+      "title": "Toothy",
+      "subtitle": "Gamified tooth brushing tracker app",
+      "short_description": "Gamified mobile app to encourage good dental hygiene with a points system and statistics.",
+      "description": "I designed this gamified mobile app to encourage good dental hygiene, with a young audience in mind. I integrated a points system, a dashboard with personalized statistics, and a playful interface to transform brushing into a positive habit."
+    },
+    {
+      "id": "pokedex",
+      "title": "Pokedex",
+      "subtitle": "Pokémon collection mini-site",
+      "short_description": "Training project on React and API consumption to dynamically display Pokémon cards.",
+      "description": "Training project on React and API consumption. I created this site that dynamically displays Pokémon cards with their information, retrieved via a Web Service API."
+    },
+    {
+      "id": "clickit",
+      "title": "ClickIt!",
+      "subtitle": "Click mini-game with leaderboard",
+      "short_description": "Simple clicking game with username system and scoreboard. Backend training project.",
+      "description": "I developed this simple game where the goal is to click a button as many times as possible. Username system and scoreboard to compete with other players. This project helped me practice backend development, MongoDB, and DOM manipulation."
+    },
+    {
+      "id": "leodesign3d",
+      "title": "LEO Design 3D",
+      "subtitle": "Photorealistic architectural renders",
+      "short_description": "3D visualizations for architects and real estate professionals. Photorealistic renders and accurate projections.",
+      "description": "Alongside development, I create 3D visualizations for architects and real estate professionals. These renders help preview spaces, support decision-making, and provide accurate projections of projects before construction."
+    }
+  ],
+  "contact": {
+    "cta": "Ready to discuss innovative projects? Contact me!",
+    "location": {
+      "city": "Lille Area",
+      "country": "France"
+    }
+  },
+  "ui": {
+    "channelOpen": "CHANNEL OPEN",
+    "transmitMessage": "// TRANSMIT MESSAGE",
+    "ready": "READY",
+    "identifier": "IDENTIFIER",
+    "frequency": "FREQUENCY",
+    "payload": "PAYLOAD",
+    "transmit": "TRANSMIT",
+    "transmitting": "TRANSMITTING...",
+    "placeholderName": "Your name...",
+    "placeholderEmail": "your@email.com",
+    "placeholderMessage": "Your message...",
+    "analyze": "ANALYZE",
+    "openData": "OPEN DATA",
+    "decrypting": "DECRYPTING...",
+    "alreadyOpened": "ALREADY OPENED",
+    "loading": "LOADING",
+    "viewProject": "VIEW PROJECT",
+    "github": "GitHub",
+    "demo": "Demo",
+    "stack": "Stack",
+    "close": "CLOSE",
+    "back": "BACK",
+    "discoveries": "DISCOVERIES",
+    "launchSpaceship": "Launch spaceship",
+    "sysOnline": "SYS",
+    "online": "ONLINE",
+    "nav": "NAV",
+    "lang": "LANGUAGE",
+    "backToHome": "BACK TO HOME",
+    "previousSection": "Previous section",
+    "nextSection": "Next section",
+    "status": {
+      "shield": "SHIELD",
+      "engine": "ENGINE",
+      "scanner": "SCANNER"
+    },
+    "navigation": {
+      "presentation": "About",
+      "skills": "Skills",
+      "formations": "Education",
+      "portfolio": "Portfolio",
+      "contact": "Contact"
+    },
+    "windows": {
+      "presentation": { "title": "ABOUT", "subtitle": "PERSONAL PROFILE" },
+      "skills": { "title": "SKILLS", "subtitle": "SKILL MATRIX" },
+      "formations": { "title": "EDUCATION", "subtitle": "TRAINING RECORDS" },
+      "portfolio": { "title": "PORTFOLIO", "subtitle": "MISSION LOGS" },
+      "contact": { "title": "CONTACT", "subtitle": "COMMUNICATION LINK" },
+      "hardskills": { "title": "HARD SKILLS", "subtitle": "TECHNICAL SYSTEMS" },
+      "softskills": { "title": "SOFT SKILLS", "subtitle": "HUMAN INTERFACE" }
+    },
+    "loadingScreen": {
+      "title": "INITIALIZING",
+      "systemBootstrap": "SYSTEM BOOTSTRAP",
+      "ready": "● READY",
+      "loading": "○ LOADING",
+      "systemReady": "SYSTEM READY",
+      "loadingDots": "LOADING...",
+      "stellarNav": "STELLAR NAVIGATION SYSTEM",
+      "bootLabel": "SYSTEM INITIALIZATION",
+      "bootSub": "Core systems online",
+      "dataLabel": "DATA LOADING",
+      "dataSub": "Loading celestial database",
+      "hudLabel": "HUD DISPLAY",
+      "hudSub": "Holographic interface ready",
+      "scanLabel": "SCAN OPENING",
+      "scanSub": "Scanner calibration complete",
+      "readyLabel": "SYSTEM OPERATIONAL",
+      "readySub": "All systems nominal",
+      "enterPortfolio": "3D EXPERIENCE",
+      "skipIntro": "SKIP INTRO"
+    },
+    "welcomePage": {
+      "shipPrefix": "VESSEL",
+      "shipName": "STAL-117",
+      "welcomeLine1": "WELCOME",
+      "welcomeLine2": "ABOARD",
+      "subtitle": "Portfolio of <strong>Léo Stalhberger</strong> — Full-Stack Developer & 3D Creator",
+      "resumeLabel": "VIEW RESUME",
+      "resumeDesc": "Interactive CV • ~3 min read",
+      "experienceLabel": "3D EXPERIENCE",
+      "experienceDesc": "Immersive exploration",
+      "footer": "STELLAR NAVIGATION SYSTEM v3.0"
+    }
+  }
+}

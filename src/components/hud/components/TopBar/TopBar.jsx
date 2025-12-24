@@ -1,3 +1,5 @@
+import { useTranslation } from '../../../../hooks/useTranslation'
+import { LanguageToggle } from '../LanguageToggle'
 import './TopBar.css'
 
 /**
@@ -18,11 +20,15 @@ export const TopBar = ({
     onSelectSection,
     dropdownRef
 }) => {
+    const { t } = useTranslation()
+    const ui = t('ui')
+    
     return (
         <div className="cockpit-topbar">
             <div className="cockpit-topbar__left">
-                <span className="cockpit-topbar__label">SYS</span>
-                <span className="cockpit-topbar__value">ONLINE</span>
+                <span className="cockpit-topbar__label">{ui.sysOnline}</span>
+                <span className="cockpit-topbar__value">{ui.online}</span>
+                <LanguageToggle />
             </div>
             
             <div className="cockpit-topbar__center" ref={dropdownRef}>
@@ -30,7 +36,7 @@ export const TopBar = ({
                 <button 
                     className="cockpit-nav-arrow cockpit-nav-arrow--left"
                     onClick={onNavigatePrev}
-                    aria-label="Section précédente"
+                    aria-label={ui.previousSection}
                 >
                     <span className="cockpit-nav-arrow__icon">‹</span>
                 </button>
@@ -71,16 +77,17 @@ export const TopBar = ({
                 <button 
                     className="cockpit-nav-arrow cockpit-nav-arrow--right"
                     onClick={onNavigateNext}
-                    aria-label="Section suivante"
+                    aria-label={ui.nextSection}
                 >
                     <span className="cockpit-nav-arrow__icon">›</span>
                 </button>
             </div>
             
             <div className="cockpit-topbar__right">
-                <span className="cockpit-topbar__label">NAV</span>
+                <span className="cockpit-topbar__label">{ui.nav}</span>
                 <span className="cockpit-topbar__value">{String(currentIndex).padStart(2, '0')}/{String(totalSections - 1).padStart(2, '0')}</span>
             </div>
         </div>
     )
 }
+

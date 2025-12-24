@@ -36,6 +36,7 @@ export const useCockpitLogic = () => {
     const decryptingSection = useWindowStore((state) => state.decryptingSection)
     const openData = useWindowStore((state) => state.openData)
     const openProjectWindow = useWindowStore((state) => state.openProjectWindow)
+    const closeAllWindows = useWindowStore((state) => state.closeAllWindows)
     
     // Spaceship store
     const isSpaceshipMode = useSpaceshipStore(state => state.isSpaceshipMode)
@@ -83,10 +84,13 @@ export const useCockpitLogic = () => {
     // Effects
     useEffect(() => {
         if (allDiscovered && !showSuccessModal && !dismissedSuccess) {
-            const timer = setTimeout(() => setShowSuccessModal(true), 1000)
+            const timer = setTimeout(() => {
+                closeAllWindows() // Close all windows before showing modal
+                setShowSuccessModal(true)
+            }, 1000)
             return () => clearTimeout(timer)
         }
-    }, [allDiscovered, dismissedSuccess])
+    }, [allDiscovered, dismissedSuccess, closeAllWindows])
     
     useEffect(() => {
         if (trackedId) {
@@ -135,6 +139,9 @@ export const useCockpitLogic = () => {
     }, [returnToOverview])
     
     const goToSection = useCallback((section) => {
+        // Close all windows when navigating (for mobile UX)
+        closeAllWindows()
+        
         if (section.isOverview) {
             returnToOverview()
             setActiveSection('overview')
@@ -142,7 +149,7 @@ export const useCockpitLogic = () => {
             navigateTo(section.id)
             setActiveSection(section.id)
         }
-    }, [navigateTo, returnToOverview])
+    }, [navigateTo, returnToOverview, closeAllWindows])
     
     const navigatePrev = useCallback(() => {
         const newIndex = currentIndex <= 0 ? NAV_SECTIONS.length - 1 : currentIndex - 1

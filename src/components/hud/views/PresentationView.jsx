@@ -1,12 +1,15 @@
-import { presentation } from '../../../data/presentation'
+import { useTranslation } from '../../../hooks/useTranslation'
 import './PresentationView.css'
 
 /**
  * PresentationView - Personal introduction display
- * Uses data from presentation.js for clean architecture
+ * Uses translations from useTranslation hook
  */
 export const PresentationView = () => {
-    const { name, title, subtitle, tagline, status, about } = presentation
+    const { t } = useTranslation()
+    
+    const presentation = t('presentation')
+    const { name, title, subtitle, status, about, stats, labels } = presentation
     
     return (
         <div className="view-presentation">
@@ -20,7 +23,7 @@ export const PresentationView = () => {
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                 </div>
-                <div className="view-presentation__photo-label">IDENTITY SCAN</div>
+                <div className="view-presentation__photo-label">{labels?.identityScan || 'IDENTITY SCAN'}</div>
             </div>
             
             {/* Text Content */}
@@ -28,7 +31,7 @@ export const PresentationView = () => {
                 <h3 className="view-presentation__subtitle">{title} {subtitle}</h3>
                 
                 <div className="view-presentation__bio">
-                    {about.map((paragraph, index) => (
+                    {about?.map((paragraph, index) => (
                         <p 
                             key={index} 
                             className={`view-presentation__paragraph view-presentation__paragraph--${paragraph.type}`}
@@ -40,28 +43,27 @@ export const PresentationView = () => {
                 {/* Status Badge */}
                 <div className="view-presentation__status">
                     <span className="view-presentation__status-badge">
-                        🎓 {status.text} - {status.school}
+                        🎓 {status?.text} - {status?.school}
                     </span>
                 </div>
-                
-
                 
                 {/* Stats */}
                 <div className="view-presentation__stats">
                     <div className="view-presentation__stat">
-                        <span className="view-presentation__stat-label">EXPERIENCE</span>
-                        <span className="view-presentation__stat-value">2 YEARS</span>
+                        <span className="view-presentation__stat-label">{labels?.experience || 'EXPERIENCE'}</span>
+                        <span className="view-presentation__stat-value">{stats?.experience || '2 YEARS'}</span>
                     </div>
                     <div className="view-presentation__stat">
-                        <span className="view-presentation__stat-label">SPECIALTY</span>
-                        <span className="view-presentation__stat-value">FULL-STACK</span>
+                        <span className="view-presentation__stat-label">{labels?.specialty || 'SPECIALTY'}</span>
+                        <span className="view-presentation__stat-value">{stats?.specialty || 'FULL-STACK'}</span>
                     </div>
                     <div className="view-presentation__stat">
-                        <span className="view-presentation__stat-label">STATUS</span>
-                        <span className="view-presentation__stat-value view-presentation__stat-value--active">EN POSTE</span>
+                        <span className="view-presentation__stat-label">{labels?.status || 'STATUS'}</span>
+                        <span className="view-presentation__stat-value view-presentation__stat-value--active">{stats?.status || 'EMPLOYED'}</span>
                     </div>
                 </div>
             </div>
         </div>
     )
 }
+

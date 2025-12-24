@@ -1,16 +1,19 @@
-import { formations } from '../../../data/formations'
+import { useTranslation } from '../../../hooks/useTranslation'
 import './FormationView.css'
 
 /**
  * FormationView - Education display with timeline graduation
- * Uses formations data from formations.js
+ * Uses translations from useTranslation hook
  */
 export const FormationView = () => {
+    const { t } = useTranslation()
+    const formations = t('formations')
+    
     return (
         <div className="view-formation">
             {/* Timeline graduation ruler on the left */}
             <div className="formation-ruler">
-                {formations.items.map((_, index) => (
+                {formations.items?.map((_, index) => (
                     <div key={index} className="formation-ruler__section">
                         <span className="formation-ruler__major" />
                         <div className="formation-ruler__minors">
@@ -21,7 +24,7 @@ export const FormationView = () => {
             </div>
 
             <div className="formation-timeline">
-                {formations.items.map((item, index) => (
+                {formations.items?.map((item, index) => (
                     <div key={index} className="formation-item">
                         <div className="formation-item__marker">
                             <span className="formation-item__dot" />
@@ -47,3 +50,4 @@ export const FormationView = () => {
         </div>
     )
 }
+

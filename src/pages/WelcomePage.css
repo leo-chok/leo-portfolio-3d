@@ -23,6 +23,14 @@
     opacity: 1;
 }
 
+/* === LANGUAGE TOGGLE === */
+.welcome__language {
+    position: absolute;
+    top: 50px;
+    right: 60px;
+    z-index: 100;
+}
+
 /* === ANIMATED BACKGROUND === */
 .welcome__bg {
     position: absolute;
@@ -214,27 +222,115 @@
 }
 
 .welcome__ship-id {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 8px 20px;
-    border: 1px solid rgba(124, 196, 237, 0.3);
-    border-radius: 4px;
-    background: rgba(124, 196, 237, 0.05);
+    gap: 20px;
+    padding: 12px 30px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(124, 196, 237, 0.03) 20%,
+        rgba(124, 196, 237, 0.05) 50%,
+        rgba(124, 196, 237, 0.03) 80%,
+        transparent
+    );
+    border: none;
+    overflow: visible;
+}
+
+/* Top and bottom lines */
+.welcome__ship-id::before,
+.welcome__ship-id::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(124, 196, 237, 0.4) 30%,
+        rgba(124, 196, 237, 0.6) 50%,
+        rgba(124, 196, 237, 0.4) 70%,
+        transparent
+    );
+}
+
+.welcome__ship-id::before {
+    top: 0;
+}
+
+.welcome__ship-id::after {
+    bottom: 0;
 }
 
 .welcome__ship-prefix {
     color: rgba(124, 196, 237, 0.5);
-    font-size: 11px;
-    letter-spacing: 4px;
+    font-size: 10px;
+    letter-spacing: 5px;
+    font-weight: 400;
+    text-transform: uppercase;
 }
 
 .welcome__ship-name {
     color: #7cc4ed;
-    font-size: 16px;
+    font-size: 22px;
     font-weight: 700;
-    letter-spacing: 6px;
-    text-shadow: 0 0 20px rgba(124, 196, 237, 0.5);
+    letter-spacing: 10px;
+    text-shadow: 
+        0 0 10px rgba(124, 196, 237, 0.6),
+        0 0 30px rgba(124, 196, 237, 0.3),
+        0 0 50px rgba(124, 196, 237, 0.1);
+    animation: shipNamePulse 3s ease-in-out infinite;
+}
+
+@keyframes shipNamePulse {
+    0%, 100% { 
+        text-shadow: 
+            0 0 10px rgba(124, 196, 237, 0.6),
+            0 0 30px rgba(124, 196, 237, 0.3),
+            0 0 50px rgba(124, 196, 237, 0.1);
+    }
+    50% { 
+        text-shadow: 
+            0 0 15px rgba(124, 196, 237, 0.8),
+            0 0 40px rgba(124, 196, 237, 0.4),
+            0 0 60px rgba(124, 196, 237, 0.2);
+    }
+}
+
+/* Decorative corner markers */
+.welcome__ship-id .welcome__ship-marker {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-color: rgba(124, 196, 237, 0.6);
+    border-style: solid;
+}
+
+.welcome__ship-id .welcome__ship-marker--tl {
+    top: -4px;
+    left: 20px;
+    border-width: 2px 0 0 2px;
+}
+
+.welcome__ship-id .welcome__ship-marker--tr {
+    top: -4px;
+    right: 20px;
+    border-width: 2px 2px 0 0;
+}
+
+.welcome__ship-id .welcome__ship-marker--bl {
+    bottom: -4px;
+    left: 20px;
+    border-width: 0 0 2px 2px;
+}
+
+.welcome__ship-id .welcome__ship-marker--br {
+    bottom: -4px;
+    right: 20px;
+    border-width: 0 2px 2px 0;
 }
 
 .welcome__title {

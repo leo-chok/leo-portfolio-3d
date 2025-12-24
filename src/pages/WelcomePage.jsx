@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
+import { useTranslation } from '../hooks/useTranslation'
+import { LanguageToggle } from '../components/hud/components/LanguageToggle'
 import './WelcomePage.css'
 
 /**
@@ -10,10 +12,13 @@ import './WelcomePage.css'
  * - Two CTA buttons with descriptive subtitles
  * - Animated background with grid lines
  * - Entry animations
+ * - Language toggle for FR/EN
  */
 export const WelcomePage = () => {
     const navigate = useNavigate()
     const containerRef = useRef(null)
+    const { t } = useTranslation()
+    const welcome = t('ui.welcomePage')
     
     // Entry animation
     useEffect(() => {
@@ -49,21 +54,31 @@ export const WelcomePage = () => {
             <div className="welcome__bracket welcome__bracket--bl" />
             <div className="welcome__bracket welcome__bracket--br" />
             
+            {/* Language Toggle - Top Right */}
+            <div className="welcome__language">
+                <LanguageToggle />
+            </div>
+            
             {/* Main content */}
             <div className="welcome__content">
                 {/* Header */}
                 <header className="welcome__header">
                     <div className="welcome__ship-id">
-                        <span className="welcome__ship-prefix">VAISSEAU</span>
-                        <span className="welcome__ship-name">STAL-117</span>
+                        <span className="welcome__ship-marker welcome__ship-marker--tl" />
+                        <span className="welcome__ship-marker welcome__ship-marker--tr" />
+                        <span className="welcome__ship-marker welcome__ship-marker--bl" />
+                        <span className="welcome__ship-marker welcome__ship-marker--br" />
+                        <span className="welcome__ship-prefix">{welcome?.shipPrefix || 'VAISSEAU'}</span>
+                        <span className="welcome__ship-name">{welcome?.shipName || 'STAL-117'}</span>
                     </div>
                     <h1 className="welcome__title">
-                        <span className="welcome__title-line">BIENVENUE</span>
-                        <span className="welcome__title-line welcome__title-line--sub">À BORD</span>
+                        <span className="welcome__title-line">{welcome?.welcomeLine1 || 'BIENVENUE'}</span>
+                        <span className="welcome__title-line welcome__title-line--sub">{welcome?.welcomeLine2 || 'À BORD'}</span>
                     </h1>
-                    <p className="welcome__subtitle">
-                        Portfolio de <strong>Léo Stalhberger</strong> — Développeur Full-Stack & Créateur 3D
-                    </p>
+                    <p 
+                        className="welcome__subtitle"
+                        dangerouslySetInnerHTML={{ __html: welcome?.subtitle || 'Portfolio de <strong>Léo Stalhberger</strong> — Développeur Full-Stack & Créateur 3D' }}
+                    />
                 </header>
                 
                 {/* CTA Buttons */}
@@ -75,8 +90,8 @@ export const WelcomePage = () => {
                         <span className="welcome__cta-shimmer" />
                         <span className="welcome__cta-icon">◇</span>
                         <span className="welcome__cta-content">
-                            <span className="welcome__cta-label">VOIR LE RÉSUMÉ</span>
-                            <span className="welcome__cta-desc">CV interactif • Lecture ~3 min</span>
+                            <span className="welcome__cta-label">{welcome?.resumeLabel || 'VOIR LE RÉSUMÉ'}</span>
+                            <span className="welcome__cta-desc">{welcome?.resumeDesc || 'CV interactif • Lecture ~3 min'}</span>
                         </span>
                     </button>
                     
@@ -87,8 +102,8 @@ export const WelcomePage = () => {
                         <span className="welcome__cta-shimmer" />
                         <span className="welcome__cta-icon">◈</span>
                         <span className="welcome__cta-content">
-                            <span className="welcome__cta-label">EXPÉRIENCE 3D</span>
-                            <span className="welcome__cta-desc">Exploration immersive</span>
+                            <span className="welcome__cta-label">{welcome?.experienceLabel || 'EXPÉRIENCE 3D'}</span>
+                            <span className="welcome__cta-desc">{welcome?.experienceDesc || 'Exploration immersive'}</span>
                         </span>
                     </button>
                 </div>
@@ -96,7 +111,7 @@ export const WelcomePage = () => {
                 {/* Footer */}
                 <footer className="welcome__footer">
                     <div className="welcome__footer-line" />
-                    <span className="welcome__footer-text">STELLAR NAVIGATION SYSTEM v3.0</span>
+                    <span className="welcome__footer-text">{welcome?.footer || 'STELLAR NAVIGATION SYSTEM v3.0'}</span>
                     <div className="welcome__footer-line" />
                 </footer>
             </div>

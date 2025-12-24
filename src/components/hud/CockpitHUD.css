@@ -949,3 +949,15 @@
         invert(80%) sepia(50%) saturate(500%) hue-rotate(100deg)
         drop-shadow(0 0 8px rgba(100, 237, 180, 0.8));
 }
+
+/* ======================================
+   LANGUAGE TOGGLE (Top Right Corner)
+   ====================================== */
+.cockpit-hud__language {
+    position: fixed;
+    top: 30px;
+    right: 130px;
+    z-index: 500;
+    pointer-events: auto;
+}
+

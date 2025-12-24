@@ -10,6 +10,7 @@ import {
     DiscoveryScore 
 } from './components'
 
+
 /**
  * CockpitHUD - Main HUD overlay for the cockpit interface
  * 
@@ -34,6 +35,7 @@ export const CockpitHUD = () => {
             <div className="cockpit-bracket cockpit-bracket--tr" />
             <div className="cockpit-bracket cockpit-bracket--bl" />
             <div className="cockpit-bracket cockpit-bracket--br" />
+            
             
             {/* Top bar with navigation */}
             <TopBar

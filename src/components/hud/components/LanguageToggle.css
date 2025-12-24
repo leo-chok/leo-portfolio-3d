@@ -1,0 +1,72 @@
+/**
+ * LanguageToggle - Styled like TopBar info items
+ * Format: LANG FR/EN (matching SYS ONLINE style)
+ */
+
+.language-toggle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: 'Orbitron', monospace;
+    padding: 0;
+    margin-left: 12px;
+}
+
+.language-toggle__label {
+    color: rgba(124, 196, 237, 0.5);
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin-right: 4px;
+}
+
+.language-toggle__option {
+    color: rgba(124, 196, 237, 0.4);
+    font-size: 11px;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+}
+
+.language-toggle__option.active {
+    color: rgba(100, 237, 180, 0.95);
+    text-shadow: 
+        0 0 6px rgba(100, 237, 180, 0.5),
+        0 0 12px rgba(100, 237, 180, 0.3);
+}
+
+.language-toggle__separator {
+    color: rgba(124, 196, 237, 0.3);
+    font-size: 11px;
+}
+
+.language-toggle:hover .language-toggle__option:not(.active) {
+    color: rgba(124, 196, 237, 0.7);
+}
+
+/* Focus state for accessibility */
+.language-toggle:focus {
+    outline: none;
+}
+
+/* Mobile - more compact */
+@media (max-width: 768px) {
+    .language-toggle {
+        margin-left: 8px;
+        gap: 2px;
+    }
+    
+    .language-toggle__label {
+        display: none;
+    }
+    
+    .language-toggle__option {
+        font-size: 10px;
+    }
+    
+    .language-toggle__separator {
+        font-size: 10px;
+    }
+}
+
