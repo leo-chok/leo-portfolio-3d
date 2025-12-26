@@ -136,3 +136,74 @@
 .ship-exit-hint .ship-label {
     color: rgba(200, 150, 100, 0.6);
 }
+
+/* ===========================
+   BOUNDARY WARNING - Minimal HUD text
+   =========================== */
+
+.ship-boundary-warning {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 200;
+    animation: warningFade 0.3s ease-out;
+}
+
+@keyframes warningFade {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Warning content layout */
+.warning-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Warning icons */
+.warning-icon {
+    font-size: 24px;
+    color: #ff4444;
+    text-shadow: 
+        0 0 10px rgba(255, 68, 68, 0.8),
+        0 0 20px rgba(255, 68, 68, 0.5);
+    animation: iconFlash 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes iconFlash {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+}
+
+/* Text container */
+.warning-text {
+    text-align: center;
+}
+
+/* Title - ZONE LIMITE */
+.warning-title {
+    font-family: 'Orbitron', 'Consolas', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ff5555;
+    letter-spacing: 4px;
+    text-shadow: 
+        0 0 8px rgba(255, 85, 85, 0.8),
+        0 0 16px rgba(255, 85, 85, 0.4);
+    margin-bottom: 4px;
+}
+
+/* Subtitle - DEMI-TOUR REQUIS */
+.warning-subtitle {
+    font-family: 'Orbitron', 'Segoe UI', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    color: rgba(255, 150, 150, 0.8);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+

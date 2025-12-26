@@ -90,9 +90,9 @@ export const SpaceshipController = forwardRef((props, ref) => {
         rotationSpeed: .1,
         rotationDamping: 0.92,
         
-        // Boundary (planets go up to 130, so 155 gives good margin)
-        boundaryRadius: 155,
-        boundarySlowdownStart: 135,
+        // Boundary: slowdown 120→140, barrier visual at 160
+        boundaryRadius: 140,
+        boundarySlowdownStart: 120, // Lower = earlier barrier warning/slowdown
         
         // Throttle thresholds for store updates
         speedThreshold: 1,
@@ -234,14 +234,15 @@ export const SpaceshipController = forwardRef((props, ref) => {
         // Apply boundary slowdown to velocity
         velocityRef.current.multiplyScalar(boundaryFactor)
         
-        // Hard stop BEFORE boundary (give margin to reverse)
+        // Hard stop at boundary - only block OUTWARD movement
         const stopRadius = config.boundaryRadius - 2
         if (distanceFromCenter >= stopRadius) {
-            // Push back inside the stop radius (reuse vector)
-            temp.pushBack.copy(currentPos).normalize().multiplyScalar(stopRadius - 1)
-            groupRef.current.position.copy(temp.pushBack)
-            velocityRef.current.set(0, 0, 0)
-            targetSpeedRef.current = 0 // Reset throttle at boundary
+            // Check if moving outward (away from center)
+            const movingOutward = velocityRef.current.dot(currentPos) > 0
+            if (movingOutward) {
+                velocityRef.current.set(0, 0, 0)
+            }
+            // Don't reset targetSpeedRef so player can accelerate to leave
         }
         
         // Apply velocity to position
