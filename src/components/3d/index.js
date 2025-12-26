@@ -13,14 +13,8 @@ export {
     SpaceDust 
 } from './scene'
 
-// Ships (Player spaceship, NPC ships, effects)
-export { 
-    SpaceshipController, 
-    Mothership, 
-    ShipDust, 
-    EngineGlow, 
-    BarrierEffect 
-} from './ships'
+// Ships (NPC ships only - player ship is in /game module)
+export { Mothership } from './ships'
 
 // 3D HUD elements (Reticles, callouts in 3D space)
 export { 

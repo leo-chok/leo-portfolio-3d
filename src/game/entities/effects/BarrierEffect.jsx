@@ -19,8 +19,8 @@ export const BarrierEffect = () => {
     const outerMaterialRef = useRef()
     const currentOpacity = useRef(0)
     
-    // Get ship position and barrier intensity from store
-    const position = useSpaceshipStore(state => state.position)
+    // Get barrier intensity for conditional rendering (reactive)
+    // Position is read inside useFrame to avoid re-renders from throttled updates
     const barrierIntensity = useSpaceshipStore(state => state.barrierIntensity)
     
     // Barrier appears at this radius
@@ -53,6 +53,9 @@ export const BarrierEffect = () => {
     useFrame(() => {
         if (!groupRef.current) return
         
+        // Read position from store directly (avoid re-renders from throttled updates)
+        const position = useSpaceshipStore.getState().position
+        
         // Get ship world position
         _shipPos.set(position.x, position.y, position.z)
         
@@ -69,8 +72,9 @@ export const BarrierEffect = () => {
         groupRef.current.lookAt(_lookTarget)
         
         // Update opacity - bright barrier effect
+        const currentBarrierIntensity = useSpaceshipStore.getState().barrierIntensity
         if (materialRef.current) {
-            const targetOpacity = barrierIntensity * 0.9
+            const targetOpacity = currentBarrierIntensity * 0.9
             currentOpacity.current += (targetOpacity - currentOpacity.current) * 0.15
             materialRef.current.opacity = currentOpacity.current
         }

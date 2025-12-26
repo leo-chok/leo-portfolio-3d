@@ -2,8 +2,7 @@ import { useRef, useEffect, useMemo, forwardRef, useImperativeHandle } from 'rea
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import { useSpaceshipStore } from '../../../stores/spaceshipStore'
-import { ShipDust } from './ShipDust'
-import { EngineGlow } from './EngineGlow'
+import { ShipDust, EngineGlow } from '../effects'
 import { ShipHUD3D, Crosshair } from './hud'
 import * as THREE from 'three'
 
@@ -88,7 +87,7 @@ export const SpaceshipController = forwardRef((props, ref) => {
         brakeRate: 400,               // km/h per second while holding Ctrl (faster braking)
         
         // Rotation
-        rotationSpeed: .05,
+        rotationSpeed: .1,
         rotationDamping: 0.92,
         
         // Boundary (planets go up to 130, so 155 gives good margin)

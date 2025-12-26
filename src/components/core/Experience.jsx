@@ -5,11 +5,10 @@ import {
     SolarSystem, 
     SpaceDust, 
     MilkyWay, 
-    SpaceshipController, 
-    BarrierEffect, 
     Mothership,
     Nebula 
 } from '../3d'
+import { SpaceshipController, BarrierEffect } from '../../game'
 import { CameraController } from './CameraController'
 import { Effects } from './Effects'
 import { useDebugStore } from '../../stores/debugStore'

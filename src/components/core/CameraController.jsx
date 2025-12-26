@@ -57,6 +57,7 @@ export const CameraController = ({ startAnimation = false, shipRef }) => {
     // === SPACESHIP MODE ===
     const isSpaceshipMode = useSpaceshipStore(state => state.isSpaceshipMode)
     const shipCameraLag = useRef(new THREE.Vector3())
+    const smoothedSpeedRef = useRef(0) // Smoothed speed to avoid jitter from throttled updates
     
     // === INTRO ANIMATION STATE ===
     const introPlayed = useRef(false)
@@ -129,8 +130,9 @@ export const CameraController = ({ startAnimation = false, shipRef }) => {
             _tempOffset.copy(_shipCamOffset).applyQuaternion(shipQuat)
             _desiredCamPos.copy(shipPos).add(_tempOffset)
             
-            // Smooth camera position follow with lag
-            const posLag = 0.1
+            // Smooth camera position follow (frame-rate independent)
+            const smoothing = 15 // Higher = tighter follow
+            const posLag = 1 - Math.exp(-smoothing * delta)
             camera.position.lerp(_desiredCamPos, posLag)
             
             // === CAMERA SHAKE (speed-based amplitude, constant slow frequency) ===
