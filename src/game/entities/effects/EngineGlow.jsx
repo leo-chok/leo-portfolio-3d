@@ -7,16 +7,20 @@ import * as THREE from 'three'
  * EngineGlow - Sprite-based engine exhaust glow
  * Uses a radial gradient texture for smooth circular glow
  * Increases intensity progressively when boosting
- * Reads isBoosting directly from store to avoid parent re-renders
+ * 
+ * Props:
+ * - fixedIntensity: If provided, uses this fixed intensity (0.3-1.5) instead of player speed
+ *   Use this for NPCs like Mothership to decouple from player's boost state
  */
 export const EngineGlow = ({ 
     color = '#ff9944',
     size = 0.06,
     opacity = 0.8,
-    layers = 2
+    layers = 2,
+    fixedIntensity = null // If set, use fixed intensity instead of player speed
 }) => {
     const groupRef = useRef()
-    const intensityRef = useRef(0.3) // Current intensity (0.3 = idle, 1.5 = max speed)
+    const intensityRef = useRef(fixedIntensity ?? 0.3) // Current intensity (0.3 = idle, 1.5 = max speed)
     const timeRef = useRef(0)
     
     // Max speed for scaling
@@ -24,17 +28,27 @@ export const EngineGlow = ({
     
     // Smooth transition for glow effect based on speed + flicker effect
     useFrame((state, delta) => {
-        // Read speed from store without subscribing (no re-render)
-        const speed = useSpaceshipStore.getState().speed
+        let targetIntensity
         
-        // Calculate target intensity based on speed (0.3 to 1.5)
-        const speedFactor = Math.min(speed / MAX_SPEED, 1)
-        const targetIntensity = 0.3 + speedFactor * 1.2
+        if (fixedIntensity !== null) {
+            // Use fixed intensity for NPCs
+            targetIntensity = fixedIntensity
+        } else {
+            // Read speed from store without subscribing (no re-render)
+            const speed = useSpaceshipStore.getState().speed
+            
+            // Calculate target intensity based on speed (0.3 to 1.5)
+            const speedFactor = Math.min(speed / MAX_SPEED, 1)
+            targetIntensity = 0.3 + speedFactor * 1.2
+        }
         
         // Lerp towards target (smooth transition)
         intensityRef.current += (targetIntensity - intensityRef.current) * 0.1
         
-        // Flicker/pulse effect - faster and more intense at higher speeds
+        // Flicker/pulse effect
+        const speedFactor = fixedIntensity !== null 
+            ? (fixedIntensity - 0.3) / 1.2 
+            : Math.min(useSpaceshipStore.getState().speed / MAX_SPEED, 1)
         timeRef.current += delta * (5 + speedFactor * 15) // Speed up flicker with velocity
         const flicker = 1 + Math.sin(timeRef.current) * 0.08 * (0.3 + speedFactor * 0.7)
         const flicker2 = 1 + Math.sin(timeRef.current * 1.7 + 1) * 0.05 * speedFactor

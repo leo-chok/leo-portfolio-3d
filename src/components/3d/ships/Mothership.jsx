@@ -49,7 +49,7 @@ export const Mothership = () => {
         maxY: 25,                 // Maximum height
         wobbleAmount: 0.3,        // Sinusoidal wobble intensity (reduced)
         wobbleSpeed: 0.5,         // Wobble frequency (slower)
-        hitboxSize: 5,            // Clickable area size
+        hitboxSize: 2,            // Clickable area size
     }), [])
     
     // Register this ship with the body registry
@@ -161,7 +161,7 @@ export const Mothership = () => {
             stopTracking()
         } else {
             // Start tracking this ship
-            setTrackedRef(groupRef, 3, 'mothership', null)
+            setTrackedRef(groupRef, 1, 'mothership', null)
         }
     }
     
@@ -180,35 +180,35 @@ export const Mothership = () => {
             <group ref={modelRef}>
                 <primitive 
                     object={clonedScene} 
-                    scale={[0.05, 0.05, 0.05]}
+                    scale={[0.1, 0.1, 0.1]}
                 />
                 
                 {/* Left engine */}
-                <group position={[-0.05, 0, -0.45]}>
+                <group position={[-0.08, 0, -0.88]}>
                     <EngineGlow 
                         color="#4488ff"
-                        size={0.25}
+                        size={0.5}
                         opacity={0.9}
                         layers={3}
-                        isBoosting={false}
+                        fixedIntensity={0.8}
                     />
                 </group>
                 
                 {/* Right engine */}
-                <group position={[0.05, 0, -0.45]}>
+                <group position={[0.08, 0, -0.88]}>
                     <EngineGlow 
                         color="#4488ff"
-                        size={0.25}
+                        size={0.5}
                         opacity={0.9}
                         layers={3}
-                        isBoosting={false}
+                        fixedIntensity={0.8}
                     />
                 </group>
             </group>
             
             {/* HUD Elements */}
             <HudReticle 
-                radius={2} 
+                radius={.5} 
                 visible={hovered || isTracked} 
                 isTracked={isTracked}
             />

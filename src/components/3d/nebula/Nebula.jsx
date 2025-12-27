@@ -18,33 +18,49 @@ export const Nebula = ({
     opacity = 0.05,
     spread = 300,          // Spread around the distance sphere
 }) => {
-    // Generate cloud configurations
+    // Seeded pseudo-random number generator for consistent positions
+    // Uses a simple but effective hash function
+    const seededRandom = (seed) => {
+        const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453123
+        return x - Math.floor(x)
+    }
+    
+    // Generate cloud configurations with fixed seed (no dependencies that change)
     const clouds = useMemo(() => {
         const cloudConfigs = []
         
         for (let i = 0; i < cloudCount; i++) {
+            // Use index-based seeds for reproducible random values
+            const seed1 = seededRandom(i * 1.1 + 0.1)
+            const seed2 = seededRandom(i * 2.2 + 0.2)
+            const seed3 = seededRandom(i * 3.3 + 0.3)
+            const seed4 = seededRandom(i * 4.4 + 0.4)
+            const seed5 = seededRandom(i * 5.5 + 0.5)
+            const seed6 = seededRandom(i * 6.6 + 0.6)
+            const seed7 = seededRandom(i * 7.7 + 0.7)
+            
             // Random position on a sphere at 'distance' radius
-            const theta = Math.random() * Math.PI * 2
-            const phi = Math.acos(2 * Math.random() - 1)
+            const theta = seed1 * Math.PI * 2
+            const phi = Math.acos(2 * seed2 - 1)
             
             // Add some spread variation
-            const r = distance + (Math.random() - 0.5) * spread
+            const r = distance + (seed3 - 0.5) * spread
             
             const x = r * Math.sin(phi) * Math.cos(theta)
             const y = r * Math.sin(phi) * Math.sin(theta)
             const z = r * Math.cos(phi)
             
             // Random size
-            const size = baseSize * (1 + (Math.random() - 0.5) * sizeVariation * 2)
+            const size = baseSize * (1 + (seed4 - 0.5) * sizeVariation * 2)
             
             // Random color from palette
-            const color = colors[Math.floor(Math.random() * colors.length)]
+            const color = colors[Math.floor(seed5 * colors.length)]
             
             // Random spin on its own axis (after lookAt)
-            const spinAngle = Math.random() * Math.PI * 2
+            const spinAngle = seed6 * Math.PI * 2
             
             // Random opacity variation
-            const cloudOpacity = opacity * (0.7 + Math.random() * 0.6)
+            const cloudOpacity = opacity * (0.7 + seed7 * 0.6)
             
             cloudConfigs.push({
                 id: i,
@@ -53,7 +69,7 @@ export const Nebula = ({
                 color,
                 spinAngle,
                 opacity: cloudOpacity,
-                seed: i * 17 + Math.floor(Math.random() * 1000)  // Unique seed per cloud
+                seed: i * 17 + Math.floor(seed1 * 1000)  // Unique seed per cloud
             })
         }
         

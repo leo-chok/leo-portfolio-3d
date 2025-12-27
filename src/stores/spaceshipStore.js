@@ -34,17 +34,41 @@ export const useSpaceshipStore = create((set, get) => ({
     // Barrier intensity (0 = no barrier, 1 = full barrier)
     barrierIntensity: 0,
     
+    // Spawn counter - increments each time spaceship mode is entered
+    // Used to force repositioning next to mothership on each activation
+    spawnCount: 0,
+    
+    // Death state
+    isDead: false,
+    deathPosition: null, // [x, y, z] for explosion position
+    
     /**
      * Enter spaceship mode
      * Spawns ship at a default position
      */
     enterSpaceshipMode: () => {
-        set({
+        set((state) => ({
             isSpaceshipMode: true,
             speed: 0,
             isBoosting: false,
+            isDead: false,
+            deathPosition: null,
             position: { x: 0, y: 5, z: 40 }, // Start in front of sun
-            rotation: { x: 0, y: Math.PI, z: 0 } // Facing sun
+            rotation: { x: 0, y: Math.PI, z: 0 }, // Facing sun
+            spawnCount: state.spawnCount + 1 // Increment to trigger repositioning
+        }))
+    },
+    
+    /**
+     * Die - Called when ship collides with obstacle
+     * @param {Array} position - [x, y, z] position for explosion
+     */
+    die: (position) => {
+        set({
+            isDead: true,
+            deathPosition: position,
+            speed: 0,
+            isBoosting: false
         })
     },
     
@@ -56,7 +80,9 @@ export const useSpaceshipStore = create((set, get) => ({
         set({
             isSpaceshipMode: false,
             speed: 0,
-            isBoosting: false
+            isBoosting: false,
+            isDead: false,
+            deathPosition: null
         })
         // Return camera to overview orbiting position
         useCameraStore.getState().returnToOverview()

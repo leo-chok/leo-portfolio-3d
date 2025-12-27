@@ -4,7 +4,7 @@ import { Loader } from '@react-three/drei'
 import { Experience } from '../components/core/Experience'
 import { CockpitHUD } from '../components/hud/CockpitHUD'
 import { CockpitHUDMobile } from '../components/hud/CockpitHUDMobile'
-import { SpaceshipControls } from '../game'
+import { SpaceshipControls, DeathScreen } from '../game'
 import { DebugPanel } from '../components/hud/DebugPanel'
 import { WindowManager } from '../components/hud/WindowManager'
 import { Taskbar } from '../components/hud/common/Taskbar'
@@ -22,11 +22,22 @@ function ExperiencePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [canStartAnimation, setCanStartAnimation] = useState(false)
   const isSpaceshipMode = useSpaceshipStore(state => state.isSpaceshipMode)
+  const isDead = useSpaceshipStore(state => state.isDead)
   const enterSpaceshipMode = useSpaceshipStore(state => state.enterSpaceshipMode)
   const exitSpaceshipMode = useSpaceshipStore(state => state.exitSpaceshipMode)
   
   // Detect mobile viewport
   const isMobile = useIsMobile(768)
+  
+  // Auto-exit after 3 seconds when dead
+  useEffect(() => {
+    if (isDead) {
+      const timer = setTimeout(() => {
+        exitSpaceshipMode()
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [isDead, exitSpaceshipMode])
   
   // Global T key toggle for spaceship mode
   useEffect(() => {
@@ -81,8 +92,11 @@ function ExperiencePage() {
       <SpaceshipControls />
       <WindowManager />
       
-      {/* Desktop only components */}
-      {!isMobile && <Taskbar />}
+      {/* Death screen overlay */}
+      <DeathScreen />
+      
+      {/* Desktop only components - hidden in spaceship mode */}
+      {!isMobile && !isSpaceshipMode && <Taskbar />}
       {!isMobile && <DebugPanel />}
     </>
   )
