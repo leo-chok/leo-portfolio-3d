@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
 import { useSpaceshipStore } from '../../../../stores/spaceshipStore'
@@ -8,9 +8,9 @@ import * as THREE from 'three'
  * ShipHUD3D - Minimalist sci-fi HUD with two arc gauges
  * 
  * Left arc: Speed gauge (green → yellow → orange → red)
- * Right arc: Shield gauge (blue → orange → red based on level)
+ * Right arc: Shield/Health gauge (blue → orange → red based on level)
  * 
- * Ultra thin lines, subtle glow effect
+ * Red glitch effect when taking damage
  */
 export const ShipHUD3D = () => {
     const groupRef = useRef()
@@ -18,6 +18,7 @@ export const ShipHUD3D = () => {
     const shieldBarsRef = useRef([])
     const speedTextRef = useRef()
     const shieldTextRef = useRef()
+    const glitchOffsetRef = useRef({ x: 0, y: 0 })
     
     // Arc parameters
     const arcRadius = 0.18
@@ -33,11 +34,24 @@ export const ShipHUD3D = () => {
     const MAX_SPEED = 1117
     const NUM_BARS = 15 // More bars for finer resolution
     
-    // Shield level (will be connected to store later)
-    const shieldLevel = useRef(1.0)
-    
-    useFrame(() => {
-        const { speed } = useSpaceshipStore.getState()
+    useFrame((state, delta) => {
+        const { speed, health, isHit } = useSpaceshipStore.getState()
+        
+        // Glitch effect when hit
+        if (isHit) {
+            glitchOffsetRef.current = {
+                x: (Math.random() - 0.5) * 0.01,
+                y: (Math.random() - 0.5) * 0.01
+            }
+        } else {
+            glitchOffsetRef.current = { x: 0, y: 0 }
+        }
+        
+        // Apply glitch offset to main group
+        if (groupRef.current) {
+            groupRef.current.position.x = glitchOffsetRef.current.x
+            groupRef.current.position.y = glitchOffsetRef.current.y
+        }
         
         // Update speed bars
         const speedPercent = Math.min(speed / MAX_SPEED, 1)
@@ -50,22 +64,29 @@ export const ShipHUD3D = () => {
                 
                 bar.material.opacity = isActive ? 0.9 : 0.08
                 
-                // Color gradient: green → yellow → orange → red
-                if (barPercent >= 0.9) bar.material.color.setHex(0xff3333) // Red (max)
-                else if (barPercent >= 0.7) bar.material.color.setHex(0xff6633) // Orange
-                else if (barPercent >= 0.5) bar.material.color.setHex(0xffaa33) // Yellow-orange
-                else if (barPercent >= 0.3) bar.material.color.setHex(0xcccc33) // Yellow
-                else bar.material.color.setHex(0x33cc66) // Green
+                // If hit, flash everything red
+                if (isHit) {
+                    bar.material.color.setHex(0xff0000)
+                } else {
+                    // Normal color gradient: green → yellow → orange → red
+                    if (barPercent >= 0.9) bar.material.color.setHex(0xff3333) // Red (max)
+                    else if (barPercent >= 0.7) bar.material.color.setHex(0xff6633) // Orange
+                    else if (barPercent >= 0.5) bar.material.color.setHex(0xffaa33) // Yellow-orange
+                    else if (barPercent >= 0.3) bar.material.color.setHex(0xcccc33) // Yellow
+                    else bar.material.color.setHex(0x33cc66) // Green
+                }
             }
         })
         
         // Update speed text
         if (speedTextRef.current) {
             speedTextRef.current.text = `${Math.round(speed)} km/h`
+            if (isHit) speedTextRef.current.color = '#ff0000'
+            else speedTextRef.current.color = '#88ccff'
         }
         
-        // Update shield bars
-        const shieldPercent = shieldLevel.current
+        // Update shield/health bars (connected to health now)
+        const shieldPercent = health / 100
         const activeShieldBars = Math.ceil(shieldPercent * NUM_BARS)
         
         shieldBarsRef.current.forEach((bar, i) => {
@@ -73,16 +94,25 @@ export const ShipHUD3D = () => {
                 const isActive = i < activeShieldBars
                 bar.material.opacity = isActive ? 0.9 : 0.08
                 
-                // Color based on shield level
-                if (shieldPercent > 0.5) bar.material.color.setHex(0x33aaff) // Blue
-                else if (shieldPercent > 0.2) bar.material.color.setHex(0xffaa33) // Orange
-                else bar.material.color.setHex(0xff3333) // Red
+                // If hit, flash red
+                if (isHit) {
+                    bar.material.color.setHex(0xff0000)
+                } else {
+                    // Color based on shield level
+                    if (shieldPercent > 0.5) bar.material.color.setHex(0x33aaff) // Blue
+                    else if (shieldPercent > 0.2) bar.material.color.setHex(0xffaa33) // Orange
+                    else bar.material.color.setHex(0xff3333) // Red
+                }
             }
         })
         
         // Update shield text
         if (shieldTextRef.current) {
             shieldTextRef.current.text = `${Math.round(shieldPercent * 100)}%`
+            if (isHit) shieldTextRef.current.color = '#ff0000'
+            else if (shieldPercent > 0.5) shieldTextRef.current.color = '#33aaff'
+            else if (shieldPercent > 0.2) shieldTextRef.current.color = '#ffaa33'
+            else shieldTextRef.current.color = '#ff3333'
         }
     })
     

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { useCameraStore } from './cameraStore'
+import { useGameStore } from './gameStore'
 
 /**
  * Spaceship Store - Manages spaceship flight mode state
@@ -42,21 +43,55 @@ export const useSpaceshipStore = create((set, get) => ({
     isDead: false,
     deathPosition: null, // [x, y, z] for explosion position
     
+    // Health system
+    health: 100, // 0-100%
+    isHit: false, // True briefly when taking damage (for red flash)
+    
     /**
      * Enter spaceship mode
      * Spawns ship at a default position
+     * Resets waves to wave 1
      */
     enterSpaceshipMode: () => {
+        // Reset game state (waves, enemies, score) to start fresh
+        useGameStore.getState().clearAll()
+        
         set((state) => ({
             isSpaceshipMode: true,
             speed: 0,
             isBoosting: false,
             isDead: false,
             deathPosition: null,
-            position: { x: 0, y: 5, z: 40 }, // Start in front of sun
+            health: 100, // Full health on spawn
+            isHit: false,
+            position: { x: 0, y: 8, z: 60 }, // Start further out, away from mothership
             rotation: { x: 0, y: Math.PI, z: 0 }, // Facing sun
             spawnCount: state.spawnCount + 1 // Increment to trigger repositioning
         }))
+    },
+    
+    /**
+     * Take damage - Called when hit by enemy laser
+     * @param {number} amount - Damage amount (default 10%)
+     * @returns {boolean} true if died
+     */
+    takeDamage: (amount = 10) => {
+        const { health, die } = useSpaceshipStore.getState()
+        const newHealth = Math.max(0, health - amount)
+        
+        set({ health: newHealth, isHit: true })
+        
+        // Clear hit flash after 200ms
+        setTimeout(() => {
+            useSpaceshipStore.setState({ isHit: false })
+        }, 200)
+        
+        if (newHealth <= 0) {
+            const pos = useSpaceshipStore.getState().position
+            die([pos.x, pos.y, pos.z])
+            return true
+        }
+        return false
     },
     
     /**

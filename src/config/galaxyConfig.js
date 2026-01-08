@@ -133,7 +133,7 @@ export const COLORS = {
 
 // Luminosity settings
 export const INTENSITY = {
-    sun: 3,
+    sun: 7,
     planet: 4,
     moon: 3,
     satellite: 2,

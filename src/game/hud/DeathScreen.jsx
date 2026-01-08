@@ -17,9 +17,6 @@ export const DeathScreen = () => {
                 <div className="death-screen__glitch" data-text="YOU DIED">
                     YOU DIED
                 </div>
-                <div className="death-screen__subtitle">
-                    COLLISION DETECTED
-                </div>
             </div>
         </div>
     )

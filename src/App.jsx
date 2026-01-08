@@ -3,12 +3,14 @@ import { Suspense, useState, useEffect } from 'react'
 import { Loader } from '@react-three/drei'
 import { Experience } from './components/core/Experience'
 import { CockpitHUD } from './components/hud/CockpitHUD'
-import { SpaceshipControls } from './game'
+import { SpaceshipControls, WaveAnnouncement } from './game'
 import { DebugPanel } from './components/hud/DebugPanel'
 import { WindowManager } from './components/hud/WindowManager'
 import { Taskbar } from './components/hud/common/Taskbar'
 import { LoadingScreen } from './components/hud/LoadingScreen'
 import { useSpaceshipStore } from './stores/spaceshipStore'
+
+console.log('[App] WaveAnnouncement imported:', WaveAnnouncement)
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -65,6 +67,7 @@ function App() {
       <Loader />
       <CockpitHUD />
       <SpaceshipControls />
+      <WaveAnnouncement />
       <WindowManager />
       <Taskbar />
       <DebugPanel />

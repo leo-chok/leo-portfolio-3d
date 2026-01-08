@@ -277,5 +277,10 @@
       "experienceDesc": "Immersive exploration",
       "footer": "STELLAR NAVIGATION SYSTEM v3.0"
     }
+  },
+  "game": {
+    "wave": "WAVE",
+    "hostilesDetected": "HOSTILES DETECTED",
+    "targets": "TARGETS"
   }
 }

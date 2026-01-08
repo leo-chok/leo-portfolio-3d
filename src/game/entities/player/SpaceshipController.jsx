@@ -1,10 +1,11 @@
-import { useRef, useEffect, useMemo, useState, forwardRef, useImperativeHandle } from 'react'
+import { useRef, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import { useSpaceshipStore } from '../../../stores/spaceshipStore'
 import { useCameraStore } from '../../../stores/cameraStore'
-import { ShipDust, EngineGlow, ExplosionEffect } from '../effects'
-import { ShipHUD3D, Crosshair } from './hud'
+import { useGameStore } from '../../../stores/gameStore'
+import { ShipDust, EngineGlow } from '../effects'
+import { ShipHUD3D, Crosshair, EnemyDirectionIndicator } from './hud'
 import * as THREE from 'three'
 
 /**
@@ -50,7 +51,7 @@ export const SpaceshipController = forwardRef((props, ref) => {
     })
     
     // Load spaceship model
-    const { scene } = useGLTF('/spaceship-draco.glb')
+    const { scene } = useGLTF('/spaceship-opt.glb')
     
     // Subscribe to spawn count to trigger repositioning on each spaceship mode entry
     const spawnCount = useSpaceshipStore(state => state.spawnCount)
@@ -78,22 +79,18 @@ export const SpaceshipController = forwardRef((props, ref) => {
         }
     }, [spawnCount]) // Re-run every time spawnCount changes (each mode entry)
     
-    // Explosions state for testing
-    const [explosions, setExplosions] = useState([])
-    const explosionIdRef = useRef(0)
+    // Laser firing state
+    const lastShotTimeRef = useRef(0)
+    const SHOT_COOLDOWN = 0.2 // seconds between shots
     
-    // Remove explosion when complete
-    const handleExplosionComplete = (id) => {
-        setExplosions(prev => prev.filter(exp => exp.id !== id))
-    }
+    // Wing cannon positions (relative to ship)
+    const WING_LEFT = new THREE.Vector3(-0.040, 0.017, 0.12)
+    const WING_RIGHT = new THREE.Vector3(0.040, 0.017, 0.12)
     
-    // Store state - get functions only once, not values that change
-    // Store actions only - no reactive state to avoid re-renders!
     const setSpeed = useSpaceshipStore(state => state.setSpeed)
     const setBoosting = useSpaceshipStore(state => state.setBoosting)
     const updatePosition = useSpaceshipStore(state => state.updatePosition)
     const setBarrierIntensity = useSpaceshipStore(state => state.setBarrierIntensity)
-    const die = useSpaceshipStore(state => state.die)
     
     // Input state
     const keysRef = useRef({
@@ -163,21 +160,42 @@ export const SpaceshipController = forwardRef((props, ref) => {
             if (e.code === 'KeyT') {
                 useSpaceshipStore.getState().exitSpaceshipMode()
             }
-            // Space = spawn explosion in front of ship (for testing)
+            // Space = fire lasers from wing cannons
             if (e.code === 'Space' && groupRef.current) {
                 e.preventDefault()
-                // Get ship position and forward direction
-                const shipPos = groupRef.current.position.clone()
-                const forward = new THREE.Vector3(0, 0, -1)
-                forward.applyQuaternion(groupRef.current.quaternion)
-                // Spawn explosion 8 units in front of ship
-                const explosionPos = shipPos.add(forward.multiplyScalar(1))
                 
-                explosionIdRef.current += 1
-                setExplosions(prev => [...prev, {
-                    id: explosionIdRef.current,
-                    position: [explosionPos.x, explosionPos.y, explosionPos.z]
-                }])
+                // Check cooldown
+                const now = performance.now() / 1000
+                if (now - lastShotTimeRef.current < SHOT_COOLDOWN) return
+                lastShotTimeRef.current = now
+                
+                // Get ship quaternion for direction and position transforms
+                const shipQuat = groupRef.current.quaternion.clone()
+                const shipPos = groupRef.current.position.clone()
+                
+                // Get forward direction (default)
+                const forward = new THREE.Vector3(0, 0, -1)
+                forward.applyQuaternion(shipQuat)
+                
+                // Use auto-aim direction if available
+                const autoAim = useGameStore.getState().autoAimTarget
+                const shootDirection = autoAim?.direction?.clone() || forward
+                
+                // Calculate world positions for both wing cannons
+                const leftWingWorld = WING_LEFT.clone().applyQuaternion(shipQuat).add(shipPos)
+                const rightWingWorld = WING_RIGHT.clone().applyQuaternion(shipQuat).add(shipPos)
+                
+                // Spawn two lasers via gameStore (aimed at target if available)
+                useGameStore.getState().addLaser({
+                    startPosition: [leftWingWorld.x, leftWingWorld.y, leftWingWorld.z],
+                    direction: shootDirection.clone(),
+                    owner: 'player'
+                })
+                useGameStore.getState().addLaser({
+                    startPosition: [rightWingWorld.x, rightWingWorld.y, rightWingWorld.z],
+                    direction: shootDirection.clone(),
+                    owner: 'player'
+                })
             }
         }
         
@@ -312,51 +330,7 @@ export const SpaceshipController = forwardRef((props, ref) => {
         temp.deltaVelocity.copy(velocityRef.current).multiplyScalar(delta)
         groupRef.current.position.add(temp.deltaVelocity)
         
-        // === COLLISION DETECTION ===
-        // Check if player already dead (avoid multiple triggers)
-        if (!useSpaceshipStore.getState().isDead) {
-            const shipPos = groupRef.current.position
-            const bodyRegistry = useCameraStore.getState().bodyRegistry
-            
-            // Check each celestial body
-            for (const [id, body] of Object.entries(bodyRegistry)) {
-                if (!body.ref?.current) continue
-                
-                // Get body world position
-                temp.deltaVelocity.setFromMatrixPosition(body.ref.current.matrixWorld)
-                
-                // Calculate distance to ship
-                const dx = shipPos.x - temp.deltaVelocity.x
-                const dy = shipPos.y - temp.deltaVelocity.y
-                const dz = shipPos.z - temp.deltaVelocity.z
-                const distance = Math.sqrt(dx * dx + dy * dy + dz * dz)
-                
-                // Collision radius varies by body type
-                // Sun uses size * 0.6 for its geometry, others use full size
-                let collisionRadius
-                if (id === 'presentation') {
-                    // Sun: geometry is size * 0.6, add small margin
-                    collisionRadius = (body.size || 1) * 0.7
-                } else {
-                    // Planets, moons, mothership: use full size
-                    collisionRadius = (body.size || 1) * 1.0
-                }
-                
-                if (distance < collisionRadius) {
-                    // COLLISION! Trigger death
-                    const deathPos = [shipPos.x, shipPos.y, shipPos.z]
-                    die(deathPos)
-                    
-                    // Spawn explosion at ship position
-                    explosionIdRef.current += 1
-                    setExplosions(prev => [...prev, {
-                        id: explosionIdRef.current,
-                        position: deathPos
-                    }])
-                    break // Only one collision needed
-                }
-            }
-        }
+        // NOTE: Collision detection moved to CollisionSystem
         
         // === THROTTLED SPEED UPDATE (display in km/h) ===
         const displaySpeed = Math.round(targetSpeedRef.current * boundaryFactor)
@@ -404,24 +378,14 @@ export const SpaceshipController = forwardRef((props, ref) => {
             <ShipHUD3D />
             
             {/* Targeting crosshair in front */}
-            <Crosshair />
+            <Crosshair shipRef={groupRef} />
+            
+            {/* Enemy direction indicator */}
+            <EnemyDirectionIndicator shipRef={groupRef} />
         </group>
-        
-        {/* Explosions in world space */}
-        {explosions.map(exp => (
-            <ExplosionEffect
-                key={exp.id}
-                position={exp.position}
-                particleCount={40}
-                size={0.4}
-                duration={1.2}
-                speed={4}
-                onComplete={() => handleExplosionComplete(exp.id)}
-            />
-        ))}
         </>
     )
 })
 
 // Preload the model
-useGLTF.preload('/spaceship-draco.glb')
+useGLTF.preload('/spaceship-opt.glb')

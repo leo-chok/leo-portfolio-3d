@@ -8,7 +8,7 @@ import {
     Mothership,
     Nebula 
 } from '../3d'
-import { SpaceshipController, BarrierEffect } from '../../game'
+import { SpaceshipController, BarrierEffect, CollisionSystem, ProjectileRenderer, EnemySpawner } from '../../game'
 import { CameraController } from './CameraController'
 import { Effects } from './Effects'
 import { useDebugStore } from '../../stores/debugStore'
@@ -50,8 +50,8 @@ export const Experience = ({ startAnimation = false }) => {
                 dampingFactor={0.05}
             />
             
-            <ambientLight intensity={0.3} />
-            <pointLight position={[10, 10, 10]} intensity={0.8} />
+            <ambientLight intensity={0.6} />
+            <pointLight position={[10, 10, 10]} intensity={3} />
             
             {/* Background stars */}
             <Stars radius={150} depth={200} count={starsCount} factor={10} saturation={0} fade speed={0} />
@@ -73,6 +73,12 @@ export const Experience = ({ startAnimation = false }) => {
             {isSpaceshipMode && (
                 <>
                     <SpaceshipController ref={shipRef} />
+                    {/* Centralized collision detection */}
+                    <CollisionSystem shipRef={shipRef} />
+                    {/* Centralized projectile and explosion rendering */}
+                    <ProjectileRenderer />
+                    {/* Enemy wave spawner */}
+                    <EnemySpawner />
                     {/* Barrier in WORLD space - at radius 150 on Soleil→Vaisseau axis */}
                     <BarrierEffect />
                 </>
