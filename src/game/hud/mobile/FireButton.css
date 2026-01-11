@@ -1,0 +1,113 @@
+/* ===========================
+   FIRE BUTTON - Minimal HUD Style
+   =========================== */
+
+.fire-button {
+    position: relative;
+    border-radius: 50%;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+
+.fire-button-outer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: none;
+    border-bottom: 1px solid rgba(220, 130, 80, 0.5);
+    background: transparent;
+    box-shadow: none;
+    transition: all 0.15s ease-out;
+}
+
+/* Corner accents */
+.fire-button-outer::before,
+.fire-button-outer::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-color: rgba(220, 130, 80, 0.4);
+    border-style: solid;
+}
+
+.fire-button-outer::before {
+    top: 15%;
+    left: 15%;
+    border-width: 1px 0 0 1px;
+}
+
+.fire-button-outer::after {
+    top: 15%;
+    right: 15%;
+    border-width: 1px 1px 0 0;
+}
+
+.fire-button-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40%;
+    height: 40%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(220, 130, 80, 0.6);
+    box-shadow: none;
+    transition: all 0.15s ease-out;
+}
+
+.fire-button-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20%;
+    height: 20%;
+    transform: translate(-45%, -50%);
+    color: rgba(220, 150, 90, 0.8);
+    filter: drop-shadow(0 0 4px rgba(220, 130, 80, 0.5));
+}
+
+.fire-button-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Label */
+.fire-button::after {
+    content: 'TIR';
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Orbitron', 'Segoe UI', sans-serif;
+    font-size: 9px;
+    color: rgba(200, 150, 100, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* Firing state */
+.fire-button.firing .fire-button-outer {
+    border-bottom-color: rgba(255, 150, 50, 0.8);
+    box-shadow: 0 0 15px rgba(255, 150, 50, 0.3);
+}
+
+.fire-button.firing .fire-button-inner {
+    border-bottom-color: rgba(255, 180, 80, 0.9);
+    box-shadow: 0 0 10px rgba(255, 150, 50, 0.4);
+}
+
+.fire-button.firing .fire-button-icon {
+    color: rgba(255, 200, 100, 1);
+    filter: drop-shadow(0 0 8px rgba(255, 150, 50, 0.8));
+    animation: iconPulse 0.1s ease-in-out infinite alternate;
+}
+
+@keyframes iconPulse {
+    from { opacity: 0.8; }
+    to { opacity: 1; }
+}

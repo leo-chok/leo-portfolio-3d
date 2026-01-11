@@ -1,0 +1,115 @@
+/* ===========================
+   SPEED SLIDER - Minimal HUD Style
+   =========================== */
+
+.speed-slider {
+    position: relative;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.speed-slider-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.3);
+    overflow: visible;
+    box-shadow: none;
+}
+
+.speed-slider-fill {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(
+        90deg,
+        rgba(124, 196, 237, 0.3) 0%,
+        rgba(124, 196, 237, 0.6) 50%,
+        rgba(200, 160, 80, 0.8) 80%,
+        rgba(220, 130, 80, 0.9) 100%
+    );
+    transition: width 0.1s ease-out;
+    box-shadow: 0 0 8px rgba(124, 196, 237, 0.3);
+}
+
+.speed-slider-segments {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    pointer-events: none;
+}
+
+.speed-slider-segment {
+    width: 1px;
+    height: 5px;
+    background: rgba(124, 196, 237, 0.25);
+}
+
+.speed-slider-segment:nth-child(5) {
+    height: 8px;
+    background: rgba(124, 196, 237, 0.4);
+}
+
+.speed-slider-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    width: 3px;
+    height: 16px;
+    margin-left: -1.5px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    border-right: 2px solid rgba(124, 196, 237, 0.8);
+    box-shadow: 0 0 6px rgba(124, 196, 237, 0.4);
+    transition: left 0.1s ease-out;
+}
+
+.speed-slider-label {
+    position: absolute;
+    top: -18px;
+    left: 0;
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: rgba(124, 196, 237, 0.8);
+    text-shadow: 0 0 6px rgba(124, 196, 237, 0.3);
+    pointer-events: none;
+}
+
+.speed-value {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.speed-unit {
+    font-size: 8px;
+    opacity: 0.6;
+    margin-left: 2px;
+}
+
+/* Label under slider */
+.speed-slider::after {
+    content: 'VITESSE';
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    font-family: 'Orbitron', 'Segoe UI', sans-serif;
+    font-size: 9px;
+    color: rgba(200, 220, 240, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}

@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react'
 import { useSpaceshipStore } from '../../stores/spaceshipStore'
 import { useGameStore } from '../../stores/gameStore'
+import { useIsMobile } from '../../hooks/useIsMobile'
 import './SpaceshipControls.css'
 
 /**
  * SpaceshipControls - Minimal sci-fi control hints overlay
  * Shows when spaceship mode is active
  * Includes boundary warning message and wave announcements
+ * Keyboard controls hidden on mobile (MobileControls handles touch input)
  */
 export const SpaceshipControls = () => {
     const isSpaceshipMode = useSpaceshipStore(state => state.isSpaceshipMode)
     const barrierIntensity = useSpaceshipStore(state => state.barrierIntensity)
+    const isMobile = useIsMobile(768)
     
     // Wave announcement state
     const currentWave = useGameStore(state => state.currentWave)
@@ -69,27 +72,32 @@ export const SpaceshipControls = () => {
                 </div>
             )}
             
-            {/* Exit hint at top */}
-            <div className="ship-exit-hint">
-                <span className="ship-key">T</span>
-                <span className="ship-label">Quitter</span>
-            </div>
-            
-            {/* Controls at bottom */}
-            <div className="ship-controls">
-                <div className="ship-control-group">
-                    <span className="ship-key">↑↓←→</span>
-                    <span className="ship-label">Piloter</span>
-                </div>
-                <div className="ship-control-group">
-                    <span className="ship-key">SHIFT</span>
-                    <span className="ship-label">Accélérer</span>
-                </div>
-                <div className="ship-control-group">
-                    <span className="ship-key">CTRL</span>
-                    <span className="ship-label">Freiner</span>
-                </div>
-            </div>
+            {/* Desktop only: Exit hint and controls (hidden on mobile) */}
+            {!isMobile && (
+                <>
+                    {/* Exit hint at top */}
+                    <div className="ship-exit-hint">
+                        <span className="ship-key">T</span>
+                        <span className="ship-label">Quitter</span>
+                    </div>
+                    
+                    {/* Controls at bottom */}
+                    <div className="ship-controls">
+                        <div className="ship-control-group">
+                            <span className="ship-key">↑↓←→</span>
+                            <span className="ship-label">Piloter</span>
+                        </div>
+                        <div className="ship-control-group">
+                            <span className="ship-key">SHIFT</span>
+                            <span className="ship-label">Accélérer</span>
+                        </div>
+                        <div className="ship-control-group">
+                            <span className="ship-key">CTRL</span>
+                            <span className="ship-label">Freiner</span>
+                        </div>
+                    </div>
+                </>
+            )}
         </>
     )
 }

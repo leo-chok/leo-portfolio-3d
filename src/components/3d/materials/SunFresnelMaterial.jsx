@@ -11,7 +11,7 @@ const SunFresnelShader = shaderMaterial(
     {
         uTime: 0,
         uColor: new THREE.Color('#ffaa00'),
-        uGlowColor: new THREE.Color('#f0b104ff'),
+        uGlowColor: new THREE.Color('#f0b104'),
         uIntensity: .1,
         uFresnelPower: .5,
         uGlowStrength: 0.9,

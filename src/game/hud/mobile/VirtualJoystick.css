@@ -1,0 +1,100 @@
+/* ===========================
+   VIRTUAL JOYSTICK - Minimal HUD Style
+   =========================== */
+
+.virtual-joystick {
+    position: relative;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.joystick-outer-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: none;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.4);
+    background: transparent;
+    box-shadow: none;
+}
+
+/* Corner brackets decoration */
+.joystick-outer-ring::before,
+.joystick-outer-ring::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: rgba(124, 196, 237, 0.3);
+    border-style: solid;
+}
+
+.joystick-outer-ring::before {
+    top: 10%;
+    left: 10%;
+    border-width: 1px 0 0 1px;
+}
+
+.joystick-outer-ring::after {
+    top: 10%;
+    right: 10%;
+    border-width: 1px 1px 0 0;
+}
+
+.joystick-inner-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: none;
+    border-bottom: 1px solid rgba(124, 196, 237, 0.25);
+    background: transparent;
+}
+
+.joystick-thumb {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+    margin-top: -12px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid rgba(124, 196, 237, 0.7);
+    box-shadow: 0 0 8px rgba(124, 196, 237, 0.3);
+    transition: transform 0.05s ease-out;
+}
+
+.joystick-thumb::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: rgba(124, 196, 237, 0.8);
+    box-shadow: 0 0 6px rgba(124, 196, 237, 0.5);
+}
+
+/* Joystick label */
+.virtual-joystick::after {
+    content: 'DIRECTION';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Orbitron', 'Segoe UI', sans-serif;
+    font-size: 9px;
+    color: rgba(200, 220, 240, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+}

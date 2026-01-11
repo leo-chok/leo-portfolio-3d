@@ -93,10 +93,10 @@ export const CelestialBody = ({
                 <sphereGeometry args={[size, 32, 32]} />
                 <meshStandardMaterial
                     color={color}
-                    roughness={0.7}
-                    metalness={0.1}
+                    roughness={0.9}
+                    metalness={1}
                     emissive={color}
-                    emissiveIntensity={hovered ? 0.15 : 0.08}
+                    emissiveIntensity={hovered ? 0.2 : 0.05}
                 />
             </mesh>
             

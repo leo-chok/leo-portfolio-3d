@@ -4,6 +4,7 @@ import { useGLTF } from '@react-three/drei'
 import { useSpaceshipStore } from '../../../stores/spaceshipStore'
 import { useCameraStore } from '../../../stores/cameraStore'
 import { useGameStore } from '../../../stores/gameStore'
+import { useMobileInputStore } from '../../../stores/mobileInputStore'
 import { ShipHUD3D, Crosshair, EnemyDirectionIndicator } from '../../hud'
 import { EngineGlow, ShipDust, BarrierEffect } from '../effects'
 import { PLAYER_CONFIG } from '../../config'
@@ -89,7 +90,6 @@ export const SpaceshipController = forwardRef((props, ref) => {
     const WING_RIGHT = new THREE.Vector3(0.040, 0.017, 0.12)
     
     const setSpeed = useSpaceshipStore(state => state.setSpeed)
-    const setBoosting = useSpaceshipStore(state => state.setBoosting)
     const updatePosition = useSpaceshipStore(state => state.updatePosition)
     const setBarrierIntensity = useSpaceshipStore(state => state.setBarrierIntensity)
     
@@ -99,9 +99,11 @@ export const SpaceshipController = forwardRef((props, ref) => {
         ArrowDown: false,
         ArrowLeft: false,
         ArrowRight: false,
-        Shift: false,      // Accelerate
         ControlLeft: false // Decelerate
     })
+    
+    // Mobile firing ref (to handle continuous fire)
+    const mobileFiringRef = useRef(false)
     
     // Target speed ref (0-1117 km/h = 0-310 m/s approx in scene units)
     const targetSpeedRef = useRef(0)
@@ -121,7 +123,7 @@ export const SpaceshipController = forwardRef((props, ref) => {
         return clonedScene
     }, [scene])
     
-    // Keyboard event handlers - Shift/Ctrl held continuously for acceleration
+    // Keyboard event handlers - Ctrl for deceleration
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.code === 'ArrowUp') keysRef.current.ArrowUp = true
@@ -129,8 +131,7 @@ export const SpaceshipController = forwardRef((props, ref) => {
             if (e.code === 'ArrowLeft') keysRef.current.ArrowLeft = true
             if (e.code === 'ArrowRight') keysRef.current.ArrowRight = true
             if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
-                keysRef.current.Shift = true
-                setBoosting(true)
+                keysRef.current.Shift = true  // Accelerate
             }
             if (e.code === 'ControlLeft') keysRef.current.ControlLeft = true
             if (e.code === 'KeyT') {
@@ -182,7 +183,6 @@ export const SpaceshipController = forwardRef((props, ref) => {
             if (e.code === 'ArrowRight') keysRef.current.ArrowRight = false
             if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
                 keysRef.current.Shift = false
-                setBoosting(false)
             }
             if (e.code === 'ControlLeft') keysRef.current.ControlLeft = false
         }
@@ -194,7 +194,7 @@ export const SpaceshipController = forwardRef((props, ref) => {
             window.removeEventListener('keydown', handleKeyDown)
             window.removeEventListener('keyup', handleKeyUp)
         }
-    }, [setBoosting])
+    }, [])
     
     // Main update loop - priority -1 ensures this runs BEFORE camera controller
     useFrame((state, delta) => {
@@ -215,10 +215,21 @@ export const SpaceshipController = forwardRef((props, ref) => {
         const temp = tempObjects.current
         const lastUpdate = lastStoreUpdate.current
         
+        // === MOBILE INPUT ===
+        const mobileInput = useMobileInputStore.getState()
+        const isMobileActive = mobileInput.isTouchActive || 
+            (mobileInput.leftStick.x !== 0 || mobileInput.leftStick.y !== 0 || mobileInput.speedPercent > 0)
+        
         // === ROTATION (Quaternion-based for proper local axes) ===
         // Roll (left/right) - barrel roll around local Z axis
         if (keys.ArrowLeft) rotVel.roll += config.rotationSpeed * delta
         if (keys.ArrowRight) rotVel.roll -= config.rotationSpeed * delta
+        
+        // Mobile joystick direction (left stick X = roll, Y = pitch)
+        if (isMobileActive) {
+            rotVel.roll -= mobileInput.leftStick.x * config.rotationSpeed * delta * 1.5
+            rotVel.pitch -= mobileInput.leftStick.y * config.rotationSpeed * delta * 1.5  // Inverted for intuitive control
+        }
         
         // Pitch (up/down) - nose up/down around local X axis
         // ArrowUp = nose DOWN, ArrowDown = nose UP (inverted for natural feel)
@@ -246,12 +257,55 @@ export const SpaceshipController = forwardRef((props, ref) => {
         temp.forward.applyQuaternion(groupRef.current.quaternion)
         
         // === THROTTLE CONTROL ===
-        // Shift = accelerate, ControlLeft = decelerate (continuous while held)
+        // Keyboard: Shift = accelerate, ControlLeft = decelerate
         if (keys.Shift) {
             targetSpeedRef.current += config.throttleRate * delta
         }
         if (keys.ControlLeft) {
             targetSpeedRef.current -= config.brakeRate * delta
+        }
+        
+        // Mobile: Lerp toward slider target (simulates throttle acceleration/deceleration)
+        if (isMobileActive) {
+            const mobileTargetSpeed = mobileInput.speedPercent * config.maxSpeedKmh
+            const speedDiff = mobileTargetSpeed - targetSpeedRef.current
+            
+            // Use throttle rate for acceleration, brake rate for deceleration
+            if (speedDiff > 0) {
+                // Accelerating
+                targetSpeedRef.current += Math.min(speedDiff, config.throttleRate * delta)
+            } else if (speedDiff < 0) {
+                // Decelerating
+                targetSpeedRef.current += Math.max(speedDiff, -config.brakeRate * delta)
+            }
+        }
+        
+        // === MOBILE FIRING ===
+        if (mobileInput.isFiring && groupRef.current) {
+            const now = performance.now() / 1000
+            if (now - lastShotTimeRef.current >= SHOT_COOLDOWN) {
+                lastShotTimeRef.current = now
+                
+                const shipQuat = groupRef.current.quaternion.clone()
+                const shipPos = groupRef.current.position.clone()
+                const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(shipQuat)
+                const autoAim = useGameStore.getState().autoAimTarget
+                const shootDirection = autoAim?.direction?.clone() || forward
+                
+                const leftWingWorld = WING_LEFT.clone().applyQuaternion(shipQuat).add(shipPos)
+                const rightWingWorld = WING_RIGHT.clone().applyQuaternion(shipQuat).add(shipPos)
+                
+                useGameStore.getState().addLaser({
+                    startPosition: [leftWingWorld.x, leftWingWorld.y, leftWingWorld.z],
+                    direction: shootDirection.clone(),
+                    owner: 'player'
+                })
+                useGameStore.getState().addLaser({
+                    startPosition: [rightWingWorld.x, rightWingWorld.y, rightWingWorld.z],
+                    direction: shootDirection.clone(),
+                    owner: 'player'
+                })
+            }
         }
         
         // Clamp target speed to 0 - maxSpeedKmh

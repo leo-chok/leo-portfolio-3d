@@ -1,0 +1,67 @@
+/* ===========================
+   MOBILE CONTROLS - Container Layout
+   Minimal HUD Style
+   =========================== */
+
+.mobile-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 30px 25px;
+    pointer-events: none;
+    z-index: 100;
+    animation: controlsReveal 0.5s ease-out backwards;
+}
+
+@keyframes controlsReveal {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobile-controls-left,
+.mobile-controls-right {
+    pointer-events: auto;
+}
+
+.mobile-controls-left {
+    display: flex;
+    align-items: center;
+    padding-bottom: 25px;
+}
+
+.mobile-controls-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 25px;
+}
+
+/* Portrait mode adjustments */
+@media (max-height: 500px) {
+    .mobile-controls {
+        height: 160px;
+        padding: 20px 20px;
+    }
+    
+    .mobile-controls-right {
+        gap: 18px;
+    }
+}
+
+/* Larger phones/tablets */
+@media (min-width: 500px) {
+    .mobile-controls {
+        padding: 30px 50px;
+    }
+}

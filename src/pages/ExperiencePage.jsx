@@ -5,6 +5,7 @@ import { Experience } from '../components/core/Experience'
 import { CockpitHUD } from '../components/hud/CockpitHUD'
 import { CockpitHUDMobile } from '../components/hud/CockpitHUDMobile'
 import { SpaceshipControls, DeathScreen } from '../game'
+import { MobileControls } from '../game/hud/mobile'
 import { DebugPanel } from '../components/hud/DebugPanel'
 import { WindowManager } from '../components/hud/WindowManager'
 import { Taskbar } from '../components/hud/common/Taskbar'
@@ -91,6 +92,9 @@ function ExperiencePage() {
       
       <SpaceshipControls />
       <WindowManager />
+      
+      {/* Mobile touch controls - only in spaceship mode */}
+      {isMobile && isSpaceshipMode && <MobileControls />}
       
       {/* Death screen overlay */}
       <DeathScreen />

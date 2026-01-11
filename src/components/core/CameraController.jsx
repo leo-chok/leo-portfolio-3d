@@ -1,6 +1,6 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import gsap from 'gsap'
 
 // Import stores with individual selectors for optimization
@@ -15,7 +15,8 @@ const _desiredCamPos = new THREE.Vector3()
 const _moveDelta = new THREE.Vector3()
 const _overviewPos = new THREE.Vector3(0, 80, 220)
 const _overviewTarget = new THREE.Vector3(0, 0, 0)
-const _shipCamOffset = new THREE.Vector3(0, 0.1, 0.5) // Much closer: behind and slightly above ship
+const _shipCamOffsetDesktop = new THREE.Vector3(0, 0.1, 0.5) // Desktop: close behind ship
+const _shipCamOffsetMobile = new THREE.Vector3(0, 0.2, 1.0)   // Mobile: farther back for better visibility
 const _shipLookAhead = new THREE.Vector3(0, 0, -2) // Look ahead of ship
 // Reusable vectors for spaceship camera (avoid GC)
 const _tempOffset = new THREE.Vector3()
@@ -52,6 +53,15 @@ export const CameraController = ({ startAnimation = false, shipRef }) => {
     const isApproaching = useRef(true)
     const approachProgress = useRef(0)
     const previousTrackedRef = useRef(null)
+    
+    // Mobile detection
+    const [isMobile, setIsMobile] = useState(false)
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
     const returnProgress = useRef(0)
     
     // === SPACESHIP MODE ===
@@ -127,7 +137,7 @@ export const CameraController = ({ startAnimation = false, shipRef }) => {
             
             // Calculate desired camera position (behind and above ship, in ship's local space)
             // Reuse vectors instead of clone() to avoid GC
-            _tempOffset.copy(_shipCamOffset).applyQuaternion(shipQuat)
+            _tempOffset.copy(isMobile ? _shipCamOffsetMobile : _shipCamOffsetDesktop).applyQuaternion(shipQuat)
             _desiredCamPos.copy(shipPos).add(_tempOffset)
             
             // Smooth camera position follow (frame-rate independent)
