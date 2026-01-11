@@ -4,8 +4,9 @@ import { useGLTF } from '@react-three/drei'
 import { useSpaceshipStore } from '../../../stores/spaceshipStore'
 import { useCameraStore } from '../../../stores/cameraStore'
 import { useGameStore } from '../../../stores/gameStore'
-import { ShipDust, EngineGlow } from '../effects'
-import { ShipHUD3D, Crosshair, EnemyDirectionIndicator } from './hud'
+import { ShipHUD3D, Crosshair, EnemyDirectionIndicator } from '../../hud'
+import { EngineGlow, ShipDust, BarrierEffect } from '../effects'
+import { PLAYER_CONFIG } from '../../config'
 import * as THREE from 'three'
 
 /**
@@ -105,33 +106,8 @@ export const SpaceshipController = forwardRef((props, ref) => {
     // Target speed ref (0-1117 km/h = 0-310 m/s approx in scene units)
     const targetSpeedRef = useRef(0)
     
-    // Configuration
-    const config = useMemo(() => ({
-        // Ship is VERY small for epic scale feeling
-        shipScale: 0.01,
-        
-        // Speed settings
-        // - Max speed: 1117 km/h (displayed)
-        // - 40 seconds to traverse scene diameter (270 units) at max speed
-        // - 4 seconds to go from 0 to max speed while holding Shift
-        maxSpeedKmh: 1117,            // Max speed in km/h
-        speedToUnits: 0.00604,        // Conversion: 1117 km/h = 6.75 units/s → 6.75/1117
-        throttleRate: 280,            // km/h per second while holding Shift (1117/4 = ~280)
-        brakeRate: 400,               // km/h per second while holding Ctrl (faster braking)
-        
-        // Rotation (radians per second squared - accelerates rotation velocity)
-        rotationSpeed: 6.0,
-        rotationDamping: 0.92,
-        
-        // Boundary: slowdown 120→140, barrier visual at 160
-        boundaryRadius: 140,
-        boundarySlowdownStart: 120, // Lower = earlier barrier warning/slowdown
-        
-        // Throttle thresholds for store updates
-        speedThreshold: 1,
-        barrierThreshold: 0.05,
-        positionThreshold: 0.5,
-    }), [])
+    // Use centralized config
+    const config = PLAYER_CONFIG
     
     // Clone scene to avoid shared state issues
     const spaceshipModel = useMemo(() => {

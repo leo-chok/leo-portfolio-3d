@@ -1,7 +1,7 @@
 import { useRef, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { useGameStore } from '../../../../stores/gameStore'
+import { useGameStore } from '../../stores/gameStore'
 
 /**
  * Crosshair - Sci-fi targeting reticle with auto-aim

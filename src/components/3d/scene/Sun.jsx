@@ -1,17 +1,23 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import { useTexture } from '@react-three/drei'
 import { INTENSITY } from '../../../config/galaxyConfig'
 import { HudReticle } from '../hud3d/HudReticle'
 import { HudCallout } from '../hud3d/HudCallout'
-import { FresnelGlowMaterial } from '../materials/FresnelGlowMaterial'
+import { SunFresnelMaterial } from '../materials/SunFresnelMaterial'
 import { GlowHalo } from '../materials/GlowHalo'
+import { SolarCorona } from '../materials/SolarCorona'
 import { useCameraStore } from '../../../stores/cameraStore'
 import { useDebugStore, hueToColor } from '../../../stores/debugStore'
 
 /**
- * Sun Component - HYBRID: Fresnel rim light + Halo sprite
- * Color and size controlled by debug store
+ * Sun Component - Dynamic star with corona, flares, and halos
+ * Features:
+ * - Fresnel rim light core
+ * - Animated corona shader (fire ring)
+ * - Particle ejections (solar flares)
+ * - Rotating dynamic halos
  */
 export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }) => {
     const groupRef = useRef()
@@ -30,14 +36,15 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
     const unregisterBody = useCameraStore(state => state.unregisterBody)
     const trackedRef = useCameraStore(state => state.trackedRef)
     const setTrackedRef = useCameraStore(state => state.setTrackedRef)
-    const stopTracking = useCameraStore(state => state.stopTracking)
     
     // Dynamic color from HUE
     const color = useMemo(() => hueToColor(sunHue, 80, 65), [sunHue])
     
+    // Corona/flare color (more orange/red)
+    const flareColor = useMemo(() => hueToColor(sunHue - 10, 90, 55), [sunHue])
+    
     // Memoized offset for HudCallout
-    // Closer to sun radius (size * 0.6)
-    const calloutOffset = useMemo(() => [size * 0.6 + 0.8, size * 0.3, 0], [size])
+    const calloutOffset = useMemo(() => [size * 0.25 + 0.3, size * 0.15, 0], [size])
     
     // Register body
     useEffect(() => {
@@ -47,19 +54,21 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
         return () => unregisterBody(id)
     }, [id, size, registerBody, unregisterBody])
     
-    // Minimal useFrame - just subtle pulse
-    useFrame((state) => {
-        const time = state.clock.getElapsedTime()
+    // Load sun texture
+    const sunTexture = useTexture('/sun_texture.jpg')
+    
+    // Slow rotation for dynamic effect
+    useFrame((state, delta) => {
         if (coreRef.current) {
-            const pulse = 1 + Math.sin(time * 0.3) * 0.03
-            coreRef.current.scale.setScalar(pulse)
+            coreRef.current.rotation.y += delta * 0.02 // Slow rotation
         }
     })
     
     const handleClick = (e) => {
         e.stopPropagation()
         if (trackedRef?.current === groupRef.current) {
-            stopTracking()
+            const returnToOverview = useCameraStore.getState().returnToOverview
+            returnToOverview()
             onClick?.(null, null)
             return
         }
@@ -69,33 +78,50 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
     
     return (
         <group ref={groupRef} position={position}>
-            {/* Halo glow behind the sun - sprite based */}
+            {/* Background glow halo - sprite based */}
             <GlowHalo 
                 color={color}
-                size={size * 2.5}
+                size={size * 3}
                 opacity={0.5}
-                layers={3}
+                layers={2}
             />
             
-            {/* Core with Fresnel rim light */}
+            {/* SOLID textured sun surface - renders first (renderOrder=0), blocks objects behind */}
             <mesh 
                 ref={coreRef}
+                renderOrder={0}
                 onClick={handleClick}
                 onPointerOver={() => { document.body.style.cursor = 'pointer'; setHovered(true) }}
                 onPointerOut={() => { document.body.style.cursor = 'auto'; setHovered(false) }}
             >
-                <sphereGeometry args={[size * 0.6, 48, 48]} />
-                <FresnelGlowMaterial
-                    ref={materialRef}
-                    color={color}
-                    glowColor="#ffffff"
-                    intensity={hovered ? 1.2 : 1}
-                    fresnelPower={1.5}
-                    glowStrength={1.0}
+                <sphereGeometry args={[size * 0.59, 64, 48]} />
+                <meshBasicMaterial
+                    map={sunTexture}
+                    toneMapped={false}
                 />
             </mesh>
             
-            <pointLight color={color} intensity={intensity} distance={200} decay={1.5} />
+            {/* Fresnel rim light - transparent overlay (renderOrder=1) */}
+            <mesh renderOrder={1}>
+                <sphereGeometry args={[size * 0.6, 48, 48]} />
+                <SunFresnelMaterial
+                    ref={materialRef}
+                    color="#ff8800"
+                    glowColor="#ff5900"
+                    intensity={hovered ? 50 : 5}
+                    fresnelPower={1.5}
+                    glowStrength={4}
+                />
+            </mesh>
+            
+            {/* Animated corona shader - outermost glow, extends beyond texture */}
+            <SolarCorona 
+                size={size * 0.55}
+                color={flareColor}
+                intensity={0.7}
+            />
+            
+            <pointLight color={color} intensity={intensity} distance={300} decay={1.5} />
             
             <HudReticle 
                 radius={size * 0.6 * 1.3} 
@@ -106,6 +132,7 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
                 name={name} 
                 sectionId={id} 
                 visible={hovered || trackedRef?.current === groupRef.current} 
+                isTracked={trackedRef?.current === groupRef.current}
                 offset={calloutOffset}
                 classification="STAR"
             />

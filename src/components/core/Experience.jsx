@@ -44,7 +44,7 @@ export const Experience = ({ startAnimation = false }) => {
                 autoRotate={false}
                 autoRotateSpeed={0.04}
                 target={[0, 0, 0]}
-                maxDistance={150}
+                maxDistance={300}
                 minDistance={5}
                 enableDamping={true}
                 dampingFactor={0.05}
@@ -54,7 +54,7 @@ export const Experience = ({ startAnimation = false }) => {
             <pointLight position={[10, 10, 10]} intensity={3} />
             
             {/* Background stars */}
-            <Stars radius={150} depth={200} count={starsCount} factor={10} saturation={0} fade speed={0} />
+            <Stars radius={250} depth={300} count={starsCount} factor={10} saturation={0} fade speed={0} />
             
             {/* Milky Way disk - tilted galactic plane */}
             <MilkyWay />

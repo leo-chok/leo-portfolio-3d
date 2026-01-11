@@ -36,7 +36,7 @@ export const SpaceshipControls = () => {
     
     if (!isSpaceshipMode) return null
     
-    // Show boundary warning at ~135 units (75% into slowdown zone: 120→140)
+    // Show boundary warning at ~195 units (75% into slowdown zone: 180→200)
     const showWarning = barrierIntensity > 0.75
     
     return (

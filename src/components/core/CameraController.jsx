@@ -13,7 +13,7 @@ import { useSpaceshipStore } from '../../stores/spaceshipStore'
 const _worldPos = new THREE.Vector3()
 const _desiredCamPos = new THREE.Vector3()
 const _moveDelta = new THREE.Vector3()
-const _overviewPos = new THREE.Vector3(0, 40, 120)
+const _overviewPos = new THREE.Vector3(0, 80, 220)
 const _overviewTarget = new THREE.Vector3(0, 0, 0)
 const _shipCamOffset = new THREE.Vector3(0, 0.1, 0.5) // Much closer: behind and slightly above ship
 const _shipLookAhead = new THREE.Vector3(0, 0, -2) // Look ahead of ship
@@ -208,11 +208,15 @@ export const CameraController = ({ startAnimation = false, shipRef }) => {
         trackedRef.current.getWorldPosition(_worldPos)
         
         // Calculate desired camera position
+        // Cap the distance for large objects (like sun) to ensure visible zoom
         const size = targetSize || 1.5
+        const maxOffset = 80 // Maximum camera distance offset (higher = less zoom on large objects)
+        const yOffset = Math.min(size * 3, maxOffset * 0.4)
+        const zOffset = Math.min(size * 8, maxOffset)
         _desiredCamPos.set(
             _worldPos.x,
-            _worldPos.y + size * 3,
-            _worldPos.z + size * 8
+            _worldPos.y + yOffset,
+            _worldPos.z + zOffset
         )
         
         if (isApproaching.current) {

@@ -6,8 +6,12 @@ export { EnemyShip, EnemySpawner } from './entities/enemies'
 // Systems
 export { CollisionSystem, ProjectileRenderer } from './systems'
 
-// HUD
-export { SpaceshipControls } from './hud/SpaceshipControls'
-export { DeathScreen } from './hud/DeathScreen'
-export { WaveAnnouncement } from './hud/WaveAnnouncement'
-
+// HUD (all components from centralized hud folder)
+export { 
+    ShipHUD3D, 
+    Crosshair, 
+    EnemyDirectionIndicator,
+    SpaceshipControls, 
+    DeathScreen, 
+    WaveAnnouncement 
+} from './hud'

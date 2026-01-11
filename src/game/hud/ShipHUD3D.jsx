@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
-import { useSpaceshipStore } from '../../../../stores/spaceshipStore'
+import { useSpaceshipStore } from '../../stores/spaceshipStore'
 import * as THREE from 'three'
 
 /**

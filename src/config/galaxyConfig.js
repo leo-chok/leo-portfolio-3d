@@ -34,33 +34,33 @@ export const DEFAULTS = {
     // Sun - The biggest element
     sun: {
         hue: 40, // Warm orange/yellow
-        size: 15,
+        size: 30,
     },
     
     // Planets - All on same orbital plane (tilt 0)
     planets: {
         portfolio: { 
-            hue: randomBlueHue(), 
-            size: 4, 
-            orbitRadius: 90, 
+            hue: 30,  // Orange/warm
+            size: 5, 
+            orbitRadius: 130, 
             orbitTilt: 0 
         },
         formation: { 
-            hue: randomBlueHue(), 
-            size: 2, 
-            orbitRadius: 35, 
-            orbitTilt: 0 
-        },
-        skills: { 
-            hue: randomBlueHue(), 
-            size: 2, 
+            hue: 235, // Blue
+            size: 3, 
             orbitRadius: 50, 
             orbitTilt: 0 
         },
+        skills: { 
+            hue: 160, // Cyan/teal
+            size: 2.5, 
+            orbitRadius: 80, 
+            orbitTilt: 0 
+        },
         contact: { 
-            hue: randomBlueHue(), 
+            hue: 290, // Purple/violet
             size: 1.5, 
-            orbitRadius: 130, 
+            orbitRadius: 160, 
             orbitTilt: 0 
         },
     },
@@ -70,35 +70,35 @@ export const DEFAULTS = {
         // Portfolio moons (5 projects)
         'moon-keepgoals': { 
             hue: randomGreyHue(), 
-            saturation: 10, // Low sat = grey
+            saturation: 35, // More colorful
             size: 0.3, 
-            orbitRadius: randomMoonOrbit(4, 12), 
+            orbitRadius: randomMoonOrbit(7, 12), 
             orbitTilt: randomMoonTilt() 
         },
         'moon-toothy': { 
             hue: randomGreyHue(), 
-            saturation: 10,
+            saturation: 35,
             size: 0.3, 
-            orbitRadius: randomMoonOrbit(5, 14), 
+            orbitRadius: randomMoonOrbit(12, 18), 
             orbitTilt: randomMoonTilt() 
         },
         'moon-jambonbeurre': { 
             hue: randomGreyHue(), 
-            saturation: 10,
+            saturation: 35,
             size: 0.3, 
-            orbitRadius: randomMoonOrbit(6, 16), 
+            orbitRadius: randomMoonOrbit(7, 16), 
             orbitTilt: randomMoonTilt() 
         },
         'moon-pokedex': { 
             hue: randomGreyHue(), 
-            saturation: 10,
+            saturation: 35,
             size: 0.3, 
-            orbitRadius: randomMoonOrbit(7, 18), 
+            orbitRadius: randomMoonOrbit(8, 18), 
             orbitTilt: randomMoonTilt() 
         },
         'moon-clickit': { 
             hue: randomGreyHue(), 
-            saturation: 10,
+            saturation: 35,
             size: 0.3, 
             orbitRadius: randomMoonOrbit(8, 20), 
             orbitTilt: randomMoonTilt() 
@@ -106,14 +106,14 @@ export const DEFAULTS = {
         // Skills moons (2)
         'moon-hardskills': { 
             hue: randomGreyHue(), 
-            saturation: 10,
+            saturation: 35,
             size: 0.3, 
             orbitRadius: randomMoonOrbit(3, 8), 
             orbitTilt: randomMoonTilt() 
         },
         'moon-softskills': { 
             hue: randomGreyHue(), 
-            saturation: 10,
+            saturation: 35,
             size: 0.3, 
             orbitRadius: randomMoonOrbit(4, 10), 
             orbitTilt: randomMoonTilt() 
@@ -133,8 +133,8 @@ export const COLORS = {
 
 // Luminosity settings
 export const INTENSITY = {
-    sun: 7,
-    planet: 4,
+    sun: 9,
+    planet: 8,
     moon: 3,
     satellite: 2,
 }

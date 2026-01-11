@@ -6,14 +6,14 @@ import { COLORS } from '../../../config/galaxyConfig'
 /**
  * OrbitRing Component - Visual representation of orbital path
  */
-export const OrbitRing = ({ radius, color = COLORS.hud }) => {
+export const OrbitRing = ({ radius, color = '#aaccff' }) => {
     return (
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[radius - 0.03, radius + 0.03, 64]} />
+            <ringGeometry args={[radius - 0.03, radius + 0.03, 128]} />
             <meshBasicMaterial 
                 color={color}
                 transparent
-                opacity={0.2}
+                opacity={0.25}
                 side={THREE.DoubleSide}
                 toneMapped={false}
             />

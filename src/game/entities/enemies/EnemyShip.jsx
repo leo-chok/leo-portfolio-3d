@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { useGameStore } from '../../../stores/gameStore'
 import { useSpaceshipStore } from '../../../stores/spaceshipStore'
 import { EnemyEngineGlow } from './EnemyEngineGlow'
+import { ENEMY_CONFIG } from '../../config'
 
 /**
  * EnemyShip - AI with attack run pattern and smooth transitions
@@ -47,20 +48,25 @@ export const EnemyShip = ({ id, initialPosition = [0, 0, 0], health = 1 }) => {
     // Reusable vectors
     const tempVec = useRef(new THREE.Vector3())
     
-    // Config
-    const APPROACH_SPEED = 8
-    const LOOP_SPEED = 10
-    const PASS_THROUGH_SPEED = 12
-    const REALIGN_SPEED = 10
-    const SHOT_COOLDOWN_ALIGNED = 0.5
-    const SHOT_COOLDOWN_NORMAL = 1.5
-    const ALIGNMENT_THRESHOLD = 0.92
-    const PASS_THROUGH_MIN = 2
-    const PASS_THROUGH_MAX = 5
-    const LOOP_RADIUS = 30
-    const DIRECTION_LERP_SPEED = 1.0 // How fast to lerp direction (lower = smoother)
-    const MAX_ROLL = Math.PI / 3 // 60° max bank angle
-    const ROLL_LERP_SPEED = 3.0 // How fast to lerp roll
+    // Destructure config for cleaner code
+    const {
+        approachSpeed: APPROACH_SPEED,
+        loopSpeed: LOOP_SPEED,
+        passThroughSpeed: PASS_THROUGH_SPEED,
+        realignSpeed: REALIGN_SPEED,
+        shotCooldownAligned: SHOT_COOLDOWN_ALIGNED,
+        shotCooldownNormal: SHOT_COOLDOWN_NORMAL,
+        alignmentThreshold: ALIGNMENT_THRESHOLD,
+        passThroughMin: PASS_THROUGH_MIN,
+        passThroughMax: PASS_THROUGH_MAX,
+        loopRadius: LOOP_RADIUS,
+        directionLerpSpeed: DIRECTION_LERP_SPEED,
+        maxRoll: MAX_ROLL,
+        rollLerpSpeed: ROLL_LERP_SPEED,
+        modelScale,
+        engineGlowPosition,
+        engineGlowSize
+    } = ENEMY_CONFIG
     
     // Load enemy model
     const { scene } = useGLTF('/ennemy_spaceship-opt.glb')
@@ -262,12 +268,12 @@ export const EnemyShip = ({ id, initialPosition = [0, 0, 0], health = 1 }) => {
         <group ref={groupRef}>
             <primitive 
                 object={enemyModel} 
-                scale={0.15}
+                scale={modelScale}
                 rotation={[0, Math.PI, 0]}
             />
             {/* Engine glow - positioned behind the ship */}
-            <group position={[0, 0.25, 1]}>
-                <EnemyEngineGlow speedRef={speedRef} size={0.4} opacity={1.0} layers={3} />
+            <group position={engineGlowPosition}>
+                <EnemyEngineGlow speedRef={speedRef} size={engineGlowSize} opacity={1.0} layers={3} />
             </group>
         </group>
     )

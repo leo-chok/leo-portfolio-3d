@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { useGameStore } from '../../stores/gameStore'
 import { useSpaceshipStore } from '../../stores/spaceshipStore'
 import { useCameraStore } from '../../stores/cameraStore'
+import { COLLISION_CONFIG } from '../config'
 import * as THREE from 'three'
 
 /**
@@ -16,6 +17,20 @@ import * as THREE from 'three'
  * - Enemy → Body = destroy enemy
  */
 export const CollisionSystem = ({ shipRef }) => {
+    // Destructure config
+    const {
+        playerHitRadius,
+        playerDamagePerHit,
+        enemyHitRadius,
+        enemyDamagePerHit,
+        bodyCollisionMultiplier,
+        presentationCollisionMultiplier,
+        playerDeathExplosionScale,
+        laserImpactExplosionScale,
+        enemyCrashExplosionScale,
+        shipCollisionExplosionScale
+    } = COLLISION_CONFIG
+    
     // Reusable THREE objects
     const temp = useRef({
         bodyPos: new THREE.Vector3(),
@@ -57,9 +72,7 @@ export const CollisionSystem = ({ shipRef }) => {
                 const dz = temp.laserPos.z - temp.enemyPos.z
                 const distance = Math.sqrt(dx * dx + dy * dy + dz * dz)
                 
-                const hitRadius = 1.5 // Enemy hit radius
-                
-                if (distance < hitRadius) {
+                if (distance < enemyHitRadius) {
                     lasersToRemove.push(laser.id)
                     enemiesToDamage.push(Number(enemyId))
                     break
@@ -84,14 +97,11 @@ export const CollisionSystem = ({ shipRef }) => {
                 const dz = temp.laserPos.z - shipPos.z
                 const distance = Math.sqrt(dx * dx + dy * dy + dz * dz)
                 
-                const hitRadius = 1.0 // Player hit radius
-                
-                if (distance < hitRadius) {
+                if (distance < playerHitRadius) {
                     lasersToRemove.push(laser.id)
-                    // Damage player 10% instead of instant death
-                    const died = takeDamage(10)
+                    const died = takeDamage(playerDamagePerHit)
                     if (died) {
-                        addExplosion([shipPos.x, shipPos.y, shipPos.z], 2.0)
+                        addExplosion([shipPos.x, shipPos.y, shipPos.z], playerDeathExplosionScale)
                     }
                     break
                 }
@@ -106,9 +116,9 @@ export const CollisionSystem = ({ shipRef }) => {
             
             let collisionRadius
             if (bodyId === 'presentation') {
-                collisionRadius = (body.size || 1) * 0.7
+                collisionRadius = (body.size || 1) * presentationCollisionMultiplier
             } else {
-                collisionRadius = (body.size || 1) * 1.0
+                collisionRadius = (body.size || 1) * bodyCollisionMultiplier
             }
             
             // Ship → Body
@@ -121,7 +131,7 @@ export const CollisionSystem = ({ shipRef }) => {
                 if (distance < collisionRadius) {
                     const deathPos = [shipPos.x, shipPos.y, shipPos.z]
                     die(deathPos)
-                    addExplosion(deathPos, 1.0)
+                    addExplosion(deathPos, shipCollisionExplosionScale)
                     break
                 }
             }
@@ -142,7 +152,7 @@ export const CollisionSystem = ({ shipRef }) => {
                     lasersToRemove.push(Number(laserId))
                     addExplosion(
                         [temp.laserPos.x, temp.laserPos.y, temp.laserPos.z],
-                        0.2
+                        laserImpactExplosionScale
                     )
                 }
             }
@@ -162,7 +172,7 @@ export const CollisionSystem = ({ shipRef }) => {
                     // Enemy crashed into planet
                     addExplosion(
                         [temp.enemyPos.x, temp.enemyPos.y, temp.enemyPos.z],
-                        0.8
+                        enemyCrashExplosionScale
                     )
                     removeEnemy(Number(enemyId))
                 }
@@ -171,7 +181,7 @@ export const CollisionSystem = ({ shipRef }) => {
         
         // Process removals
         lasersToRemove.forEach(id => removeLaser(id))
-        enemiesToDamage.forEach(id => damageEnemy(id, 1))
+        enemiesToDamage.forEach(id => damageEnemy(id, enemyDamagePerHit))
     })
     
     return null
