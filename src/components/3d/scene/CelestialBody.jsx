@@ -5,7 +5,7 @@ import { COLORS, SIZES, INTENSITY } from '../../../config/galaxyConfig'
 import { HudReticle } from '../hud3d/HudReticle'
 import { HudCallout } from '../hud3d/HudCallout'
 import { Satellite } from './Satellite'
-import { FresnelGlowMaterial } from '../materials/FresnelGlowMaterial'
+import { PlanetRimMaterial } from '../materials/PlanetRimMaterial'
 import { useCameraStore } from '../../../stores/cameraStore'
 import { useDebugStore } from '../../../stores/debugStore'
 
@@ -83,6 +83,7 @@ export const CelestialBody = ({
     
     return (
         <group ref={groupRef}>
+            {/* Solid core - receives light from sun, casts shadows */}
             <mesh
                 ref={meshRef}
                 onClick={handleClick}
@@ -90,12 +91,24 @@ export const CelestialBody = ({
                 onPointerOut={() => { document.body.style.cursor = 'auto'; setHovered(false) }}
             >
                 <sphereGeometry args={[size, 32, 32]} />
-                <FresnelGlowMaterial
+                <meshStandardMaterial
+                    color={color}
+                    roughness={0.7}
+                    metalness={0.1}
+                    emissive={color}
+                    emissiveIntensity={hovered ? 0.15 : 0.08}
+                />
+            </mesh>
+            
+            {/* Rim light overlay - transparent glow on edges */}
+            <mesh renderOrder={1}>
+                <sphereGeometry args={[size * 1.02, 32, 32]} />
+                <PlanetRimMaterial
                     ref={materialRef}
                     color={color}
-                    intensity={hovered ? emissiveMultiplier * 0.9 : emissiveMultiplier * 0.6}
-                    fresnelPower={isPlanet ? 3.0 : 3.5}
-                    glowStrength={isPlanet ? 1.2 : 1.0}
+                    intensity={hovered ? 2.0 : 1.2}
+                    fresnelPower={isPlanet ? 2.0 : 2.5}
+                    glowStrength={isPlanet ? 3.0 : 2.5}
                 />
             </mesh>
             

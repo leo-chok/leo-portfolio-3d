@@ -50,8 +50,7 @@ export const Experience = ({ startAnimation = false }) => {
                 dampingFactor={0.05}
             />
             
-            <ambientLight intensity={0.6} />
-            <pointLight position={[10, 10, 10]} intensity={3} />
+            <pointLight position={[0, 0, 0]} intensity={10000} />
             
             {/* Background stars */}
             <Stars radius={250} depth={300} count={starsCount} factor={10} saturation={0} fade speed={0} />

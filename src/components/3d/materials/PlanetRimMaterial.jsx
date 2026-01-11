@@ -4,17 +4,18 @@ import * as THREE from 'three'
 import { useRef, useMemo, forwardRef, useEffect } from 'react'
 
 /**
- * FresnelGlowMaterial - Rim light effect for sci-fi glow without bloom
- * Creates edge lighting effect that's performant and visually striking
+ * PlanetRimMaterial - Transparent rim light for planets/moons
+ * Used as overlay on top of solid MeshStandardMaterial
+ * Center is fully transparent, edges glow
  */
-const FresnelGlowShader = shaderMaterial(
+const PlanetRimShader = shaderMaterial(
     {
         uTime: 0,
-        uColor: new THREE.Color('#7cc4ed'),
-        uGlowColor: new THREE.Color('#7cc4ed'),
-        uIntensity: 2,
-        uFresnelPower: 10,
-        uGlowStrength: 2,
+        uColor: new THREE.Color('#4488ff'),
+        uGlowColor: new THREE.Color('#ffffff'),
+        uIntensity: 0.5,
+        uFresnelPower: 2.5,
+        uGlowStrength: 1.0,
     },
     // Vertex shader
     `
@@ -28,7 +29,7 @@ const FresnelGlowShader = shaderMaterial(
         gl_Position = projectionMatrix * mvPosition;
     }
     `,
-    // Fragment shader
+    // Fragment shader - transparent center, glowing edges
     `
     uniform vec3 uColor;
     uniform vec3 uGlowColor;
@@ -46,35 +47,32 @@ const FresnelGlowShader = shaderMaterial(
         float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), uFresnelPower);
         
         // Subtle pulse animation
-        float pulse = 1.0 + sin(uTime * 2.0) * 0.05;
+        float pulse = 1.0 + sin(uTime * 1.5) * 0.03;
         
-        // Base color with intensity
-        vec3 baseColor = uColor * uIntensity;
+        // Rim glow only (no base color fill)
+        vec3 glowEffect = uGlowColor * fresnel * uGlowStrength * pulse * uIntensity;
         
-        // Add fresnel glow
-        vec3 glowEffect = uGlowColor * fresnel * uGlowStrength * pulse;
+        // Alpha based on fresnel - center fully transparent, edges visible
+        float alpha = fresnel * 0.7;
         
-        // Combine
-        vec3 finalColor = baseColor + glowEffect;
-        
-        gl_FragColor = vec4(finalColor, 1.0);
+        gl_FragColor = vec4(glowEffect, alpha);
     }
     `
 )
 
 // Extend Three.js with our custom material
-extend({ FresnelGlowShader })
+extend({ PlanetRimShader })
 
 /**
- * FresnelGlowMaterial Component
- * Use this in place of meshBasicMaterial for glowing celestial bodies
+ * PlanetRimMaterial Component
+ * Use this as overlay on planets/moons for rim light effect
  */
-export const FresnelGlowMaterial = forwardRef(({ 
-    color = '#7cc4ed',
-    glowColor,
-    intensity = 1.5,
+export const PlanetRimMaterial = forwardRef(({ 
+    color = '#4488ff',
+    glowColor = null, // null = use planet color
+    intensity = 0.5,
     fresnelPower = 2.5,
-    glowStrength = 0.6,
+    glowStrength = 1.0,
     animate = true,
     ...props 
 }, ref) => {
@@ -91,7 +89,7 @@ export const FresnelGlowMaterial = forwardRef(({
         }
     })
     
-    // Update uniforms when props change (fixes hover issue)
+    // Update uniforms when props change
     useEffect(() => {
         if (materialRef.current) {
             materialRef.current.uColor = new THREE.Color(color)
@@ -103,7 +101,7 @@ export const FresnelGlowMaterial = forwardRef(({
     }, [color, glowColor, intensity, fresnelPower, glowStrength])
     
     return (
-        <fresnelGlowShader
+        <planetRimShader
             ref={(el) => {
                 materialRef.current = el
                 if (ref) {
@@ -117,9 +115,12 @@ export const FresnelGlowMaterial = forwardRef(({
             uFresnelPower={fresnelPower}
             uGlowStrength={glowStrength}
             toneMapped={false}
+            transparent
+            depthWrite={false}
+            side={THREE.FrontSide}
             {...props}
         />
     )
 })
 
-FresnelGlowMaterial.displayName = 'FresnelGlowMaterial'
+PlanetRimMaterial.displayName = 'PlanetRimMaterial'

@@ -2,6 +2,7 @@ import { GALAXY_MAP } from '../../../config/galaxyConfig'
 import { Sun } from './Sun'
 import { CelestialBody } from './CelestialBody'
 import { OrbitingBody } from './OrbitingBody'
+import { AsteroidBelt } from './AsteroidBelt'
 import { useDebugStore, hueToColor } from '../../../stores/debugStore'
 
 /**
@@ -21,6 +22,9 @@ export const SolarSystem = () => {
                 name={GALAXY_MAP.sun.name}
                 position={GALAXY_MAP.sun.position}
             />
+            
+            {/* ====== ASTEROID BELT ====== */}
+            <AsteroidBelt />
 
             {/* ====== PLANETS ====== */}
             {GALAXY_MAP.planets.map((planet, planetIndex) => {

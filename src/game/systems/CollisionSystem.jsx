@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { useGameStore } from '../../stores/gameStore'
 import { useSpaceshipStore } from '../../stores/spaceshipStore'
 import { useCameraStore } from '../../stores/cameraStore'
+import { useAsteroidStore } from '../../stores/asteroidStore'
 import { COLLISION_CONFIG } from '../config'
 import * as THREE from 'three'
 
@@ -176,6 +177,17 @@ export const CollisionSystem = ({ shipRef }) => {
                     )
                     removeEnemy(Number(enemyId))
                 }
+            }
+        }
+        
+        // === ASTEROID BELT COLLISIONS ===
+        if (shipPos && !isDead) {
+            const { checkCollision } = useAsteroidStore.getState()
+            
+            if (checkCollision(shipPos, 0.5)) {
+                const deathPos = [shipPos.x, shipPos.y, shipPos.z]
+                die(deathPos)
+                addExplosion(deathPos, shipCollisionExplosionScale)
             }
         }
         
