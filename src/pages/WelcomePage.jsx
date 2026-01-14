@@ -54,10 +54,6 @@ export const WelcomePage = () => {
             <div className="welcome__bracket welcome__bracket--bl" />
             <div className="welcome__bracket welcome__bracket--br" />
             
-            {/* Language Toggle - Top Right */}
-            <div className="welcome__language">
-                <LanguageToggle />
-            </div>
             
             {/* Main content */}
             <div className="welcome__content">
@@ -108,10 +104,14 @@ export const WelcomePage = () => {
                     </button>
                 </div>
                 
+            {/* Language Toggle - Top Right */}
+            <div className="welcome__language">
+                <LanguageToggle />
+            </div>
                 {/* Footer */}
                 <footer className="welcome__footer">
                     <div className="welcome__footer-line" />
-                    <span className="welcome__footer-text">{welcome?.footer || 'STELLAR NAVIGATION SYSTEM v3.0'}</span>
+                    <span className="welcome__footer-text">{welcome?.footer || 'STELLAR NAVIGATION SYSTEM v1.0'}</span>
                     <div className="welcome__footer-line" />
                 </footer>
             </div>

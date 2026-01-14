@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { useInView } from '../../hooks/useInView'
+import { useTranslation } from '../../hooks/useTranslation'
+import { formations as formationsData } from '../../data/formations'
 import { ResumeSection } from './ResumeSection'
-import { formations } from '../../data/formations'
 import './ResumeFormations.css'
 
 /**
@@ -14,6 +15,25 @@ import './ResumeFormations.css'
  * - Uses Intersection Observer for reliable mobile detection
  */
 export const ResumeFormations = () => {
+    const { t } = useTranslation()
+    const translatedFormations = t('formations')
+    
+    // Merge static data with translated data (use index since formations don't have IDs)
+    const formations = {
+        ...formationsData,
+        items: formationsData.items.map((staticItem, index) => {
+            const translated = translatedFormations?.items?.[index] || {}
+            return {
+                ...staticItem,
+                title: translated.title || staticItem.title,
+                subtitle: translated.subtitle || staticItem.subtitle,
+                school: translated.school || staticItem.school,
+                period: translated.period || staticItem.period,
+                description: translated.description || staticItem.description
+            }
+        })
+    }
+    
     const timelineRef = useRef(null)
     const [observerRef, isInView] = useInView({ threshold: 0.1 })
     const hasAnimated = useRef(false)
@@ -62,7 +82,7 @@ export const ResumeFormations = () => {
                 
                 {/* Timeline items */}
                 <div className="formations__items">
-                    {formations.items.map((formation, idx) => (
+                    {(formations?.items || []).map((formation, idx) => (
                         <div 
                             key={idx} 
                             className={`formations__item ${idx % 2 === 0 ? 'formations__item--left' : 'formations__item--right'}`}

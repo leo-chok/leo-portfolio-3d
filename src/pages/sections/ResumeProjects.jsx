@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { useInView } from '../../hooks/useInView'
+import { useTranslation } from '../../hooks/useTranslation'
+import { projects as projectsData } from '../../data/projects'
 import { ResumeSection } from './ResumeSection'
-import { projects } from '../../data/projects'
 import './ResumeProjects.css'
 
 /**
@@ -14,6 +15,21 @@ import './ResumeProjects.css'
  * - Uses Intersection Observer for reliable mobile detection
  */
 export const ResumeProjects = () => {
+    const { t } = useTranslation()
+    const translatedProjects = t('projects')
+    
+    // Merge static data (image, links, stack) with translated data
+    const projects = projectsData.map(staticProject => {
+        const translated = translatedProjects?.find(p => p.id === staticProject.id) || {}
+        return {
+            ...staticProject,
+            title: translated.title || staticProject.title,
+            subtitle: translated.subtitle || staticProject.subtitle,
+            short_description: translated.short_description || staticProject.short_description,
+            description: translated.description || staticProject.description
+        }
+    })
+    
     const [expandedId, setExpandedId] = useState(null)
     const gridRef = useRef(null)
     const [observerRef, isInView] = useInView({ threshold: 0.1 })
@@ -46,7 +62,7 @@ export const ResumeProjects = () => {
                 ref={(el) => { gridRef.current = el; observerRef.current = el }}
             >
                 <div className="projects__grid">
-                    {projects.map((project, idx) => (
+                    {(projects || []).map((project, idx) => (
                         <article 
                             key={project.id}
                             className={`projects__card ${expandedId === project.id ? 'projects__card--expanded' : ''}`}
@@ -82,7 +98,7 @@ export const ResumeProjects = () => {
                                 <div className="projects__stack">
                                     <span className="projects__stack-label">Stack :</span>
                                     <div className="projects__stack-items">
-                                        {project.stack.map((tech, idx) => (
+                                        {(project.stack || []).map((tech, idx) => (
                                             <span key={idx} className="projects__stack-item">{tech}</span>
                                         ))}
                                     </div>

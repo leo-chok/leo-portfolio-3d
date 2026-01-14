@@ -23,13 +23,7 @@
     opacity: 1;
 }
 
-/* === LANGUAGE TOGGLE === */
-.welcome__language {
-    position: absolute;
-    top: 50px;
-    right: 60px;
-    z-index: 100;
-}
+
 
 /* === ANIMATED BACKGROUND === */
 .welcome__bg {
@@ -519,6 +513,15 @@
 .welcome__cta--experience:hover .welcome__cta-label {
     color: #64edb4;
     text-shadow: 0 0 15px rgba(100, 237, 180, 0.5);
+}
+
+/* === LANGUAGE TOGGLE === */
+.welcome__language {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+    z-index: 100;
 }
 
 /* === FOOTER === */

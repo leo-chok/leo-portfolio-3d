@@ -107,6 +107,20 @@ export const HudCallout = ({ name, sectionId, visible = false, isTracked = false
             drawProgressRef.current = 0
             showTextRef.current = false
             setShowText(false)
+            
+            // Immediately hide all visual elements when hover ends
+            if (lineRef.current?.material) {
+                lineRef.current.material.opacity = 0
+            }
+            if (originDotRef.current?.material) {
+                originDotRef.current.material.opacity = 0
+            }
+            if (connectionDotRef.current) {
+                connectionDotRef.current.visible = false
+            }
+            if (panelGroupRef.current) {
+                panelGroupRef.current.visible = false
+            }
         }
     }, [visible])
     

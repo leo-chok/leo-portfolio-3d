@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useLanguage } from '../context/LanguageContext'
 
 // Sections
 import { ResumeHero } from './sections/ResumeHero'
@@ -25,6 +26,7 @@ import './sections/ResumeSection.css'
  */
 export const ResumePage = () => {
     const navigate = useNavigate()
+    const { language, toggleLanguage } = useLanguage()
     
     const handleExperienceClick = () => {
         navigate('/experience')
@@ -37,26 +39,26 @@ export const ResumePage = () => {
                 <div className="resume__scanlines" />
             </div>
             
-            {/* Floating Identity Card - Desktop only */}
-            {/* Removed from here - now using sticky inside hero-section-wrapper */}
             
-            {/* Floating nav button */}
+            {/* Back to home - Fixed orange sci-fi button */}
             <button 
-                className="resume__nav-float"
-                onClick={handleExperienceClick}
-                title="Voir l'expérience 3D"
-            >
-                <span className="resume__nav-icon">◇</span>
-                <span className="resume__nav-label">Expérience 3D</span>
-            </button>
-            
-            {/* Back to welcome */}
-            <button 
-                className="resume__nav-back"
+                className="resume__home-btn"
                 onClick={() => navigate('/')}
                 title="Retour à l'accueil"
             >
-                ← Accueil
+                <svg className="resume__home-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 14L4 9l5-5"/>
+                    <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/>
+                </svg>
+            </button>
+            
+            {/* Language toggle - Fixed blue sci-fi button */}
+            <button 
+                className="resume__lang-btn"
+                onClick={toggleLanguage}
+                title={language === 'fr' ? 'Switch to English' : 'Passer en Français'}
+            >
+                <span className="resume__lang-text">{language === 'fr' ? 'EN' : 'FR'}</span>
             </button>
             
             {/* Content wrapper */}
@@ -75,7 +77,7 @@ export const ResumePage = () => {
                 <footer className="resume__footer">
                     <div className="resume__footer-line" />
                     <span className="resume__footer-text">
-                        © {new Date().getFullYear()} Léo Stalhberger — Portfolio STAL-117
+                        © {new Date().getFullYear()} Léo Stalhberger
                     </span>
                     <div className="resume__footer-line" />
                 </footer>

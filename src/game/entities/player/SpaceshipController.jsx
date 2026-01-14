@@ -226,9 +226,10 @@ export const SpaceshipController = forwardRef((props, ref) => {
         if (keys.ArrowRight) rotVel.roll -= config.rotationSpeed * delta
         
         // Mobile joystick direction (left stick X = roll, Y = pitch)
+        // Sensitivity reduced for smoother control
         if (isMobileActive) {
-            rotVel.roll -= mobileInput.leftStick.x * config.rotationSpeed * delta * 1.5
-            rotVel.pitch -= mobileInput.leftStick.y * config.rotationSpeed * delta * 1.5  // Inverted for intuitive control
+            rotVel.roll -= mobileInput.leftStick.x * config.rotationSpeed * delta * 0.8
+            rotVel.pitch -= mobileInput.leftStick.y * config.rotationSpeed * delta * 0.8
         }
         
         // Pitch (up/down) - nose up/down around local X axis

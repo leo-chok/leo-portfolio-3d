@@ -17,6 +17,7 @@
     "@react-three/drei": "^9.120.0",
     "@react-three/fiber": "^9.0.0-rc.3",
     "@react-three/postprocessing": "^3.0.4",
+    "@vercel/analytics": "^1.6.1",
     "gsap": "^3.12.5",
     "postprocessing": "^6.38.0",
     "r3f-perf": "^7.2.3",

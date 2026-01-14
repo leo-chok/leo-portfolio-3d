@@ -31,11 +31,6 @@ export const SuccessModal = ({ isOpen, onClose, onLaunchSpaceship }) => {
                 }} 
             />
             <div className="success-modal__content" onClick={(e) => e.stopPropagation()}>
-                {/* Corner brackets */}
-                <div className="success-modal__corner success-modal__corner--tl" />
-                <div className="success-modal__corner success-modal__corner--tr" />
-                <div className="success-modal__corner success-modal__corner--bl" />
-                <div className="success-modal__corner success-modal__corner--br" />
                 
                 {/* Status indicator */}
                 <div className="success-modal__status">

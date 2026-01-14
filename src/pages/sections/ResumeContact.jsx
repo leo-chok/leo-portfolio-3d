@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useInView } from '../../hooks/useInView'
+import { useTranslation } from '../../hooks/useTranslation'
+import { contact as contactData } from '../../data/contact'
 import { ResumeSection } from './ResumeSection'
-import { contact } from '../../data/contact'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faEnvelope, faLocationDot, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
@@ -17,10 +18,25 @@ import './ResumeContact.css'
  * - Uses Intersection Observer for reliable mobile detection
  */
 export const ResumeContact = () => {
+    const { t } = useTranslation()
+    const translatedContact = t('contact')
+    
+    // Merge static data (urls, email) with translated data (labels, cta)
+    const contact = {
+        ...contactData,
+        cta: translatedContact?.cta || contactData.cta,
+        location: {
+            ...contactData.location,
+            city: translatedContact?.location?.city || contactData.location.city,
+            country: translatedContact?.location?.country || contactData.location.country
+        },
+        form: translatedContact?.form || {}
+    }
+    
     const contactRef = useRef(null)
     const [observerRef, isInView] = useInView({ threshold: 0.1 })
     const hasAnimated = useRef(false)
-    const [formStatus, setFormStatus] = useState('idle') // idle, sending, success, error
+    const [formStatus, setFormStatus] = useState('idle')
     
     useEffect(() => {
         const items = contactRef.current?.querySelectorAll('.contact__card, .contact__form-wrapper')
@@ -74,37 +90,37 @@ export const ResumeContact = () => {
                     className="contact__card"
                     style={{ opacity: 0, transform: 'translateY(40px)' }}
                 >
-                    <p className="contact__cta">{contact.cta}</p>
+                    <p className="contact__cta">{contact?.cta}</p>
                     
                     <div className="contact__info">
                         <div className="contact__info-item">
                             <FontAwesomeIcon icon={faLocationDot} className="contact__info-icon" />
-                            <span>{contact.location.city}, {contact.location.country}</span>
+                            <span>{contact?.location?.city}, {contact?.location?.country}</span>
                         </div>
                         <div className="contact__info-item">
                             <FontAwesomeIcon icon={faEnvelope} className="contact__info-icon" />
-                            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                            <a href={`mailto:${contact?.email}`}>{contact?.email}</a>
                         </div>
                     </div>
                     
                     <div className="contact__social">
                         <a 
-                            href={contact.social.linkedin.url}
+                            href={contact?.social?.linkedin?.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="contact__social-link"
                         >
                             <FontAwesomeIcon icon={faLinkedin} />
-                            <span>{contact.social.linkedin.label}</span>
+                            <span>{contact?.social?.linkedin?.label}</span>
                         </a>
                         <a 
-                            href={contact.social.github.url}
+                            href={contact?.social?.github?.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="contact__social-link"
                         >
                             <FontAwesomeIcon icon={faGithub} />
-                            <span>{contact.social.github.label}</span>
+                            <span>{contact?.social?.github?.label}</span>
                         </a>
                     </div>
                 </div>
@@ -116,36 +132,36 @@ export const ResumeContact = () => {
                 >
                     <form className="contact__form" onSubmit={handleSubmit}>
                         <div className="contact__form-group">
-                            <label htmlFor="name" className="contact__label">Nom</label>
+                            <label htmlFor="name" className="contact__label">{contact.form?.name || 'Nom'}</label>
                             <input 
                                 type="text" 
                                 id="name" 
                                 name="name" 
                                 required 
                                 className="contact__input"
-                                placeholder="Votre nom"
+                                placeholder={contact.form?.namePlaceholder || 'Votre nom'}
                             />
                         </div>
                         <div className="contact__form-group">
-                            <label htmlFor="email" className="contact__label">Email</label>
+                            <label htmlFor="email" className="contact__label">{contact.form?.email || 'Email'}</label>
                             <input 
                                 type="email" 
                                 id="email" 
                                 name="email" 
                                 required 
                                 className="contact__input"
-                                placeholder="votre@email.com"
+                                placeholder={contact.form?.emailPlaceholder || 'votre@email.com'}
                             />
                         </div>
                         <div className="contact__form-group">
-                            <label htmlFor="message" className="contact__label">Message</label>
+                            <label htmlFor="message" className="contact__label">{contact.form?.message || 'Message'}</label>
                             <textarea 
                                 id="message" 
                                 name="message" 
                                 required 
                                 rows="4"
                                 className="contact__input contact__textarea"
-                                placeholder="Votre message..."
+                                placeholder={contact.form?.messagePlaceholder || 'Votre message...'}
                             />
                         </div>
                         
@@ -156,14 +172,14 @@ export const ResumeContact = () => {
                         >
                             <FontAwesomeIcon icon={faPaperPlane} />
                             <span>
-                                {formStatus === 'sending' ? 'Envoi...' : 
-                                 formStatus === 'success' ? 'Envoyé !' : 
-                                 'Envoyer'}
+                                {formStatus === 'sending' ? (contact.form?.sending || 'Envoi...') : 
+                                 formStatus === 'success' ? (contact.form?.sent || 'Envoyé !') : 
+                                 (contact.form?.submit || 'Envoyer')}
                             </span>
                         </button>
                         
                         {formStatus === 'error' && (
-                            <p className="contact__error">Une erreur est survenue. Réessayez.</p>
+                            <p className="contact__error">{contact.form?.error || 'Une erreur est survenue. Réessayez.'}</p>
                         )}
                     </form>
                 </div>

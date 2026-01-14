@@ -18,7 +18,7 @@ const BELT_THICKNESS = 2 // Vertical spread
 
 export const AsteroidBelt = ({ 
     asteroidPath = '/asteroid.glb',
-    color = '#151616'
+    color = '#667a7aff'
 }) => {
     const meshRef = useRef()
     const { nodes } = useGLTF(asteroidPath)

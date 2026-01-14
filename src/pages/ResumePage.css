@@ -227,60 +227,115 @@ body:has(.resume) {
     }
 }
 
-/* === BACK BUTTON (Analyser style) === */
-.resume__nav-back {
+/* === HOME BUTTON (Orange Sci-Fi Capsule) === */
+.resume__home-btn {
     position: fixed;
     top: 30px;
-    left: 30px;
+    left: 0;
     z-index: 100;
-    padding: 12px 24px;
-    background: transparent;
-    border: none;
-    border-top: 1px solid rgba(124, 196, 237, 0.15);
-    border-bottom: 1px solid rgba(124, 196, 237, 0.25);
-    color: rgba(124, 196, 237, 0.8);
-    font-size: 11px;
-    font-family: 'Orbitron', monospace;
-    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    background: rgba(255, 140, 50, 0.2);
+    border: 1px solid rgba(255, 140, 50, 0.6);
+    border-left: none;
+    border-radius: 0 50% 50% 0;
     cursor: pointer;
     transition: all 0.3s ease;
-    overflow: hidden;
 }
 
-/* Corner brackets */
-.resume__nav-back::before,
-.resume__nav-back::after {
+.resume__home-btn::before {
     content: '';
     position: absolute;
-    width: 10px;
-    height: 10px;
-    border-color: rgba(124, 196, 237, 0.4);
-    border-style: solid;
+    top: 3px;
+    right: 3px;
+    bottom: 3px;
+    left: 0;
+    border: 1px solid rgba(255, 140, 50, 0.2);
+    border-left: none;
+    border-radius: 0 50% 50% 0;
+    pointer-events: none;
+}
+
+.resume__home-icon {
+    width: 22px;
+    height: 22px;
+    color: rgba(255, 140, 50, 0.9);
+    transition: all 0.3s ease;
+    margin-left: 4px;
+}
+
+.resume__home-btn:hover {
+    background: rgba(255, 140, 50, 0.2);
+    border-color: rgba(255, 140, 50, 1);
+    box-shadow: 
+        0 0 20px rgba(255, 140, 50, 0.3),
+        inset 0 0 15px rgba(255, 140, 50, 0.1);
+}
+
+.resume__home-btn:hover .resume__home-icon {
+    color: #ff8c32;
+    filter: drop-shadow(0 0 6px rgba(255, 140, 50, 0.8));
+    transform: translateX(-2px);
+}
+
+/* === LANGUAGE TOGGLE BUTTON (Blue Sci-Fi Capsule) === */
+.resume__lang-btn {
+    position: fixed;
+    top: 92px;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    background: rgba(29, 69, 121, 0.2);
+    border: 1px solid rgba(68, 82, 99, 0.6);
+    border-left: none;
+    border-radius: 0 50% 50% 0;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.resume__nav-back::before {
-    top: 0;
+.resume__lang-btn::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    bottom: 3px;
     left: 0;
-    border-width: 2px 0 0 2px;
+    border: 1px solid rgba(50, 140, 255, 0.2);
+    border-left: none;
+    border-radius: 0 50% 50% 0;
+    pointer-events: none;
 }
 
-.resume__nav-back::after {
-    bottom: 0;
-    right: 0;
-    border-width: 0 2px 2px 0;
+.resume__lang-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(50, 140, 255, 0.9);
+    transition: all 0.3s ease;
+    margin-left: 4px;
+    letter-spacing: 1px;
 }
 
-.resume__nav-back:hover {
-    color: #7cc4ed;
-    text-shadow: 0 0 15px rgba(124, 196, 237, 0.5);
+.resume__lang-btn:hover {
+    background: rgba(50, 200, 100, 0.2);
+    border-color: rgba(50, 200, 100, 1);
+    box-shadow: 
+        0 0 20px rgba(50, 200, 100, 0.3),
+        inset 0 0 15px rgba(50, 200, 100, 0.1);
 }
 
-.resume__nav-back:hover::before,
-.resume__nav-back:hover::after {
-    border-color: rgba(124, 196, 237, 0.9);
-    width: 14px;
-    height: 14px;
+.resume__lang-btn:hover .resume__lang-text {
+    color: #32c864;
+    filter: drop-shadow(0 0 6px rgba(50, 200, 100, 0.8));
 }
 
 /* === FOOTER === */
@@ -308,10 +363,20 @@ body:has(.resume) {
 
 /* === RESPONSIVE ADDITIONS === */
 @media (max-width: 768px) {
-    /* Hide nav buttons on mobile - users use back button */
-    .resume__nav-back,
+    /* Hide 3D experience button on mobile */
     .resume__nav-float {
         display: none;
+    }
+    
+    /* Adapt home button for mobile */
+    .resume__home-btn {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .resume__home-icon {
+        width: 18px;
+        height: 18px;
     }
     
     .resume__footer {

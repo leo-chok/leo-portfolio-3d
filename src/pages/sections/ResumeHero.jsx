@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { useInView } from '../../hooks/useInView'
-import { presentation } from '../../data/presentation'
+import { useTranslation } from '../../hooks/useTranslation'
+import { presentation as presentationData } from '../../data/presentation'
 import './ResumeHero.css'
 
 /**
@@ -13,6 +14,24 @@ import './ResumeHero.css'
  * - About text with staggered reveal using Intersection Observer
  */
 export const ResumeHero = () => {
+    const { t } = useTranslation()
+    const translatedPresentation = t('presentation')
+    
+    // Merge static data with translated data
+    const presentation = {
+        ...presentationData,
+        name: translatedPresentation?.name || presentationData.name,
+        title: translatedPresentation?.title || presentationData.title,
+        subtitle: translatedPresentation?.subtitle || presentationData.subtitle,
+        tagline: translatedPresentation?.tagline || presentationData.tagline,
+        status: {
+            ...presentationData.status,
+            type: translatedPresentation?.status?.type || presentationData.status.type,
+            text: translatedPresentation?.status?.text || presentationData.status.text,
+            school: translatedPresentation?.status?.school || presentationData.status.school
+        },
+        about: translatedPresentation?.about || presentationData.about
+    }
     const heroRef = useRef(null)
     const portraitRef = useRef(null)
     const nameRef = useRef(null)
@@ -93,18 +112,18 @@ export const ResumeHero = () => {
                             ref={nameRef}
                             style={{ opacity: 0, transform: 'translateY(30px)' }}
                         >
-                            {presentation.name}
+                            {presentation?.name}
                         </h1>
                         <div 
                             className="hero__titles" 
                             ref={titleRef}
                             style={{ opacity: 0, transform: 'translateY(30px)' }}
                         >
-                            <span className="hero__title">{presentation.title}</span>
+                            <span className="hero__title">{presentation?.title}</span>
                             <span className="hero__title-separator">•</span>
-                            <span className="hero__subtitle">{presentation.subtitle}</span>
+                            <span className="hero__subtitle">{presentation?.subtitle}</span>
                         </div>
-                        <p className="hero__tagline">{presentation.tagline}</p>
+                        <p className="hero__tagline">{presentation?.tagline}</p>
                     </div>
                     
                     {/* Portrait - Mobile only (above status) */}
@@ -131,10 +150,10 @@ export const ResumeHero = () => {
                     >
                         <div className="hero__status-badge">
                             <span className="hero__status-dot" />
-                            <span className="hero__status-type">{presentation.status.type}</span>
+                            <span className="hero__status-type">{presentation?.status?.type}</span>
                         </div>
-                        <p className="hero__status-text">{presentation.status.text}</p>
-                        <p className="hero__status-school">{presentation.status.school}</p>
+                        <p className="hero__status-text">{presentation?.status?.text}</p>
+                        <p className="hero__status-school">{presentation?.status?.school}</p>
                     </div>
                     
                     {/* About Section */}
@@ -142,7 +161,7 @@ export const ResumeHero = () => {
                         className="hero__about" 
                         ref={(el) => { aboutRef.current = el; aboutObserverRef.current = el }}
                     >
-                        {presentation.about.map((item, index) => (
+                        {(presentation?.about || []).map((item, index) => (
                             <div 
                                 key={index} 
                                 className={`hero__about-item hero__about-item--${item.type}`}

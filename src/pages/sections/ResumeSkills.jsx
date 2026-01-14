@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { useInView } from '../../hooks/useInView'
+import { useTranslation } from '../../hooks/useTranslation'
+import { skills as skillsData } from '../../data/skills'
 import { ResumeSection } from './ResumeSection'
-import { skills } from '../../data/skills'
 import './ResumeSkills.css'
 
 /**
@@ -14,6 +15,14 @@ import './ResumeSkills.css'
  * - Uses Intersection Observer for reliable mobile detection
  */
 export const ResumeSkills = () => {
+    const { t } = useTranslation()
+    const translatedSkills = t('skills')
+    
+    // Use translated categories if available, fallback to static
+    const skills = {
+        ...skillsData,
+        categories: translatedSkills?.categories || skillsData.categories
+    }
     const gridRef = useRef(null)
     const [observerRef, isInView] = useInView({ threshold: 0.1 })
     const hasAnimated = useRef(false)
@@ -36,8 +45,8 @@ export const ResumeSkills = () => {
     }, [isInView])
     
     // Separate soft skills from technical skills
-    const technicalCategories = skills.categories.filter(cat => cat.name !== 'Soft Skills')
-    const softSkillsCategory = skills.categories.find(cat => cat.name === 'Soft Skills')
+    const technicalCategories = skills.categories?.filter(cat => cat.name !== 'Soft Skills') || []
+    const softSkillsCategory = skills.categories?.find(cat => cat.name === 'Soft Skills')
     
     return (
         <ResumeSection id="skills" title="Compétences" icon="◈">

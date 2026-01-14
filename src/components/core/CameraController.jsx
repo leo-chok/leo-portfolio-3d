@@ -37,7 +37,7 @@ const _tempShipUp = new THREE.Vector3()
  * - Individual Zustand selectors (minimal re-renders)
  * - Single controls.update() call per frame
  */
-export const CameraController = ({ startAnimation = false, shipRef }) => {
+export const CameraController = ({ startAnimation = false, shipRef, onIntroComplete }) => {
     const { camera } = useThree()
     const controls = useThree((state) => state.controls)
     
@@ -117,9 +117,11 @@ export const CameraController = ({ startAnimation = false, shipRef }) => {
                 controls.enabled = true
                 controls.autoRotate = true
                 controls.autoRotateSpeed = 0.3
+                // Notify parent that intro is complete
+                onIntroComplete?.()
             }
         })
-    }, [startAnimation, camera, controls])
+    }, [startAnimation, camera, controls, onIntroComplete])
     
     // === MAIN FRAME LOOP ===
     useFrame((state, delta) => {

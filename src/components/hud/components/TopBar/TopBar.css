@@ -309,9 +309,11 @@
 .cockpit-nav-arrow__icon {
     font-size: 28px;
     font-weight: 200;
-    line-height: 1;
+    line-height: 0;
     font-family: system-ui, sans-serif;
     transition: all 0.2s ease;
+    position: relative;
+    top: -2px;
 }
 
 .cockpit-nav-arrow:hover {

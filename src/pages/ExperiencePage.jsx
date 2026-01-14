@@ -4,6 +4,7 @@ import { Loader } from '@react-three/drei'
 import { Experience } from '../components/core/Experience'
 import { CockpitHUD } from '../components/hud/CockpitHUD'
 import { CockpitHUDMobile } from '../components/hud/CockpitHUDMobile'
+import { WelcomeModal } from '../components/hud/components/WelcomeModal/WelcomeModal'
 import { SpaceshipControls, DeathScreen } from '../game'
 import { MobileControls } from '../game/hud/mobile'
 import { DebugPanel } from '../components/hud/DebugPanel'
@@ -22,6 +23,7 @@ import { useIsMobile } from '../hooks/useIsMobile'
 function ExperiencePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [canStartAnimation, setCanStartAnimation] = useState(false)
+  const [showWelcome, setShowWelcome] = useState(false)
   const isSpaceshipMode = useSpaceshipStore(state => state.isSpaceshipMode)
   const isDead = useSpaceshipStore(state => state.isDead)
   const enterSpaceshipMode = useSpaceshipStore(state => state.enterSpaceshipMode)
@@ -65,6 +67,20 @@ function ExperiencePage() {
   const handleLoadingComplete = () => {
     setIsLoading(false)
   }
+  
+  // Called when intro camera animation completes (Overview mode)
+  const handleIntroComplete = () => {
+    const hasSeenWelcome = sessionStorage.getItem('hasSeenWelcome')
+    if (!hasSeenWelcome) {
+      setShowWelcome(true)
+    }
+  }
+  
+  // Close welcome modal and save to session
+  const handleCloseWelcome = () => {
+    setShowWelcome(false)
+    sessionStorage.setItem('hasSeenWelcome', 'true')
+  }
 
   return (
     <>
@@ -75,6 +91,12 @@ function ExperiencePage() {
           onComplete={handleLoadingComplete} 
         />
       )}
+      
+      {/* Welcome Modal - shown once after intro animation */}
+      <WelcomeModal 
+        isOpen={showWelcome} 
+        onStart={handleCloseWelcome} 
+      />
 
       <Canvas
         shadows
@@ -82,7 +104,7 @@ function ExperiencePage() {
       >
         <color attach="background" args={['#050a0f']} />
         <Suspense fallback={null}>
-          <Experience startAnimation={canStartAnimation} />
+          <Experience startAnimation={canStartAnimation} onIntroComplete={handleIntroComplete} />
         </Suspense>
       </Canvas>
       <Loader />

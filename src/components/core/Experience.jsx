@@ -14,7 +14,7 @@ import { Effects } from './Effects'
 import { useDebugStore } from '../../stores/debugStore'
 import { useSpaceshipStore } from '../../stores/spaceshipStore'
 
-export const Experience = ({ startAnimation = false }) => {
+export const Experience = ({ startAnimation = false, onIntroComplete }) => {
     // Get settings from debug store
     const starsCount = useDebugStore(state => state.starsCount)
     const dustCount = useDebugStore(state => state.dustCount)
@@ -35,7 +35,7 @@ export const Experience = ({ startAnimation = false }) => {
             )}
             
             {/* Unified camera controller */}
-            <CameraController startAnimation={startAnimation} shipRef={shipRef} />
+            <CameraController startAnimation={startAnimation} shipRef={shipRef} onIntroComplete={onIntroComplete} />
             
             <OrbitControls 
                 enableZoom={true} 
