@@ -37,7 +37,7 @@ export const Crosshair = ({ shipRef }) => {
     const BASE_Y = 0.09 // Offset to align with laser trajectory
     const BASE_Z = -1.5
     const OUTER_LERP_SPEED = 12
-    const CENTER_LERP_SPEED = 4
+    const CENTER_LERP_SPEED = 6     // Faster pursuit
     const ROTATION_SPEED_IDLE = 0.2
     const ROTATION_SPEED_TRACKING = 1.5
     
@@ -114,42 +114,41 @@ export const Crosshair = ({ shipRef }) => {
             }
         }
         
-        // Store auto-aim direction for laser firing
-        if (hasTarget && closestEnemy && shipRef?.current) {
-            const enemyPos = closestEnemy.current.position
-            const shipPos = shipRef.current.position
-            const direction = new THREE.Vector3(
-                enemyPos.x - shipPos.x,
-                enemyPos.y - shipPos.y,
-                enemyPos.z - shipPos.z
-            ).normalize()
-            
-            useGameStore.getState().setAutoAimTarget({ direction })
-        } else {
-            useGameStore.getState().setAutoAimTarget(null)
-        }
+        // Note: Auto-aim direction is now stored based on crosshair position (see below)
+        // Player must time shots when center cursor aligns with enemy
         
         if (hasTarget !== isTracking) {
             setIsTracking(hasTarget)
         }
         
         if (hasTarget && closestEnemy && shipRef?.current) {
-            // Project enemy position to crosshair plane
-            const enemyWorld = closestEnemy.current.position.clone()
+            // Same approach as EnemyDirectionIndicator
+            const enemyPos = closestEnemy.current.position
             const shipPos = shipRef.current.position
-            const toEnemy = enemyWorld.clone().sub(shipPos)
             
-            // Convert to local ship space for crosshair offset
-            const localEnemy = toEnemy.clone()
-            localEnemy.applyQuaternion(shipRef.current.quaternion.clone().invert())
+            // Direction to enemy in world space
+            const toEnemy = new THREE.Vector3().subVectors(enemyPos, shipPos)
+            const distance = toEnemy.length()
+            toEnemy.normalize()
             
-            // Scale down for crosshair plane distance
-            const scale = Math.abs(BASE_Z) / Math.max(0.1, -localEnemy.z)
-            targetPositionRef.current.set(
-                localEnemy.x * scale * 0.8,
-                localEnemy.y * scale * 0.8 + BASE_Y,
-                BASE_Z
-            )
+            // Convert to local ship space (same as EnemyDirectionIndicator)
+            const shipQuatInverse = shipRef.current.quaternion.clone().invert()
+            const localDir = toEnemy.clone().applyQuaternion(shipQuatInverse)
+            
+            // Project onto a plane at BASE_Z
+            // If enemy is in front (localDir.z < 0), scale the direction to reach the plane
+            if (localDir.z < 0) {
+                // Scale factor to reach plane at BASE_Z
+                const scale = BASE_Z / localDir.z  // Both negative, result positive
+                targetPositionRef.current.set(
+                    localDir.x * scale,
+                    localDir.y * scale + BASE_Y,
+                    BASE_Z
+                )
+            } else {
+                // Enemy behind, center crosshair
+                targetPositionRef.current.set(0, BASE_Y, BASE_Z)
+            }
         } else {
             targetPositionRef.current.set(0, BASE_Y, BASE_Z)
         }
@@ -159,12 +158,30 @@ export const Crosshair = ({ shipRef }) => {
         rotationRef.current += delta * rotSpeed
         arcsGroupRef.current.rotation.z = rotationRef.current
         
-        // === POSITION LERP ===
-        outerPositionRef.current.lerp(targetPositionRef.current, delta * OUTER_LERP_SPEED)
+        // === POSITION ===
+        // OUTER: Instant lock on target (no lerp)
+        outerPositionRef.current.copy(targetPositionRef.current)
         outerGroupRef.current.position.copy(outerPositionRef.current)
         
+        // CENTER: Slower lerp for delayed pursuit effect
         centerPositionRef.current.lerp(targetPositionRef.current, delta * CENTER_LERP_SPEED)
         centerGroupRef.current.position.copy(centerPositionRef.current)
+        
+        // === STORE CROSSHAIR AIM DIRECTION (where center cursor points) ===
+        // This is used for laser firing - NO auto-aim, player must time shots!
+        if (shipRef?.current) {
+            // Convert center crosshair position to world direction
+            // centerPositionRef is in local ship space, convert to world direction
+            const crosshairLocal = centerPositionRef.current.clone()
+            crosshairLocal.y -= BASE_Y // Remove Y offset
+            crosshairLocal.normalize()
+            
+            // Convert to world space direction
+            const crosshairWorldDir = crosshairLocal.clone()
+            crosshairWorldDir.applyQuaternion(shipRef.current.quaternion)
+            
+            useGameStore.getState().setAutoAimTarget({ direction: crosshairWorldDir })
+        }
         
         // Scale - only outer arcs and middle ring
         const s = scaleRef.current

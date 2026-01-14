@@ -23,8 +23,8 @@ export const BarrierEffect = () => {
     // Position is read inside useFrame to avoid re-renders from throttled updates
     const barrierIntensity = useSpaceshipStore(state => state.barrierIntensity)
     
-    // Barrier appears at this radius (beyond ship stop point for visual effect)
-    const BARRIER_RADIUS = 160
+    // Barrier appears beyond ship's stop point (ship stops at ~200)
+    const BARRIER_RADIUS = 210
     
     // Create radial gradient texture
     const texture = useMemo(() => {

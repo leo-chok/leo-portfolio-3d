@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from 'react'
+import { useRef, useMemo, useState, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import { useCameraStore } from '../../../stores/cameraStore'
@@ -32,6 +32,7 @@ export const Mothership = () => {
     
     // Register with body registry for camera tracking
     const registerBody = useCameraStore(state => state.registerBody)
+    const unregisterBody = useCameraStore(state => state.unregisterBody)
     
     // Movement state (refs to avoid re-renders)
     const positionRef = useRef(new THREE.Vector3(60, 15, 40))
@@ -52,12 +53,14 @@ export const Mothership = () => {
         hitboxSize: 2,            // Clickable area size
     }), [])
     
-    // Register this ship with the body registry
-    useMemo(() => {
+    // Register this ship with the body registry for collision detection
+    // Size 10 = collision radius for the large mothership hull
+    useEffect(() => {
         if (groupRef.current) {
-            registerBody('mothership', groupRef, 3, null)
+            registerBody('mothership', groupRef, 5, null)
         }
-    }, [registerBody])
+        return () => unregisterBody('mothership')
+    }, [registerBody, unregisterBody])
     
     // Pick a new random target point (far away from current position)
     const pickNewTarget = () => {
@@ -101,6 +104,23 @@ export const Mothership = () => {
         // Check if should pick new target (arrived OR minimum time passed)
         if (distance < 5 && timeSinceLastChange > config.minTimeBetweenTargets) {
             pickNewTarget()
+        }
+        
+        // === SUN AVOIDANCE ===
+        // Check if too close to sun (at origin) and steer away
+        const distFromSun = Math.sqrt(currentPos.x * currentPos.x + currentPos.z * currentPos.z)
+        const sunSafeRadius = 30 // Stay outside this radius (sun is ~15 units)
+        
+        if (distFromSun < sunSafeRadius) {
+            // Push away from sun
+            const awayFromSun = new THREE.Vector3(currentPos.x, 0, currentPos.z).normalize()
+            const pushStrength = (sunSafeRadius - distFromSun) * 0.5 * delta
+            currentPos.add(awayFromSun.multiplyScalar(pushStrength))
+            
+            // Pick new target away from sun
+            if (timeSinceLastChange > 2) {
+                pickNewTarget()
+            }
         }
         
         // Always move towards current target

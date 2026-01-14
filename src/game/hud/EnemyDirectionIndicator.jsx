@@ -4,34 +4,39 @@ import * as THREE from 'three'
 import { useGameStore } from '../../stores/gameStore'
 
 /**
- * EnemyDirectionIndicator - Arrows pointing to ALL enemies
+ * EnemyDirectionIndicator - 3D arrows on a sphere pointing to enemies
  * 
- * - One arrow per enemy
+ * - Positioned on a sphere around the ship for true 3D spatial awareness
+ * - 3D cone arrows point exactly toward each enemy
  * - Disappears when enemy is in field of view
- * - Size: LARGE when close, SMALL when far (inverted)
+ * - Size based on distance (close = big, far = small)
  */
 export const EnemyDirectionIndicator = ({ shipRef }) => {
     const groupRef = useRef()
-    const arrowsDataRef = useRef({}) // Track data per enemy
     
-    // Config - Match HUD circle dimensions
-    const HUD_RADIUS = 0.22 // Slightly outside the HUD arcs (0.18)
-    const HUD_Z = -0.5 // Same Z plane as HUD
-    const HUD_CENTER_Y = 0.05 // Vertical center of HUD
-    const MIN_SIZE = 0.5   // Far away
-    const MAX_SIZE = 1.5   // Close
-    const MIN_DISTANCE = 20
+    // Config
+    const SPHERE_RADIUS = 0.35    // Radius of indicator sphere around ship
+    const HUD_Z_OFFSET = -0.3     // Z offset in front of ship
+    const MIN_SIZE = 0.4          // Far away
+    const MAX_SIZE = 1.2          // Close
+    const MIN_DISTANCE = 15
     const MAX_DISTANCE = 100
-    const FOV_THRESHOLD = Math.cos(THREE.MathUtils.degToRad(35))
+    const FOV_THRESHOLD = Math.cos(THREE.MathUtils.degToRad(20)) // Hide when in view
+    
+    // Reusable vectors
+    const tempVec = useMemo(() => new THREE.Vector3(), [])
+    const tempQuat = useMemo(() => new THREE.Quaternion(), [])
+    const upVector = useMemo(() => new THREE.Vector3(0, 1, 0), [])
     
     // Get enemies from store
     const enemies = useGameStore(state => state.enemies)
     
-    useFrame((state, delta) => {
+    useFrame(() => {
         if (!groupRef.current || !shipRef?.current) return
         
         const enemyRefs = useGameStore.getState().enemyRefs
         const shipPos = shipRef.current.position
+        const shipQuatInverse = shipRef.current.quaternion.clone().invert()
         
         // Update each arrow
         groupRef.current.children.forEach((arrow, index) => {
@@ -48,25 +53,34 @@ export const EnemyDirectionIndicator = ({ shipRef }) => {
             }
             
             const enemyPos = enemyRef.current.position
-            const toEnemy = new THREE.Vector3().subVectors(enemyPos, shipPos)
-            const distance = toEnemy.length()
+            
+            // Direction to enemy in world space
+            tempVec.subVectors(enemyPos, shipPos)
+            const distance = tempVec.length()
+            tempVec.normalize()
             
             // Convert to local ship space
-            const localDir = toEnemy.clone()
-            localDir.applyQuaternion(shipRef.current.quaternion.clone().invert())
-            localDir.normalize()
+            const localDir = tempVec.clone().applyQuaternion(shipQuatInverse)
             
-            // Check if enemy is in front (within FOV)
-            const isInFront = localDir.z < 0 && Math.abs(localDir.z) > FOV_THRESHOLD
-            
-            if (isInFront) {
+            // Check if enemy is in front (within FOV) - hide indicator
+            // localDir.z < 0 means in front, we check if it's mostly forward
+            const forwardDot = -localDir.z // How much is it in front
+            if (forwardDot > FOV_THRESHOLD) {
                 arrow.visible = false
                 return
             }
             
-            // Calculate angle for circular placement
-            // Use X and Y for 2D circle, angle 0 = top
-            const angle = Math.atan2(localDir.x, -localDir.y)
+            // Position arrow on sphere surface in local space
+            // The arrow sits on the sphere, pointing toward the enemy
+            const spherePos = localDir.clone().multiplyScalar(SPHERE_RADIUS)
+            spherePos.z += HUD_Z_OFFSET // Shift forward to be visible
+            
+            arrow.position.copy(spherePos)
+            
+            // Rotate arrow to point toward enemy direction
+            // Create a quaternion that rotates from default (pointing +Y) to localDir
+            tempQuat.setFromUnitVectors(upVector, localDir)
+            arrow.quaternion.copy(tempQuat)
             
             // Size based on distance - INVERTED (close = big, far = small)
             const distanceFactor = THREE.MathUtils.clamp(
@@ -74,43 +88,22 @@ export const EnemyDirectionIndicator = ({ shipRef }) => {
                 0, 1
             )
             const size = MAX_SIZE - distanceFactor * (MAX_SIZE - MIN_SIZE)
+            arrow.scale.setScalar(size)
             
-            // Position arrow on circle around HUD
-            arrow.position.set(
-                Math.sin(angle) * HUD_RADIUS,
-                HUD_CENTER_Y + Math.cos(angle) * HUD_RADIUS,
-                HUD_Z
-            )
-            
-            // Rotate arrow to point outward (towards enemy direction)
-            arrow.rotation.z = -angle
-            arrow.scale.set(size, size, 1)
             arrow.visible = true
         })
     })
     
-    // Arrow geometry
-    const arrowGeometry = useMemo(() => {
-        const shape = new THREE.Shape()
-        const s = 0.012
-        
-        shape.moveTo(0, s * 1.2)
-        shape.lineTo(-s, 0)
-        shape.lineTo(-s * 0.4, 0)
-        shape.lineTo(0, s * 0.5)
-        shape.lineTo(s * 0.4, 0)
-        shape.lineTo(s, 0)
-        shape.closePath()
-        
-        return new THREE.ShapeGeometry(shape)
+    // 3D Cone geometry for arrow (pointing +Y by default)
+    const coneGeometry = useMemo(() => {
+        return new THREE.ConeGeometry(0.015, 0.04, 8)
     }, [])
     
-    // Create materials once
+    // Materials
     const mainMaterial = useMemo(() => new THREE.MeshBasicMaterial({
         color: '#ff4444',
         transparent: true,
         opacity: 0.9,
-        side: THREE.DoubleSide,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     }), [])
@@ -118,21 +111,20 @@ export const EnemyDirectionIndicator = ({ shipRef }) => {
     const glowMaterial = useMemo(() => new THREE.MeshBasicMaterial({
         color: '#ff6600',
         transparent: true,
-        opacity: 0.4,
-        side: THREE.DoubleSide,
+        opacity: 0.3,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     }), [])
     
     return (
         <group ref={groupRef}>
-            {/* Render one arrow group per enemy */}
-            {enemies.map((enemy, index) => (
+            {/* Render one 3D arrow per enemy */}
+            {enemies.map((enemy) => (
                 <group key={enemy.id} visible={false}>
-                    {/* Main arrow */}
-                    <mesh geometry={arrowGeometry} material={mainMaterial} />
-                    {/* Glow */}
-                    <mesh geometry={arrowGeometry} material={glowMaterial} scale={1.3} />
+                    {/* Main cone */}
+                    <mesh geometry={coneGeometry} material={mainMaterial} />
+                    {/* Glow cone */}
+                    <mesh geometry={coneGeometry} material={glowMaterial} scale={1.4} />
                 </group>
             ))}
         </group>

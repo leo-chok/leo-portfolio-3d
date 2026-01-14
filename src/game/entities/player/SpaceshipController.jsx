@@ -69,9 +69,9 @@ export const SpaceshipController = forwardRef((props, ref) => {
             // Get mothership world position
             const mothershipPos = new THREE.Vector3()
             mothership.ref.current.getWorldPosition(mothershipPos)
-            // Spawn 3 units to the left of mothership
+            // Spawn 8 units to the left of mothership (outside collision radius)
             groupRef.current.position.set(
-                mothershipPos.x - 3,
+                mothershipPos.x - 8,
                 mothershipPos.y,
                 mothershipPos.z
             )
