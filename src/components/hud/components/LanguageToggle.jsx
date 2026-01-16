@@ -1,4 +1,5 @@
 import { useLanguage } from '../../../context/LanguageContext'
+import { useAudioStore } from '../../../stores/audioStore'
 import './LanguageToggle.css'
 
 /**
@@ -8,10 +9,27 @@ import './LanguageToggle.css'
 export const LanguageToggle = () => {
     const { language, toggleLanguage } = useLanguage()
     
+    const handleClick = async () => {
+        const audioStore = useAudioStore.getState()
+        
+        // Initialize audio if first interaction
+        if (!audioStore.isInitialized) {
+            await audioStore.initAudio()
+            // Wait for buffer to load, then play sound
+            setTimeout(() => {
+                useAudioStore.getState().playClick()
+            }, 200)
+        } else {
+            audioStore.playClick()
+        }
+        
+        toggleLanguage()
+    }
+    
     return (
         <button 
             className="language-toggle"
-            onClick={toggleLanguage}
+            onClick={handleClick}
             aria-label={`Switch to ${language === 'fr' ? 'English' : 'Français'}`}
         >
             <span className="language-toggle__label">LANG</span>

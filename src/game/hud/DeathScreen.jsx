@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { useSpaceshipStore } from '../../stores/spaceshipStore'
+import { useAudioStore } from '../../stores/audioStore'
 import './DeathScreen.css'
 
 /**
@@ -8,6 +10,15 @@ import './DeathScreen.css'
  */
 export const DeathScreen = () => {
     const isDead = useSpaceshipStore(state => state.isDead)
+    
+    // Stop music and play game over sound when death screen appears
+    useEffect(() => {
+        if (isDead) {
+            const audioStore = useAudioStore.getState()
+            audioStore.stopAmbient()  // Stop chase music
+            audioStore.playGameOver()
+        }
+    }, [isDead])
     
     if (!isDead) return null
     

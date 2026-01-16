@@ -8,8 +8,10 @@ import { HudCallout } from '../hud3d/HudCallout'
 import { SunFresnelMaterial } from '../materials/SunFresnelMaterial'
 import { GlowHalo } from '../materials/GlowHalo'
 import { SolarCorona } from '../materials/SolarCorona'
+import { SolarEruptions } from '../materials/SolarEruptions'
 import { useCameraStore } from '../../../stores/cameraStore'
 import { useDebugStore, hueToColor } from '../../../stores/debugStore'
+import { useAudioStore } from '../../../stores/audioStore'
 
 /**
  * Sun Component - Dynamic star with corona, flares, and halos
@@ -72,6 +74,8 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
             onClick?.(null, null)
             return
         }
+        // Play planet click sound (for sun too)
+        useAudioStore.getState().playPlanetClick()
         setTrackedRef(groupRef, size, id)
         onClick?.(position, size)
     }
@@ -120,6 +124,9 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
                 color={flareColor}
                 intensity={0.7}
             />
+            
+            {/* Solar eruptions - random animated flares */}
+            <SolarEruptions sunRadius={size * 0.5} />
             
             <pointLight color={color} intensity={intensity} distance={300} decay={1.5} />
             

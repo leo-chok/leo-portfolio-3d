@@ -9,11 +9,11 @@ import { COLORS } from '../../../config/galaxyConfig'
 export const OrbitRing = ({ radius, color = '#aaccff' }) => {
     return (
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[radius - 0.03, radius + 0.03, 128]} />
+            <ringGeometry args={[radius - 0.01, radius + 0.01, 128]} />
             <meshBasicMaterial 
                 color={color}
                 transparent
-                opacity={0.25}
+                opacity={0.4}
                 side={THREE.DoubleSide}
                 toneMapped={false}
             />

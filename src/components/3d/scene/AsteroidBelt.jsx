@@ -12,13 +12,13 @@ import { useAsteroidStore } from '../../../stores/asteroidStore'
 
 // Configuration
 const ASTEROID_COUNT = 300
-const INNER_RADIUS = 98
+const INNER_RADIUS = 95
 const OUTER_RADIUS = 105
 const BELT_THICKNESS = 2 // Vertical spread
 
 export const AsteroidBelt = ({ 
     asteroidPath = '/asteroid.glb',
-    color = '#667a7aff'
+    color = '#96afb8ff'
 }) => {
     const meshRef = useRef()
     const { nodes } = useGLTF(asteroidPath)

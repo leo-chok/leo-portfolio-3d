@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRocket, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { useAudioStore } from '../../../../stores/audioStore'
 import './SuccessModal.css'
 
 /**
@@ -13,6 +15,13 @@ import './SuccessModal.css'
  * - onLaunchSpaceship: function - callback to launch the spaceship
  */
 export const SuccessModal = ({ isOpen, onClose, onLaunchSpaceship }) => {
+    // Play notification sound when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            useAudioStore.getState().playNotification()
+        }
+    }, [isOpen])
+    
     if (!isOpen) return null
     
     const handleLaunch = (e) => {

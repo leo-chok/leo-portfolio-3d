@@ -1,7 +1,9 @@
+import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSatellite, faCompass } from '@fortawesome/free-solid-svg-icons'
 import { useTranslation } from '../../../../hooks/useTranslation'
+import { useAudioStore } from '../../../../stores/audioStore'
 import './WelcomeModal.css'
 
 /**
@@ -14,6 +16,13 @@ import './WelcomeModal.css'
  */
 export const WelcomeModal = ({ isOpen, onStart }) => {
     const { t } = useTranslation()
+    
+    // Play notification sound when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            useAudioStore.getState().playNotification()
+        }
+    }, [isOpen])
     
     if (!isOpen) return null
     

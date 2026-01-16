@@ -32,11 +32,11 @@ export const EnemySpawner = () => {
         minZ: -100, maxZ: 100
     }
     
-    // Start first wave
+    // Start first wave (delayed to match chase music)
     useEffect(() => {
         const timer = setTimeout(() => {
             useGameStore.getState().startWave(1)
-        }, 2000)
+        }, 5000) // 5 seconds delay for dramatic effect
         return () => clearTimeout(timer)
     }, [])
     

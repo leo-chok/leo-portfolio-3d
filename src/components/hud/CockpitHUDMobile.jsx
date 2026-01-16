@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useCockpitLogic } from './hooks/useCockpitLogic'
 import { useTranslation } from '../../hooks/useTranslation'
 import { useLanguage } from '../../context/LanguageContext'
+import { useZenModeStore } from '../../stores/zenModeStore'
+import { useAudioStore } from '../../stores/audioStore'
 import { SuccessModal } from './components'
 import './CockpitHUDMobile.css'
 
@@ -12,13 +14,17 @@ import './CockpitHUDMobile.css'
  * New UX design with:
  * - Burger menu top left with slide-in panel
  * - Bottom bar with navigation arrows + system name + analyze button
- * - Menu contains: systems list, language toggle, back to home
+ * - Menu contains: systems list, language toggle, zen mode, audio toggle, back to home
  */
 export const CockpitHUDMobile = () => {
     const logic = useCockpitLogic()
     const navigate = useNavigate()
     const { t } = useTranslation()
     const { language, toggleLanguage } = useLanguage()
+    const enterZenMode = useZenModeStore(state => state.enterZenMode)
+    const isMuted = useAudioStore(state => state.isMuted)
+    const isAudioInitialized = useAudioStore(state => state.isInitialized)
+    const toggleMute = useAudioStore(state => state.toggleMute)
     const ui = t('ui')
     
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -34,6 +40,15 @@ export const CockpitHUDMobile = () => {
     const handleSelectSection = (section) => {
         logic.handleDropdownSelect(section)
         setIsMenuOpen(false)
+    }
+    
+    const handleZenMode = () => {
+        setIsMenuOpen(false)
+        enterZenMode()
+    }
+    
+    const handleToggleAudio = () => {
+        toggleMute()
     }
 
     return (
@@ -164,6 +179,26 @@ export const CockpitHUDMobile = () => {
                         <span className={language === 'en' ? 'active' : ''}>EN</span>
                     </span>
                 </button>
+                
+                {/* Zen Mode */}
+                <button 
+                    className="hud-mobile__menu-zen"
+                    onClick={handleZenMode}
+                >
+                    <span className="hud-mobile__menu-zen-icon">☀</span>
+                    <span className="hud-mobile__menu-zen-text">{ui.zenMode || 'MODE ZEN'}</span>
+                </button>
+                
+                {/* Audio Toggle */}
+                {isAudioInitialized && (
+                    <button 
+                        className="hud-mobile__menu-audio"
+                        onClick={handleToggleAudio}
+                    >
+                        <span className="hud-mobile__menu-audio-icon">{isMuted ? '🔇' : '🔊'}</span>
+                        <span className="hud-mobile__menu-audio-text">{isMuted ? (ui.unmute || 'ACTIVER SON') : (ui.mute || 'COUPER SON')}</span>
+                    </button>
+                )}
                 
                 {/* Divider */}
                 <div className="hud-mobile__menu-divider" />

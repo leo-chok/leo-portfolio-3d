@@ -2,6 +2,7 @@ import { useRef, useEffect, useCallback } from 'react'
 import * as THREE from 'three'
 import { useSpaceshipStore } from '../../../../stores/spaceshipStore'
 import { useGameStore } from '../../../../stores/gameStore'
+import { useAudioStore } from '../../../../stores/audioStore'
 
 /**
  * useShipInput - Keyboard input handling for spaceship
@@ -70,6 +71,11 @@ export function useShipInput(groupRef) {
             direction: shootDirection.clone(),
             owner: 'player'
         })
+        
+        // Play laser sound (no 3D since player is near camera)
+        const { playLaser } = useAudioStore.getState()
+        console.log('[Player] Firing laser, playLaser:', typeof playLaser)
+        playLaser(0.3)
     }, [groupRef])
     
     // Keyboard event handlers

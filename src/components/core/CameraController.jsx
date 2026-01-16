@@ -6,6 +6,7 @@ import gsap from 'gsap'
 // Import stores with individual selectors for optimization
 import { useCameraStore } from '../../stores/cameraStore'
 import { useSpaceshipStore } from '../../stores/spaceshipStore'
+import { useZenModeStore } from '../../stores/zenModeStore'
 
 // ============================================
 // PRE-ALLOCATED VECTORS (avoid GC in useFrame)
@@ -126,6 +127,69 @@ export const CameraController = ({ startAnimation = false, shipRef, onIntroCompl
     // === MAIN FRAME LOOP ===
     useFrame((state, delta) => {
         if (!controls || introActive.current) return
+        
+        // ===== ZEN MODE (Contemplative screensaver) =====
+        const { isZenMode, cameraPosition, lookAtTarget, fadeState } = useZenModeStore.getState()
+        
+        if (isZenMode) {
+            // Disable orbit controls in zen mode
+            controls.enabled = false
+            controls.autoRotate = false
+            
+            const { fadeOpacity } = useZenModeStore.getState()
+            
+            // During fade (screen is black) - teleport instantly
+            // During visible - just apply subtle drift
+            if (fadeOpacity > 0.95) {
+                // Teleport camera to new position during black screen
+                camera.position.copy(cameraPosition)
+            }
+            
+            // Subtle orbit drift for organic movement
+            const time = state.clock.elapsedTime
+            const driftRadius = 3
+            const driftSpeed = 0.05
+            camera.position.x += Math.sin(time * driftSpeed) * driftRadius * delta
+            camera.position.z += Math.cos(time * driftSpeed * 0.7) * driftRadius * delta
+            camera.position.y += Math.sin(time * driftSpeed * 0.5) * driftRadius * 0.3 * delta
+            
+            // Determine lookAt target
+            let finalLookAt = _overviewTarget.clone()
+            if (lookAtTarget === 'mothership') {
+                // Dynamic mothership tracking
+                const bodyRegistry = useCameraStore.getState().bodyRegistry
+                const mothership = bodyRegistry['mothership']
+                if (mothership?.ref?.current) {
+                    mothership.ref.current.getWorldPosition(finalLookAt)
+                }
+            } else if (typeof lookAtTarget === 'string') {
+                // Planet tracking - lookAtTarget is the planet ID
+                const bodyRegistry = useCameraStore.getState().bodyRegistry
+                const planet = bodyRegistry[lookAtTarget]
+                if (planet?.ref?.current) {
+                    planet.ref.current.getWorldPosition(finalLookAt)
+                }
+            } else if (lookAtTarget instanceof THREE.Vector3) {
+                finalLookAt.copy(lookAtTarget)
+            }
+            
+            // During fade - teleport lookAt instantly
+            // During visible - smooth tracking
+            if (fadeOpacity > 0.95) {
+                controls.target.copy(finalLookAt)
+            } else {
+                // Smooth lookAt for dynamic tracking (planets/mothership move)
+                const trackSmoothing = 2
+                const trackLag = 1 - Math.exp(-trackSmoothing * delta)
+                controls.target.lerp(finalLookAt, trackLag)
+            }
+            camera.lookAt(controls.target)
+            
+            // Reset camera up vector
+            camera.up.set(0, 1, 0)
+            
+            return
+        }
         
         // ===== SPACESHIP MODE (Immersive 3rd person) =====
         if (isSpaceshipMode && shipRef?.current) {

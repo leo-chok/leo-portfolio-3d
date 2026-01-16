@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { useCameraStore } from './cameraStore'
 import { useGameStore } from './gameStore'
+import { useAudioStore } from './audioStore'
 
 /**
  * Spaceship Store - Manages spaceship flight mode state
@@ -9,6 +10,7 @@ import { useGameStore } from './gameStore'
  * - Toggle spaceship control mode
  * - Track speed and boost state
  * - Collision event hooks (prepared for future)
+ * - Auto-switch to chase music
  */
 export const useSpaceshipStore = create((set, get) => ({
     // Is the spaceship mode active?
@@ -56,6 +58,15 @@ export const useSpaceshipStore = create((set, get) => ({
         // Reset game state (waves, enemies, score) to start fresh
         useGameStore.getState().clearAll()
         
+        // Start engine immediately
+        const audioStore = useAudioStore.getState()
+        audioStore.startEngine()
+        
+        // Delay chase music and enemy waves by 5 seconds
+        setTimeout(() => {
+            audioStore.switchAmbient('chase')
+        }, 5000)
+        
         set((state) => ({
             isSpaceshipMode: true,
             speed: 0,
@@ -81,6 +92,9 @@ export const useSpaceshipStore = create((set, get) => ({
         
         set({ health: newHealth, isHit: true })
         
+        // Play shield hit sound
+        useAudioStore.getState().playShieldHit()
+        
         // Clear hit flash after 200ms
         setTimeout(() => {
             useSpaceshipStore.setState({ isHit: false })
@@ -99,6 +113,9 @@ export const useSpaceshipStore = create((set, get) => ({
      * @param {Array} position - [x, y, z] position for explosion
      */
     die: (position) => {
+        // Stop engine sound
+        useAudioStore.getState().stopEngine()
+        
         set({
             isDead: true,
             deathPosition: position,
@@ -119,6 +136,12 @@ export const useSpaceshipStore = create((set, get) => ({
             isDead: false,
             deathPosition: null
         })
+        
+        // Switch back to space ambient and stop engine
+        const audioStore = useAudioStore.getState()
+        audioStore.stopEngine()
+        audioStore.switchAmbient('space')
+        
         // Return camera to overview orbiting position
         useCameraStore.getState().returnToOverview()
     },

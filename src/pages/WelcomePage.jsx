@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from '../hooks/useTranslation'
 import { LanguageToggle } from '../components/hud/components/LanguageToggle'
+import { useAudioStore } from '../stores/audioStore'
 import './WelcomePage.css'
 
 /**
@@ -13,12 +14,18 @@ import './WelcomePage.css'
  * - Animated background with grid lines
  * - Entry animations
  * - Language toggle for FR/EN
+ * - Audio initialization on first button click
  */
 export const WelcomePage = () => {
     const navigate = useNavigate()
     const containerRef = useRef(null)
     const { t } = useTranslation()
     const welcome = t('ui.welcomePage')
+    
+    // Audio store actions
+    const initAudio = useAudioStore(state => state.initAudio)
+    const playValidation = useAudioStore(state => state.playValidation)
+    const isInitialized = useAudioStore(state => state.isInitialized)
     
     // Entry animation
     useEffect(() => {
@@ -28,12 +35,28 @@ export const WelcomePage = () => {
         }
     }, [])
     
+    // Start audio on first interaction (UI sounds only, ambient starts on destination pages)
+    const startAudioAndNavigate = async (path) => {
+        if (!isInitialized) {
+            await initAudio()
+            // Wait for UI sound buffers to load
+            setTimeout(() => {
+                playValidation()
+                navigate(path)
+            }, 300)
+            return
+        }
+        // Already initialized, play immediately
+        playValidation()
+        navigate(path)
+    }
+    
     const handleResumeClick = () => {
-        navigate('/resume')
+        startAudioAndNavigate('/resume')
     }
     
     const handleExperienceClick = () => {
-        navigate('/experience')
+        startAudioAndNavigate('/experience')
     }
     
     return (

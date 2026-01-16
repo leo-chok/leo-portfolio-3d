@@ -1,6 +1,7 @@
 import { useCameraStore } from '../../../stores/cameraStore'
 import { useWindowStore } from '../../../stores/windowStore'
 import { useSpaceshipStore } from '../../../stores/spaceshipStore'
+import { useAudioStore } from '../../../stores/audioStore'
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { GALAXY_MAP } from '../../../config/galaxyConfig'
 import { useDecryptingText } from '../../../utils/textUtils'
@@ -81,16 +82,19 @@ export const useCockpitLogic = () => {
     const showAnalyzeButton = isTracking && trackedId && activeSection !== 'overview'
     const isLoading = loadingSection === trackedId
     
+    // Check if any windows are open
+    const hasOpenWindows = windows.length > 0
+    
     // Effects
+    // Show success modal only when all discovered AND no windows are open
     useEffect(() => {
-        if (allDiscovered && !showSuccessModal && !dismissedSuccess) {
+        if (allDiscovered && !showSuccessModal && !dismissedSuccess && !hasOpenWindows) {
             const timer = setTimeout(() => {
-                closeAllWindows() // Close all windows before showing modal
                 setShowSuccessModal(true)
             }, 1000)
             return () => clearTimeout(timer)
         }
-    }, [allDiscovered, dismissedSuccess, closeAllWindows])
+    }, [allDiscovered, dismissedSuccess, hasOpenWindows])
     
     useEffect(() => {
         if (trackedId) {
@@ -165,6 +169,7 @@ export const useCockpitLogic = () => {
         if (trackedId && !loadingSection) {
             if (trackedId === 'mothership') {
                 if (!analyzedSections.has(trackedId)) {
+                    useAudioStore.getState().playDecrypt()
                     startLoading(trackedId)
                 }
                 return
@@ -172,10 +177,12 @@ export const useCockpitLogic = () => {
             
             if (trackedProjectData) {
                 if (!analyzedSections.has(trackedId)) {
+                    useAudioStore.getState().playDecrypt()
                     startLoading(trackedId)
                 }
                 openProjectWindow(trackedProjectData)
             } else if (!analyzedSections.has(trackedId)) {
+                useAudioStore.getState().playDecrypt()
                 startLoading(trackedId)
             } else if (!sectionHasWindow) {
                 openData(trackedId)

@@ -4,6 +4,7 @@ import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { useGameStore } from '../../../stores/gameStore'
 import { useSpaceshipStore } from '../../../stores/spaceshipStore'
+import { useAudioStore } from '../../../stores/audioStore'
 import { EnemyEngineGlow } from './EnemyEngineGlow'
 import { ENEMY_CONFIG } from '../../config'
 
@@ -262,6 +263,9 @@ export const EnemyShip = ({ id, initialPosition = [0, 0, 0], health = 1 }) => {
             speed: 60,
             lifetime: 3
         })
+        
+        // Play laser sound with 3D positioning (uses SFX_VOLUMES.enemyLaser)
+        useAudioStore.getState().playLaser3D({ x: pos.x, y: pos.y, z: pos.z })
     }
     
     return (

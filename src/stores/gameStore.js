@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { useAudioStore } from './audioStore'
 
 /**
  * Game Store - Centralized state for game entities and systems
@@ -70,6 +71,10 @@ export const useGameStore = create((set, get) => ({
         set(state => ({
             explosions: [...state.explosions, { id, position, scale }]
         }))
+        
+        // Play explosion sound with 3D position
+        useAudioStore.getState().playExplosion(position)
+        
         return id
     },
     

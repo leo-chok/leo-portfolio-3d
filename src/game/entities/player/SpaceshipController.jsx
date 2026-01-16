@@ -4,6 +4,7 @@ import { useGLTF } from '@react-three/drei'
 import { useSpaceshipStore } from '../../../stores/spaceshipStore'
 import { useCameraStore } from '../../../stores/cameraStore'
 import { useGameStore } from '../../../stores/gameStore'
+import { useAudioStore } from '../../../stores/audioStore'
 import { useMobileInputStore } from '../../../stores/mobileInputStore'
 import { ShipHUD3D, Crosshair, EnemyDirectionIndicator } from '../../hud'
 import { EngineGlow, ShipDust, BarrierEffect } from '../effects'
@@ -173,6 +174,9 @@ export const SpaceshipController = forwardRef((props, ref) => {
                     direction: shootDirection.clone(),
                     owner: 'player'
                 })
+                
+                // Play laser sound (uses SFX_VOLUMES.playerLaser)
+                useAudioStore.getState().playLaser()
             }
         }
         
@@ -306,6 +310,10 @@ export const SpaceshipController = forwardRef((props, ref) => {
                     direction: shootDirection.clone(),
                     owner: 'player'
                 })
+                
+                // Play laser sound
+                // Play laser sound (uses SFX_VOLUMES.playerLaser)
+                useAudioStore.getState().playLaser()
             }
         }
         
@@ -368,6 +376,10 @@ export const SpaceshipController = forwardRef((props, ref) => {
         if (Math.abs(displaySpeed - lastUpdate.speed) >= config.speedThreshold) {
             setSpeed(displaySpeed)
             lastUpdate.speed = displaySpeed
+            
+            // Update engine sound pitch/volume based on speed percentage
+            const speedPercent = displaySpeed / config.maxSpeedKmh
+            useAudioStore.getState().updateEngine(speedPercent)
         }
         
         // === THROTTLED POSITION UPDATE ===
@@ -380,6 +392,9 @@ export const SpaceshipController = forwardRef((props, ref) => {
             lastUpdate.positionX = pos.x
             lastUpdate.positionY = pos.y
             lastUpdate.positionZ = pos.z
+            
+            // Update 3D audio listener position to follow player
+            useAudioStore.getState().updateListenerPosition({ x: pos.x, y: pos.y, z: pos.z })
         }
     }, -1) // Priority -1: run BEFORE default (0) priority - camera runs at default
     

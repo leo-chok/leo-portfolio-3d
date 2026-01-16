@@ -509,6 +509,65 @@
     text-shadow: 0 0 8px rgba(100, 237, 180, 0.5);
 }
 
+/* Zen Mode Button */
+.hud-mobile__menu-zen {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    font-family: 'Orbitron', monospace;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s ease;
+}
+
+.hud-mobile__menu-zen:active {
+    background: rgba(124, 196, 237, 0.1);
+}
+
+.hud-mobile__menu-zen-icon {
+    font-size: 16px;
+    color: rgba(255, 200, 80, 0.8);
+}
+
+.hud-mobile__menu-zen-text {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(124, 196, 237, 0.7);
+}
+
+/* Audio Toggle Button */
+.hud-mobile__menu-audio {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    font-family: 'Orbitron', monospace;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s ease;
+}
+
+.hud-mobile__menu-audio:active {
+    background: rgba(124, 196, 237, 0.1);
+}
+
+.hud-mobile__menu-audio-icon {
+    font-size: 16px;
+}
+
+.hud-mobile__menu-audio-text {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(124, 196, 237, 0.7);
+}
+
 /* Back to Home */
 .hud-mobile__menu-home {
     display: flex;

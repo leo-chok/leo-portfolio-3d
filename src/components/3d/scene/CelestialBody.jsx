@@ -8,6 +8,7 @@ import { Satellite } from './Satellite'
 import { PlanetRimMaterial } from '../materials/PlanetRimMaterial'
 import { useCameraStore } from '../../../stores/cameraStore'
 import { useDebugStore } from '../../../stores/debugStore'
+import { useAudioStore } from '../../../stores/audioStore'
 
 /**
  * CelestialBody Component - Optimized for performance
@@ -75,6 +76,8 @@ export const CelestialBody = ({
             onClick?.(null, null)
             return
         }
+        // Play planet click sound
+        useAudioStore.getState().playPlanetClick()
         setTrackedRef(groupRef, size, id, projectData)
         const worldPos = new THREE.Vector3()
         groupRef.current?.getWorldPosition(worldPos)

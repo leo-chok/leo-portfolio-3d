@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 import { useLanguage } from '../context/LanguageContext'
+import { useAudioStore } from '../stores/audioStore'
 
 // Sections
 import { ResumeHero } from './sections/ResumeHero'
@@ -27,6 +29,19 @@ import './sections/ResumeSection.css'
 export const ResumePage = () => {
     const navigate = useNavigate()
     const { language, toggleLanguage } = useLanguage()
+    
+    // Start ambient music when page loads
+    useEffect(() => {
+        const startAmbient = async () => {
+            const audioStore = useAudioStore.getState()
+            if (audioStore.isInitialized && !audioStore.isAmbientPlaying) {
+                // Wait for buffer to load if not ready
+                await audioStore.loadAmbient('space')
+                audioStore.playAmbient('space')
+            }
+        }
+        startAmbient()
+    }, [])
     
     const handleExperienceClick = () => {
         navigate('/experience')

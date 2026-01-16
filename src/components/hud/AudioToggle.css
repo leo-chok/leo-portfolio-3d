@@ -1,0 +1,99 @@
+/* ===========================
+   AUDIO TOGGLE BUTTON
+   Matches CockpitHUD style
+   =========================== */
+
+.audio-toggle {
+    position: fixed;
+    bottom: 90px; /* Above zen button */
+    left: 50px;   /* Aligned with zen button */
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-top: 1px solid rgba(124, 196, 237, 0.15);
+    border-bottom: 1px solid rgba(124, 196, 237, 0.25);
+    color: rgba(124, 196, 237, 0.75);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Corner brackets */
+.audio-toggle::before,
+.audio-toggle::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-color: rgba(124, 196, 237, 0.4);
+    border-style: solid;
+    transition: all 0.3s ease;
+}
+
+.audio-toggle::before {
+    top: 0;
+    left: 0;
+    border-width: 1px 0 0 1px;
+}
+
+.audio-toggle::after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 1px 1px 0;
+}
+
+.audio-toggle:hover {
+    color: rgba(124, 196, 237, 1);
+    text-shadow: 0 0 10px rgba(124, 196, 237, 0.4);
+}
+
+.audio-toggle:hover::before,
+.audio-toggle:hover::after {
+    border-color: rgba(124, 196, 237, 0.8);
+    width: 10px;
+    height: 10px;
+}
+
+.audio-toggle:active {
+    transform: scale(0.95);
+}
+
+.audio-toggle svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Muted state - red accent */
+.audio-toggle--muted {
+    color: rgba(237, 124, 124, 0.75);
+}
+
+.audio-toggle--muted::before,
+.audio-toggle--muted::after {
+    border-color: rgba(237, 124, 124, 0.4);
+}
+
+.audio-toggle--muted:hover {
+    color: rgba(237, 124, 124, 1);
+}
+
+.audio-toggle--muted:hover::before,
+.audio-toggle--muted:hover::after {
+    border-color: rgba(237, 124, 124, 0.8);
+}
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+    .audio-toggle {
+        display: none;
+    }
+}

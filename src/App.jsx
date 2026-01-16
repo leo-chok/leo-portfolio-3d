@@ -8,7 +8,11 @@ import { DebugPanel } from './components/hud/DebugPanel'
 import { WindowManager } from './components/hud/WindowManager'
 import { Taskbar } from './components/hud/common/Taskbar'
 import { LoadingScreen } from './components/hud/LoadingScreen'
+import { ZenModeButton } from './components/hud/ZenModeButton'
+import { ZenModeOverlay } from './components/hud/ZenModeOverlay'
 import { useSpaceshipStore } from './stores/spaceshipStore'
+import { useZenModeStore } from './stores/zenModeStore'
+import { useAudioStore } from './stores/audioStore'
 
 console.log('[App] WaveAnnouncement imported:', WaveAnnouncement)
 
@@ -18,6 +22,7 @@ function App() {
   const isSpaceshipMode = useSpaceshipStore(state => state.isSpaceshipMode)
   const enterSpaceshipMode = useSpaceshipStore(state => state.enterSpaceshipMode)
   const exitSpaceshipMode = useSpaceshipStore(state => state.exitSpaceshipMode)
+  const isZenMode = useZenModeStore(state => state.isZenMode)
   
   // Global T key toggle for spaceship mode
   useEffect(() => {
@@ -34,6 +39,8 @@ function App() {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isSpaceshipMode, enterSpaceshipMode, exitSpaceshipMode])
+  
+  // Note: Global hover/click sounds are now handled in Router.jsx GlobalAudioListeners
 
   // Called when loading reaches 100% (before fade out)
   const handleReadyToAnimate = () => {
@@ -65,12 +72,23 @@ function App() {
         </Suspense>
       </Canvas>
       <Loader />
-      <CockpitHUD />
-      <SpaceshipControls />
-      <WaveAnnouncement />
-      <WindowManager />
-      <Taskbar />
-      <DebugPanel />
+      
+      {/* HUD components - hidden in zen mode */}
+      {!isZenMode && (
+        <>
+          <CockpitHUD />
+          <SpaceshipControls />
+          <WaveAnnouncement />
+          <WindowManager />
+          <Taskbar />
+          <DebugPanel />
+        </>
+      )}
+      
+      {/* Zen Mode UI */}
+      {console.log('[App] ZenModeButton conditions:', { isLoading, isSpaceshipMode })}
+      {!isLoading && !isSpaceshipMode && <ZenModeButton />}
+      <ZenModeOverlay />
     </>
   )
 }

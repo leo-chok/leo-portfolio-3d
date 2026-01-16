@@ -1,0 +1,80 @@
+/* ===========================
+   ZEN MODE BUTTON
+   Matches CockpitHUD style
+   =========================== */
+
+.zen-mode-button {
+    position: fixed;
+    bottom: 40px;
+    left: 50px;
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    border-top: 1px solid rgba(124, 196, 237, 0.15);
+    border-bottom: 1px solid rgba(124, 196, 237, 0.25);
+    color: rgba(124, 196, 237, 0.75);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Corner brackets - minimal like analyze button */
+.zen-mode-button::before,
+.zen-mode-button::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: rgba(124, 196, 237, 0.4);
+    border-style: solid;
+    transition: all 0.3s ease;
+}
+
+.zen-mode-button::before {
+    top: 0;
+    left: 0;
+    border-width: 1px 0 0 1px;
+}
+
+.zen-mode-button::after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 1px 1px 0;
+}
+
+.zen-mode-button:hover {
+    color: rgba(124, 196, 237, 1);
+    text-shadow: 0 0 10px rgba(124, 196, 237, 0.4);
+}
+
+.zen-mode-button:hover::before,
+.zen-mode-button:hover::after {
+    border-color: rgba(124, 196, 237, 0.8);
+    width: 14px;
+    height: 14px;
+}
+
+.zen-mode-button:active {
+    transform: scale(0.98);
+}
+
+.zen-mode-button svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 1.5;
+}
+
+/* Hide on mobile - use burger menu instead */
+@media (max-width: 768px) {
+    .zen-mode-button {
+        display: none;
+    }
+}

@@ -11,7 +11,12 @@ import { DebugPanel } from '../components/hud/DebugPanel'
 import { WindowManager } from '../components/hud/WindowManager'
 import { Taskbar } from '../components/hud/common/Taskbar'
 import { LoadingScreen } from '../components/hud/LoadingScreen'
+import { ZenModeButton } from '../components/hud/ZenModeButton'
+import { ZenModeOverlay } from '../components/hud/ZenModeOverlay'
+import { AudioToggle } from '../components/hud/AudioToggle'
 import { useSpaceshipStore } from '../stores/spaceshipStore'
+import { useZenModeStore } from '../stores/zenModeStore'
+import { useAudioStore } from '../stores/audioStore'
 import { useIsMobile } from '../hooks/useIsMobile'
 
 /**
@@ -28,6 +33,7 @@ function ExperiencePage() {
   const isDead = useSpaceshipStore(state => state.isDead)
   const enterSpaceshipMode = useSpaceshipStore(state => state.enterSpaceshipMode)
   const exitSpaceshipMode = useSpaceshipStore(state => state.exitSpaceshipMode)
+  const isZenMode = useZenModeStore(state => state.isZenMode)
   
   // Detect mobile viewport
   const isMobile = useIsMobile(768)
@@ -41,6 +47,19 @@ function ExperiencePage() {
       return () => clearTimeout(timer)
     }
   }, [isDead, exitSpaceshipMode])
+  
+  // Start ambient music when page loads
+  useEffect(() => {
+    const startAmbient = async () => {
+      const audioStore = useAudioStore.getState()
+      if (audioStore.isInitialized && !audioStore.isAmbientPlaying) {
+        // Wait for buffer to load if not ready
+        await audioStore.loadAmbient('space')
+        audioStore.playAmbient('space')
+      }
+    }
+    startAmbient()
+  }, [])
   
   // Global T key toggle for spaceship mode
   useEffect(() => {
@@ -109,21 +128,31 @@ function ExperiencePage() {
       </Canvas>
       <Loader />
       
-      {/* HUD - Desktop vs Mobile */}
-      {isMobile ? <CockpitHUDMobile /> : <CockpitHUD />}
+      {/* HUD - hidden in zen mode */}
+      {!isZenMode && (
+        <>
+          {/* HUD - Desktop vs Mobile */}
+          {isMobile ? <CockpitHUDMobile /> : <CockpitHUD />}
+          
+          <SpaceshipControls />
+          <WindowManager />
+          
+          {/* Mobile touch controls - only in spaceship mode */}
+          {isMobile && isSpaceshipMode && <MobileControls />}
+          
+          {/* Death screen overlay */}
+          <DeathScreen />
+          
+          {/* Desktop only components - hidden in spaceship mode */}
+          {!isMobile && !isSpaceshipMode && <Taskbar />}
+          {!isMobile && <DebugPanel />}
+        </>
+      )}
       
-      <SpaceshipControls />
-      <WindowManager />
-      
-      {/* Mobile touch controls - only in spaceship mode */}
-      {isMobile && isSpaceshipMode && <MobileControls />}
-      
-      {/* Death screen overlay */}
-      <DeathScreen />
-      
-      {/* Desktop only components - hidden in spaceship mode */}
-      {!isMobile && !isSpaceshipMode && <Taskbar />}
-      {!isMobile && <DebugPanel />}
+      {/* Zen Mode UI */}
+      {!isLoading && !isSpaceshipMode && !isZenMode && <ZenModeButton />}
+      {!isLoading && !isSpaceshipMode && !isZenMode && <AudioToggle />}
+      <ZenModeOverlay />
     </>
   )
 }
