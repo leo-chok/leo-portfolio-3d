@@ -89,6 +89,8 @@ export const CelestialBody = ({
             {/* Solid core - receives light from sun, casts shadows */}
             <mesh
                 ref={meshRef}
+                castShadow
+                receiveShadow
                 onClick={handleClick}
                 onPointerOver={() => { document.body.style.cursor = 'pointer'; setHovered(true) }}
                 onPointerOut={() => { document.body.style.cursor = 'auto'; setHovered(false) }}

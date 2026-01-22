@@ -118,6 +118,14 @@ export const DEFAULTS = {
             orbitRadius: randomMoonOrbit(4, 10), 
             orbitTilt: randomMoonTilt() 
         },
+        // Formation moon - Tom (custom 3D model)
+        'moon-tom': { 
+            size: 0.8, 
+            orbitRadius: 6, 
+            orbitTilt: 15,
+            orbitSpeed: 0.06,
+            customModel: '/TheMoon.glb'
+        },
     }
 }
 
@@ -177,7 +185,15 @@ export const GALAXY_MAP = {
             id: 'formation',
             name: 'FORMATION',
             orbitSpeed: 0.03,
-            moons: [],
+            moons: [
+                { 
+                    id: 'moon-tom', 
+                    name: 'Tom', 
+                    orbitSpeed: 0.06,
+                    orbitRadius: 6,
+                    customModel: '/TheMoon.glb'
+                },
+            ],
         },
         {
             id: 'skills',

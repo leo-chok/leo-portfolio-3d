@@ -2,9 +2,11 @@ import { useRef, useMemo, useState, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import { useCameraStore } from '../../../stores/cameraStore'
+import { useSpaceshipStore } from '../../../stores/spaceshipStore'
 import { EngineGlow } from '../../../game'
 import { HudReticle } from '../hud3d/HudReticle'
 import { HudCallout } from '../hud3d/HudCallout'
+import { EnergyShield } from '../materials/EnergyShield'
 import * as THREE from 'three'
 
 /**
@@ -19,7 +21,7 @@ import * as THREE from 'three'
 export const Mothership = () => {
     const groupRef = useRef()
     const modelRef = useRef()
-    const { scene } = useGLTF('/mothership-draco.glb')
+    const { scene } = useGLTF('/osiris_mothership-draco.glb')
     const [hovered, setHovered] = useState(false)
     
     // Camera store for tracking
@@ -33,6 +35,11 @@ export const Mothership = () => {
     // Register with body registry for camera tracking
     const registerBody = useCameraStore(state => state.registerBody)
     const unregisterBody = useCameraStore(state => state.unregisterBody)
+    
+    // Shield opacity state (based on player proximity - progressive)
+    const [shieldOpacity, setShieldOpacity] = useState(0)
+    const shieldDistanceMax = 20 // Distance at which shield starts appearing (opacity = 0)
+    const shieldDistanceMin = 6  // Distance at which shield is at max opacity (0.2)
     
     // Movement state (refs to avoid re-renders)
     const positionRef = useRef(new THREE.Vector3(60, 15, 40))
@@ -50,14 +57,13 @@ export const Mothership = () => {
         maxY: 25,                 // Maximum height
         wobbleAmount: 0.3,        // Sinusoidal wobble intensity (reduced)
         wobbleSpeed: 0.5,         // Wobble frequency (slower)
-        hitboxSize: 2,            // Clickable area size
+        hitboxSize: 1,            // Clickable area size
     }), [])
     
     // Register this ship with the body registry for collision detection
-    // Size 10 = collision radius for the large mothership hull
     useEffect(() => {
         if (groupRef.current) {
-            registerBody('mothership', groupRef, 5, null)
+            registerBody('mothership', groupRef, 1, null)
         }
         return () => unregisterBody('mothership')
     }, [registerBody, unregisterBody])
@@ -156,6 +162,29 @@ export const Mothership = () => {
             // Very slow slerp for gradual smooth rotation
             modelRef.current.quaternion.slerp(targetQuat, 0.02)
         }
+        
+        // Check player proximity for shield opacity (progressive)
+        const { isSpaceshipMode, position: playerPos } = useSpaceshipStore.getState()
+        if (isSpaceshipMode) {
+            const dx = playerPos.x - currentPos.x
+            const dy = playerPos.y - currentPos.y
+            const dz = playerPos.z - currentPos.z
+            const playerDistance = Math.sqrt(dx * dx + dy * dy + dz * dz)
+            
+            // Calculate progressive opacity: 0 at distanceMax, 0.2 at distanceMin
+            let newOpacity = 0
+            if (playerDistance < shieldDistanceMax) {
+                // Normalize distance to 0-1 range (inverted: closer = higher)
+                const t = 1 - Math.max(0, (playerDistance - shieldDistanceMin) / (shieldDistanceMax - shieldDistanceMin))
+                newOpacity = Math.min(0.2, t * 0.2)
+            }
+            
+            if (Math.abs(newOpacity - shieldOpacity) > 0.01) {
+                setShieldOpacity(newOpacity)
+            }
+        } else if (shieldOpacity > 0) {
+            setShieldOpacity(0)
+        }
     })
     
     // Clone scene for this instance
@@ -197,16 +226,25 @@ export const Mothership = () => {
                 <meshBasicMaterial visible={false} />
             </mesh>
             
+            {/* Energy Shield - appears when player ship is nearby */}
+            <EnergyShield 
+                radius={0.8} 
+                color="#00aaff"
+                visible={shieldOpacity > 0}
+                opacity={shieldOpacity}
+            />
+            
             <group ref={modelRef}>
                 <primitive 
                     object={clonedScene} 
-                    scale={[0.1, 0.1, 0.1]}
+                    scale={[0.01, 0.01, 0.01]}
+                    rotation={[0, Math.PI, 0]}
                 />
                 
                 {/* Left engine */}
-                <group position={[-0.08, 0, -0.88]}>
+                <group position={[-0.2, 0, -0.7]}>
                     <EngineGlow 
-                        color="#4488ff"
+                        color="#e9b311"
                         size={0.5}
                         opacity={0.9}
                         layers={3}
@@ -215,9 +253,9 @@ export const Mothership = () => {
                 </group>
                 
                 {/* Right engine */}
-                <group position={[0.08, 0, -0.88]}>
+                <group position={[0.2, 0, -0.7]}>
                     <EngineGlow 
-                        color="#4488ff"
+                        color="#e9b311"
                         size={0.5}
                         opacity={0.9}
                         layers={3}
@@ -244,4 +282,4 @@ export const Mothership = () => {
 }
 
 // Preload model
-useGLTF.preload('/mothership-draco.glb')
+useGLTF.preload('/osiris_mothership-draco.glb')

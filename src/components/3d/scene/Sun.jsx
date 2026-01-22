@@ -128,7 +128,18 @@ export const Sun = ({ id = 'presentation', name, position = [0, 0, 0], onClick }
             {/* Solar eruptions - random animated flares */}
             <SolarEruptions sunRadius={size * 0.5} />
             
-            <pointLight color={color} intensity={intensity} distance={300} decay={1.5} />
+            <pointLight 
+                color={color} 
+                intensity={intensity} 
+                distance={300} 
+                decay={1.5}
+                castShadow
+                shadow-mapSize-width={1024}
+                shadow-mapSize-height={1024}
+                shadow-camera-near={0.5}
+                shadow-camera-far={500}
+                shadow-bias={-0.0001}
+            />
             
             <HudReticle 
                 radius={size * 0.6 * 1.3} 

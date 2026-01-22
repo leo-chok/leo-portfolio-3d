@@ -3,6 +3,7 @@ import { Sun } from './Sun'
 import { CelestialBody } from './CelestialBody'
 import { OrbitingBody } from './OrbitingBody'
 import { AsteroidBelt } from './AsteroidBelt'
+import { MoonTom } from './MoonTom'
 import { useDebugStore, hueToColor } from '../../../stores/debugStore'
 
 /**
@@ -57,6 +58,9 @@ export const SolarSystem = () => {
                                 const moonSaturation = moonDebug.saturation || 10
                                 const moonColor = hueToColor(moonDebug.hue || 0, moonSaturation, 75)
                                 
+                                // Check if moon uses a custom 3D model
+                                const hasCustomModel = moon.customModel || moonDebug.customModel
+                                
                                 return (
                                     <OrbitingBody
                                         key={moon.id || moonIndex}
@@ -69,15 +73,24 @@ export const SolarSystem = () => {
                                         showOrbitRing={true}
                                         initialAngle={(moonIndex / (planet.moons?.length || 1)) * Math.PI * 2}
                                     >
-                                        <CelestialBody
-                                            id={moon.id}
-                                            name={moon.name}
-                                            size={moonDebug.size || 0.3}
-                                            color={moonColor}
-                                            intensity={3}
-                                            satellites={moon.satellites || []}
-                                            projectData={moon.projectData}
-                                        />
+                                        {/* Use custom MoonTom component for moons with 3D models */}
+                                        {hasCustomModel && moon.id === 'moon-tom' ? (
+                                            <MoonTom
+                                                id={moon.id}
+                                                name={moon.name}
+                                                size={moonDebug.size || 0.8}
+                                            />
+                                        ) : (
+                                            <CelestialBody
+                                                id={moon.id}
+                                                name={moon.name}
+                                                size={moonDebug.size || 0.3}
+                                                color={moonColor}
+                                                intensity={3}
+                                                satellites={moon.satellites || []}
+                                                projectData={moon.projectData}
+                                            />
+                                        )}
                                     </OrbitingBody>
                                 )
                             })}
